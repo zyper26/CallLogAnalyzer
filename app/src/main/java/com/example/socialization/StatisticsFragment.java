@@ -22,14 +22,13 @@ public class StatisticsFragment {
         return instance;
     }
 
-    public long[] getGlobalScore1(){                              // Number of times and duration of calls
+    public long[] getGlobalScore1(long start_day){                              // Number of times and duration of calls
         long result[] = new long[2];
         CallLogUtils callLogUtils = CallLogUtils.getInstance(context);
-        long LastDayToCount = callLogUtils.getLastDayToCount();
+        long LastDayToCount = callLogUtils.getLastDayToCount(start_day);
         ArrayList<CallLogInfo> incomingCalls = callLogUtils.getIncomingCalls();
         ArrayList<CallLogInfo> outgoingCalls = callLogUtils.getOutgoingCalls();
-        long totalCalls = 0;
-        long totalDuration = 0;
+        long totalCalls = 0,totalDuration = 0;
         for(CallLogInfo callLogInfo: incomingCalls) {
             if (callLogInfo.getDate() > LastDayToCount){
                 totalCalls++;
@@ -55,7 +54,6 @@ public class StatisticsFragment {
         ArrayList<CallLogInfo> missedCalls = callLogUtils.getMissedCalls();
         ArrayList<CallLogInfo> outgoingCalls = callLogUtils.getOutgoingCalls();
         int totalCalls = 0;
-        int totalDuration = 0;
         totalCalls = missedCalls.size();
         for(CallLogInfo callLogInfo: outgoingCalls){
             if(callLogInfo.getDuration() == 0) {
@@ -94,10 +92,10 @@ public class StatisticsFragment {
         return score;
     }
 
-    public long[] getIndividualScore1(String number){
+    public long[] getIndividualScore1(String number, long start_day){
         long[] result = new long[2];
         CallLogUtils callLogUtils = CallLogUtils.getInstance(context);
-        long LastDayToCount = callLogUtils.getLastDayToCount();
+        long LastDayToCount = callLogUtils.getLastDayToCount(start_day);
         ArrayList<CallLogInfo> incomingCalls = callLogUtils.getIncomingCalls();
         ArrayList<CallLogInfo> outgoingCalls = callLogUtils.getOutgoingCalls();
         long totalCalls = 0;
@@ -198,12 +196,12 @@ public class StatisticsFragment {
         return (float)Calls/(float)totalCalls;
     }
 
-    public long[][] getScore1(String number){
+    public long[][] getScore1(String number, long start_day){
         long[][] score = new long[2][2];
         long[] individual_result = new long[2];
         long[] global_result = new long[2];
-        individual_result = getIndividualScore1(number);
-        global_result = getGlobalScore1();
+        individual_result = getIndividualScore1(number, start_day);
+        global_result = getGlobalScore1(start_day);
         score[0] = individual_result;
         score[1] = global_result;
         return score;
@@ -221,9 +219,12 @@ public class StatisticsFragment {
         return getIndividualScore4(number)/getGlobalScore4();
     }
 
-    public Boolean getSocial(String number){
-        long[][] result = getScore1(number);
-        if((result[0][0]*result[0][1])> (result[1][0]/(float)result[1][1]) *(result[1][0]*result[1][1]) || (result[0][0] > 0.3*result[1][0]))
+    public Boolean getSocial(String number, long start_day){
+        long[][] result = getScore1(number, start_day);
+        Boolean score1 = (result[0][0]*result[0][1])> (result[1][0]/(float)result[1][1]) *(result[1][0]*result[1][1]);
+        Boolean score2;
+        Boolean score3 = (result[0][0] > 0.3*result[1][0]);
+        if( score1 || score3 )
             return true;
         else return false;
     }

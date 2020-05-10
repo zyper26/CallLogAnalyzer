@@ -86,5 +86,4 @@ public class PhonecallReceiver extends BroadcastReceiver {
         }
         lastState = state;
     }
-
 }

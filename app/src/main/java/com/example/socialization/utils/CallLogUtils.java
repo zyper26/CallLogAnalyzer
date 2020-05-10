@@ -9,14 +9,15 @@ import android.util.Log;
 import com.example.socialization.CallLogInfo;
 
 import java.time.DayOfWeek;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
 public class CallLogUtils {
 
+    private static String TAG = "CallLogUtils";
     private static CallLogUtils instance;
     private Context context;
     private ArrayList<CallLogInfo> mainList = null;
@@ -256,12 +257,12 @@ public class CallLogUtils {
         return result;
     }
 
-    public long getLastDayToCount(){
-        LocalDateTime input = LocalDateTime.now();;
+    public long getLastDayToCount(long start_day){
+        LocalDateTime input = Instant.ofEpochMilli(start_day).atZone(ZoneId.systemDefault()).toLocalDateTime();
+        Log.d(TAG, "getLastDayToCount: " + input);;
         DayOfWeek day = input.getDayOfWeek();
         LocalDateTime endOfLastWeek = input.minusWeeks(8).with(day);
         endOfLastWeek = endOfLastWeek.toLocalDate().atStartOfDay();
-        long endOfLastWeekMilli = endOfLastWeek.toInstant(ZoneOffset.ofTotalSeconds(0)).toEpochMilli();
         LocalDateTime startOfLastWeek = endOfLastWeek.minusDays(6);
         long startOfLastWeekMilli = startOfLastWeek.toInstant(ZoneOffset.ofTotalSeconds(0)).toEpochMilli();
         return startOfLastWeekMilli;

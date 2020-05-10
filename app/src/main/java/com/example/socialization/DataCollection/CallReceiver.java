@@ -1,22 +1,21 @@
 package com.example.socialization.DataCollection;
 
-import android.app.ActivityManager;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.CallLog;
 import android.provider.ContactsContract;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.example.socialization.DataBaseResolver.ContactFeatureProviderConstants;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -27,14 +26,15 @@ public class CallReceiver extends PhonecallReceiver {
     int incomingCall = 1;
     int outgoingCall = 2;
     int missedCall = 3;
-    int day;
-    int hrs;
-    String contactName;
-    String contactNumber;
+    private String callType;
+    private long date;
+    private int SocialStatus;
+    private String contactName;
+    private String contactNumber;
     long Duration; /* (millisecond/1000)/60 - min    (millisecond /1000)%60 - sec*/
-    long dur_min;
-    long dur_sec;
-    long DurInMin;
+//    long dur_min;
+//    long dur_sec;
+//    long DurInMin;
     int CallType;
     List<String> topPackage;
     Location location;
@@ -68,18 +68,22 @@ public class CallReceiver extends PhonecallReceiver {
         }
     };
 
-    private void addContactFeatures(int day, int hour, Double lat, Double lon , int callType, String contactName, String phoneNumber, long duration, String packageName){
+    private void addContactFeatures(long date , int callType,
+                                    String contactName, String phoneNumber, long duration,
+                                    Double lat, Double lon,
+                                    int socialStatus){
+                                    //String packageName){
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put(ContactFeatureProviderConstants.COL_1,day);
-        contentValues.put(ContactFeatureProviderConstants.COL_2,hour);
-        contentValues.put(ContactFeatureProviderConstants.COL_3,lat);
-        contentValues.put(ContactFeatureProviderConstants.COL_4,lon);
-        contentValues.put(ContactFeatureProviderConstants.COL_5,callType);
-        contentValues.put(ContactFeatureProviderConstants.COL_6,contactName);
-        contentValues.put(ContactFeatureProviderConstants.COL_7,phoneNumber);
-        contentValues.put(ContactFeatureProviderConstants.COL_8,duration);
-        contentValues.put(ContactFeatureProviderConstants.COL_9,packageName);
+        contentValues.put(ContactFeatureProviderConstants.COL_1,date);
+        contentValues.put(ContactFeatureProviderConstants.COL_2,callType);
+        contentValues.put(ContactFeatureProviderConstants.COL_3,contactName);
+        contentValues.put(ContactFeatureProviderConstants.COL_4,phoneNumber);
+        contentValues.put(ContactFeatureProviderConstants.COL_5,duration);
+        contentValues.put(ContactFeatureProviderConstants.COL_6,lat);
+        contentValues.put(ContactFeatureProviderConstants.COL_7,lon);
+        contentValues.put(ContactFeatureProviderConstants.COL_8,socialStatus);
+//        contentValues.put(ContactFeatureProviderConstants.COL_9,packageName);
 
         if(contentResolver != null){
             contentResolver.insert(ContactFeatureProviderConstants.CONTENT_URI_1,contentValues);
@@ -94,23 +98,24 @@ public class CallReceiver extends PhonecallReceiver {
         public void run() {
            /*Update Database*/
             rwlock.writeLock().lock();
-            int day = dataInterface.getDay();
-            int hour = dataInterface.getHour();
+            long date = dataInterface.getDate();
+            int CallType = dataInterface.getGetCallType();
+            String contactName = dataInterface.getName();
+            String phoneNumber = dataInterface.getNumber();
+            long duration = dataInterface.getDuration();
             double lat = dataInterface.getLat();
             double lon = dataInterface.getLon();
-            int CallType = dataInterface.getGetCallType();
-            String contactName = dataInterface.getContactName();
-            String phoneNumber = dataInterface.getPhoneNumber();
-            long duration = dataInterface.getDuration();
-            List<String> packageName= dataInterface.getPackageName();
+            int socialStatus = dataInterface.getSocialStatus();
+//            List<String> packageName= dataInterface.getPackageName();
 
-            if(packageName != null){
-                for(int i = 0 ; i < packageName.size(); i++) {
-                    addContactFeatures(day, hour, lat, lon, CallType, contactName, phoneNumber, duration, packageName.get(i));
-                }
-            }else{
-                addContactFeatures(day, hour, lat, lon, CallType, contactName, phoneNumber, duration,"");
-            }
+            addContactFeatures(date, CallType, contactName,  phoneNumber,  duration, lat, lon, socialStatus);
+//            if(packageName != null){
+//                for(int i = 0 ; i < packageName.size(); i++) {
+//                    addContactFeatures(date, callType, contactName,  phoneNumber,  duration, lat, lon, socialStatus, packageName.get(i));
+//                }
+//            }else{
+//                addContactFeatures(date, callType, contactName,  phoneNumber,  duration, lat, lon, socialStatus,"");
+//            }
 
             rwlock.writeLock().unlock();
             new Thread(runnable1).start();
@@ -135,20 +140,18 @@ public class CallReceiver extends PhonecallReceiver {
     @Override
     protected void onIncomingCallStarted(Context ctx, String number, Date start) {
         rwlock.writeLock().lock();
-        hrs = start.getHours();
-        day = start.getDay();
-        CallType = incomingCall;
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy   hh:mm a");
+        CallType = CallLog.Calls.INCOMING_TYPE;
+        date = start.toInstant().toEpochMilli();
         contactNumber = number;
         contactName = getContactDisplayNameByNumber(contactNumber,ctx);
         Duration = start.getTime();
         Toast.makeText(ctx, "onIncomingCallStarted"
-                + "Hour:: "+hrs + "Day:: "+day + "Name:: "+contactName + "Num:: " + contactNumber, Toast.LENGTH_LONG).show();
-
-        dataInterface.setDay(day);
-        dataInterface.setHour(hrs);
-        dataInterface.setContactName(contactName);
+                + "Time "+ formatter.format(start) + "Name:: "+contactName + "Num:: " + contactNumber, Toast.LENGTH_LONG).show();
+        dataInterface.setDate(start.toInstant().toEpochMilli());
+        dataInterface.setName(contactName);
         dataInterface.setCallType(CallType);
-        dataInterface.setPhoneNumber(contactNumber);
+        dataInterface.setNumber(contactNumber);
         dataInterface.setDuration(Duration);
         this.context = ctx; /*Check the effect*/
         rwlock.writeLock().unlock();
@@ -158,20 +161,18 @@ public class CallReceiver extends PhonecallReceiver {
     @Override
     protected void onOutgoingCallStarted(Context ctx, String number, Date start) {
         rwlock.writeLock().lock();
-        hrs = start.getHours();
-        day = start.getDay();
-        CallType = outgoingCall;
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy   hh:mm a");
+        date = start.toInstant().toEpochMilli();
+        CallType = CallLog.Calls.OUTGOING_TYPE;
         contactNumber = number;
         contactName = getContactDisplayNameByNumber(contactNumber,ctx);
         Duration = start.getTime();
         Toast.makeText(ctx, "onOutgoingCallStarted"
-                + "Hour:: "+hrs + "Day:: "+day + "Name:: "+contactName + "Num:: " + contactNumber, Toast.LENGTH_LONG).show();
-
-        dataInterface.setDay(day);
-        dataInterface.setHour(hrs);
-        dataInterface.setContactName(contactName);
+                + "Time "+ formatter.format(start) + "Name:: "+contactName + "Num:: " + contactNumber, Toast.LENGTH_LONG).show();
+        dataInterface.setDate(start.toInstant().toEpochMilli());
+        dataInterface.setName(contactName);
         dataInterface.setCallType(CallType);
-        dataInterface.setPhoneNumber(contactNumber);
+        dataInterface.setNumber(contactNumber);
         dataInterface.setDuration(Duration);
         this.context = ctx; /*Check the effect*/
         rwlock.writeLock().unlock();;
@@ -182,8 +183,7 @@ public class CallReceiver extends PhonecallReceiver {
     protected void onIncomingCallEnded(Context ctx, String number, Date start, Date end) {
         rwlock.writeLock().lock();
         Duration =  end.getTime() - start.getTime();
-
-        topPackage = getTopAppName(ctx);
+//        topPackage = getTopAppName(ctx);
         location = new Location(ctx);
         if(location != null && 1 == location.locationUpdate()){
             lati =  location.getLat();
@@ -193,17 +193,17 @@ public class CallReceiver extends PhonecallReceiver {
         dataInterface.setDuration(Duration);
         dataInterface.setLat(lati);
         dataInterface.setLon(longi);
-        dataInterface.setPackage(topPackage);
+//        dataInterface.setPackage(topPackage);
         this.context = ctx; /*Check the effect*/
 
         rwlock.writeLock().unlock();;
 
-        if(!dataInterface.getContactName().equals("Unknown number")){ /*Don't Update Training data having no contact DB entry*/
+        if(!dataInterface.getName().equals("Unknown number")){ /*Don't Update Training data having no contact DB entry*/
             Message message = new Message();
             message.what = UPDATE_DB;
             mHandler.sendMessage(message);
         }else{
-            Toast.makeText(ctx, "onIncomingCallEnded" +"Name::->"+ dataInterface.getContactName(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(ctx, "onIncomingCallEnded" +"Name::->"+ dataInterface.getName(), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -211,7 +211,7 @@ public class CallReceiver extends PhonecallReceiver {
     protected void onOutgoingCallEnded(Context ctx, String number, Date start, Date end) {
         rwlock.writeLock().lock();
         Duration =  end.getTime() - start.getTime();
-        topPackage = getTopAppName(ctx);
+//        topPackage = getTopAppName(ctx);
         location = new Location(ctx);
         if(location != null && 1 == location.locationUpdate()){
             lati =  location.getLat();
@@ -221,45 +221,43 @@ public class CallReceiver extends PhonecallReceiver {
         dataInterface.setDuration(Duration);
         dataInterface.setLat(lati);
         dataInterface.setLon(longi);
-        dataInterface.setPackage(topPackage);
+//        dataInterface.setPackage(topPackage);
         this.context = ctx; /*Check the effect*/
 
         rwlock.writeLock().unlock();
 
-        if(!dataInterface.getContactName().equals("Unknown number")){ /*Don't Update Training data having no contact DB entry*/
+        if(!dataInterface.getName().equals("Unknown number")){ /*Don't Update Training data having no contact DB entry*/
             Message message = new Message();
             message.what = UPDATE_DB;
             mHandler.sendMessage(message);
         }else{
-            Toast.makeText(ctx, "onOutgoingCallEnded" +"Name::->"+ dataInterface.getContactName(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(ctx, "onOutgoingCallEnded" +"Name::->"+ dataInterface.getName(), Toast.LENGTH_SHORT).show();
         }
     }
 
     @Override
     protected void onMissedCall(Context ctx, String number, Date start) {
         rwlock.writeLock().lock();
-        hrs = start.getHours();
-        day = start.getDay();
+        date = start.toInstant().toEpochMilli();
         CallType = missedCall;
         contactNumber = number;
         contactName = getContactDisplayNameByNumber(contactNumber,ctx);
         Duration = start.getTime();
-        dataInterface.setDay(day);
-        dataInterface.setHour(hrs);
-        dataInterface.setContactName(contactName);
+        dataInterface.setDate(date);
+        dataInterface.setName(contactName);
         dataInterface.setCallType(CallType);
-        dataInterface.setPhoneNumber(contactNumber);
+        dataInterface.setNumber(contactNumber);
         dataInterface.setDuration(Duration);
         this.context = ctx; /*Check the effect*/
 
         rwlock.writeLock().unlock();
         Toast.makeText(ctx, "onMissedCall" , Toast.LENGTH_SHORT).show();
-        if(!dataInterface.getContactName().equals("Unknown number")){ /*Don't Update DB having no contact DB entry*/
+        if(!dataInterface.getName().equals("Unknown number")){ /*Don't Update DB having no contact DB entry*/
             Message message = new Message();
             message.what = UPDATE_DB;
             mHandler.sendMessage(message);
         }else{
-            Toast.makeText(ctx, "onMissedCall" +"Name::->"+ dataInterface.getContactName(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(ctx, "onMissedCall" +"Name::->"+ dataInterface.getName(), Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -287,23 +285,23 @@ public class CallReceiver extends PhonecallReceiver {
         return contactName;
     }
 
-    public static List<String> getTopAppName(Context context) {
-        ActivityManager mActivityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        String strName = null ;
-        List<String> packages = null;
-        final List<ActivityManager.RecentTaskInfo> runningTaskInfos;
-        try {
-              runningTaskInfos = mActivityManager.getRecentTasks(MAXAPP,0);
-              packages = new LinkedList<>();
-              for(int i = 0; i < runningTaskInfos.size() ; i++){
-                  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                      strName = runningTaskInfos.get(i).topActivity.getPackageName();
-                  }
-                  packages.add(strName);
-              }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//    public static List<String> getTopAppName(Context context) {
+//        ActivityManager mActivityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+//        String strName = null ;
+//        List<String> packages = null;
+//        final List<ActivityManager.RecentTaskInfo> runningTaskInfos;
+//        try {
+//              runningTaskInfos = mActivityManager.getRecentTasks(MAXAPP,0);
+//              packages = new LinkedList<>();
+//              for(int i = 0; i < runningTaskInfos.size() ; i++){
+//                  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                      strName = runningTaskInfos.get(i).topActivity.getPackageName();
+//                  }
+//                  packages.add(strName);
+//              }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 //        List<String> packages = null;
 //        ActivityManager mgr = (ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);
 //        List<ActivityManager.AppTask>  tasks = mgr.getAppTasks();
@@ -320,8 +318,8 @@ public class CallReceiver extends PhonecallReceiver {
 //            Log.v(TAG,packagename + ":" + label);
 //        }
 
-        return packages;
-    }
+//        return packages;
+//    }
 
     /*
     public String[] getForegroundPackageNameClassNameByUsageStats(Context ctx,long start, long end) {

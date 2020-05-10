@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import com.example.socialization.DataCollection.CallReceiver;
+import com.example.socialization.utils.CallLogUtils;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
@@ -26,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     public static String TAG = MainActivity.class.getSimpleName();
     CallLogViewPagerAdapter adapter;
     private ViewPager mViewPager;
+    CallReceiver callReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,13 +37,23 @@ public class MainActivity extends AppCompatActivity {
         ConstraintLayout content_main_layout = (ConstraintLayout) findViewById(R.id.contentView);
         mViewPager = (ViewPager) content_main_layout.findViewById(R.id.viewpager);
         initComponents();
-        onStart(mViewPager);
+        callReceiver = new CallReceiver(getApplicationContext());
+        //onStart(mViewPager);
     }
 
 //    public
     public void onStart(View v){
-        SocialStatusScheduler socialStatusScheduler = SocialStatusScheduler.getInstance(getApplicationContext());
-        socialStatusScheduler.TimerActivity();
+//        SocialStatusScheduler socialStatusScheduler = SocialStatusScheduler.getInstance(getApplicationContext());
+//        socialStatusScheduler.TimerActivity();
+        CallLogUtils callLogUtils = CallLogUtils.getInstance(getApplicationContext());
+        StatisticsFragment statisticsFragment = StatisticsFragment.getInstance(getApplicationContext());
+        ArrayList<CallLogInfo> allCalls = callLogUtils.readCallLogs();
+        for(CallLogInfo callLogInfo:allCalls){
+            if(statisticsFragment.getSocial(callLogInfo.getNumber(),callLogInfo.getDate())
+                    && callLogInfo.getDate() > callLogUtils.getLastDayToCount(callLogInfo.getDate())){
+                callLogInfo.setSocialStatus(Boolean.TRUE);
+            }
+        }
     }
 
     private void initComponents(){

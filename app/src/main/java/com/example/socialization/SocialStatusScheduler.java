@@ -2,12 +2,6 @@ package com.example.socialization;
 
 import android.content.Context;
 
-import com.example.socialization.utils.CallLogUtils;
-
-import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
-
 public class SocialStatusScheduler{
 
     private Context context;
@@ -24,22 +18,22 @@ public class SocialStatusScheduler{
     }
 
     public void TimerActivity() {
-        Timer t = new Timer();
-        TimerTask tt = new TimerTask() {
-            @Override
-            public void run() {
-                //Toast.makeText(context, "Scheduler", Toast.LENGTH_SHORT).show();
-                CallLogUtils callLogUtils = CallLogUtils.getInstance(context);
-                StatisticsFragment statisticsFragment = StatisticsFragment.getInstance(context);
-                long LastDayToCount = callLogUtils.getLastDayToCount();
-                ArrayList<CallLogInfo> allCalls = callLogUtils.readCallLogs();
-                for(CallLogInfo callLogInfo:allCalls){
-                    if(statisticsFragment.getSocial(callLogInfo.getNumber()) && callLogInfo.getDate() > LastDayToCount){
-                        callLogInfo.setSocialStatus(Boolean.TRUE);
-                    }
-                }
-            }
-        };
-        t.schedule(tt, 0, 10800000);
+//        Timer t = new Timer();
+//        TimerTask tt = new TimerTask() {
+//            @Override
+//            public void run() {
+//                //Toast.makeText(context, "Scheduler", Toast.LENGTH_SHORT).show();
+//                CallLogUtils callLogUtils = CallLogUtils.getInstance(context);
+//                StatisticsFragment statisticsFragment = StatisticsFragment.getInstance(context);
+//                ArrayList<CallLogInfo> allCalls = callLogUtils.readCallLogs();
+//                for(CallLogInfo callLogInfo:allCalls){
+//                    if(statisticsFragment.getSocial(callLogInfo.getNumber(),callLogInfo.getDate())
+//                            && callLogInfo.getDate() > callLogUtils.getLastDayToCount(callLogInfo.getDate())){
+//                        callLogInfo.setSocialStatus(Boolean.TRUE);
+//                    }
+//                }
+//            }
+//        };
+//        t.schedule(tt, 0, 10800000);
     }
 }

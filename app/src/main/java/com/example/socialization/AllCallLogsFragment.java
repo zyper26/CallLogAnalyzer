@@ -17,8 +17,8 @@ import androidx.recyclerview.widget.RecyclerView;
 public class AllCallLogsFragment extends Fragment {
 
     private static final String TAG = "call_log_fragment";
-    private RecyclerView recyclerView;
-    private CallLogAdapter adapter;
+    RecyclerView recyclerView;
+    CallLogAdapter adapter;
 
     @Nullable
     @Override

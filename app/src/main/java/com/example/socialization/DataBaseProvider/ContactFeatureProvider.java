@@ -33,9 +33,9 @@ public class ContactFeatureProvider extends ContentProvider {
         MATCHER.addURI(AUTHORITY, PATH_CONTACT_FEATURE_COUNT_ALL, CONTACT_FEATURE_COUNT);
     }
 
-    public static final String MIME_TYPE_1 = ContentResolver.CURSOR_DIR_BASE_TYPE+"/"+ "vnd.com.example.vijay.contactpredictionframework";
+    public static final String MIME_TYPE_1 = ContentResolver.CURSOR_DIR_BASE_TYPE+"/"+ "com.example.socialization.contactpredictionframework";
 //    public static final String MIME_TYPE_2 = ContentResolver.CURSOR_DIR_BASE_TYPE+"/"+ "vnd.com.codetutore.todos.place";
-    public static final String MIME_TYPE_3 = ContentResolver.CURSOR_ITEM_BASE_TYPE+"/"+ "vnd.com.example.vijay.contactpredictionframework";
+    public static final String MIME_TYPE_3 = ContentResolver.CURSOR_ITEM_BASE_TYPE+"/"+ "com.example.socialization.contactpredictionframework";
 
 
 

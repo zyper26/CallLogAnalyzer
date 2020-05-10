@@ -1,35 +1,52 @@
 package com.example.socialization.DataCollection;
 
-import java.util.List;
-
 public class DataInterface {
 
-    private int day = 0;
-    private int hour = 0;
+    private long date = 0;
+    private int callType = 0;
+    private long duration = 0;
+    private String name = null;
+    private String number = null;
     private double lat = 0.0;
     private double lon = 0.0;
-    private int CallType = 0;
-    private String contactName = null;
-    private String phoneNumber = null;
-    private long duration = 0;
-    private List<String> packageName= null;
+    private int socialStatus = 0;
+//    private List<String> packageName= null;
 
     public DataInterface(){
     }
 
-    public void setDay(int day){
-        this.day = day;
-    }
-    public int getDay() {
-        return day;
+
+    public void setName(String contactName) {
+        this.name = contactName;
     }
 
-    public void setHour(int hour) {
-        this.hour = hour;
+    public String getName() {
+        return name;
     }
 
-    public int getHour() {
-        return hour;
+    public void setDuration(long duration) {
+        this.duration = duration;
+    }
+
+    public long getDuration() {
+        return duration;
+    }
+
+    public void setCallType(int setCallType) {
+        this.callType = setCallType;
+    }
+
+    public int getGetCallType() {
+        return callType;
+    }
+
+
+    public void setNumber(String phoneNumber) {
+        this.number = phoneNumber;
+    }
+
+    public String getNumber() {
+        return number;
     }
 
     public void setLat(double lat) {
@@ -47,47 +64,29 @@ public class DataInterface {
         this.lon = lon;
     }
 
-    public void setContactName(String contactName) {
-
-        this.contactName = contactName;
+    public int getSocialStatus() {
+        return socialStatus;
     }
 
-    public String getContactName() {
-        return contactName;
+    public void setSocialStatus(int socialStatus) {
+        this.socialStatus = socialStatus;
     }
 
-    public void setDuration(long duration) {
-        this.duration = duration;
+    public long getDate() {
+        return date;
     }
 
-    public long getDuration() {
-        return duration;
+    public void setDate(long date) {
+        this.date = date;
     }
+//    public void setPackage(List<String> packages){
+//     this.packageName = packages;
+//    }
+//
+//    public List<String> getPackageName() {
+//        return packageName;
+//    }
 
-    public void setCallType(int setCallType) {
-        this.CallType = setCallType;
-    }
-
-    public int getGetCallType() {
-        return CallType;
-    }
-
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPackage(List<String> packages){
-     this.packageName = packages;
-    }
-
-    public List<String> getPackageName() {
-        return packageName;
-    }
 
 
 }
