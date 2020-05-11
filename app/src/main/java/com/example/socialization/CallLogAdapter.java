@@ -2,6 +2,7 @@ package com.example.socialization;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.provider.CallLog;
 import android.text.TextUtils;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.socialization.CallFeatures.CallLogInfo;
 import com.example.socialization.utils.Utils;
@@ -28,8 +30,14 @@ public class CallLogAdapter extends RecyclerView.Adapter<CallLogAdapter.CallLogV
 
     private ArrayList<CallLogInfo> callLogInfoArrayList = new ArrayList<>();
     private Context context;
+    OnCallLogItemClickListener onItemClickListener;
+
+    interface OnCallLogItemClickListener {
+        void onItemClicked(CallLogInfo callLogInfo);
+    }
 
     public CallLogAdapter(Context context) {
+        callLogInfoArrayList = new ArrayList<>();
         this.context = context;
     }
 
@@ -38,12 +46,12 @@ public class CallLogAdapter extends RecyclerView.Adapter<CallLogAdapter.CallLogV
     public CallLogViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view = inflater.inflate(R.layout.list_row,parent,false);
-        return new CallLogViewHolder(view);
+        return new CallLogViewHolder(view, onItemClickListener);
     }
 
     @SuppressLint("ResourceAsColor")
     @Override
-    public void onBindViewHolder(@NonNull CallLogViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull CallLogViewHolder holder, final int position) {
 //        Log.d(TAG, "onBindViewHolder: ");
         switch(Integer.parseInt(callLogInfoArrayList.get(position).getCallType()))
         {
@@ -106,7 +114,7 @@ public class CallLogAdapter extends RecyclerView.Adapter<CallLogAdapter.CallLogV
         return callLogInfoArrayList.size();
     }
 
-    class CallLogViewHolder extends RecyclerView.ViewHolder{
+    class CallLogViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         ImageView imageView;
         TextView textViewCallDuration;
@@ -114,9 +122,9 @@ public class CallLogAdapter extends RecyclerView.Adapter<CallLogAdapter.CallLogV
         TextView textViewName;
         TextView textViewCallNumber;
         TextView textViewPosition;
+        OnCallLogItemClickListener onCallLogItemClickListener;
 
-        @SuppressLint("ResourceAsColor")
-        public CallLogViewHolder(View view) {
+        public CallLogViewHolder(@NonNull View view, OnCallLogItemClickListener onCallLogItemClickListener){
             super(view.getRootView());
             imageView = view.findViewById(R.id.imageViewProfile);
             textViewCallDate = view.findViewById(R.id.textViewCallDate);
@@ -124,6 +132,18 @@ public class CallLogAdapter extends RecyclerView.Adapter<CallLogAdapter.CallLogV
             textViewCallNumber = view.findViewById(R.id.textViewCallNumber);
             textViewName = view.findViewById(R.id.textViewName);
             textViewPosition = view.findViewById(R.id.textViewPosition);
+            this.onCallLogItemClickListener = onCallLogItemClickListener;
+            view.setOnClickListener(this);
+
+        }
+
+        @Override
+        public void onClick(View view) {
+            Toast.makeText(context, "clicked", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(context, SocialScoreStatistics.class);
+            intent.putExtra("number",callLogInfoArrayList.get(getAdapterPosition()).getNumber());
+            intent.putExtra("name",callLogInfoArrayList.get(getAdapterPosition()).getNumber());
+            context.startActivity(intent);
         }
     }
 }

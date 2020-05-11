@@ -92,22 +92,31 @@ public class CallLogUtils {
     public ArrayList<CallLogInfo> readCallLogs() {
         if (mainList == null) {
             loadData();
-//            Set<CallLogInfo> hash_Set = new HashSet<CallLogInfo>();
-//            for(CallLogInfo callLogInfo:mainList){
-//                hash_Set.add(callLogInfo);
-//            }
-//            System.out.println("LoadData_main_list: "+hash_Set.size());
+            int cnt = 0;
             ArrayList<CallLogInfo> temp = new ArrayList<>();
             SocialScore socialScore = SocialScore.getInstance(context);
             for(CallLogInfo callLogInfo:mainList) {
-                CallLogInfo callTemp = new CallLogInfo();
-                callTemp.setCallType(callLogInfo.getCallType());
-                callTemp.setDate(callLogInfo.getDate());
-                callTemp.setDuration(callLogInfo.getDuration());
-                callTemp.setName(callLogInfo.getName());
-                callTemp.setNumber(callLogInfo.getNumber());
-                callTemp.setSocialStatus(socialScore.getSocial(callLogInfo.getNumber(),callLogInfo.getDate()));
-                temp.add(callTemp);
+                if(cnt<500) {
+                    CallLogInfo callTemp = new CallLogInfo();
+                    callTemp.setCallType(callLogInfo.getCallType());
+                    callTemp.setDate(callLogInfo.getDate());
+                    callTemp.setDuration(callLogInfo.getDuration());
+                    callTemp.setName(callLogInfo.getName());
+                    callTemp.setNumber(callLogInfo.getNumber());
+                    callTemp.setSocialStatus(socialScore.getSocial(callLogInfo.getNumber(), callLogInfo.getDate()));
+                    temp.add(callTemp);
+                }
+                else{
+                    CallLogInfo callTemp = new CallLogInfo();
+                    callTemp.setCallType(callLogInfo.getCallType());
+                    callTemp.setDate(callLogInfo.getDate());
+                    callTemp.setDuration(callLogInfo.getDuration());
+                    callTemp.setName(callLogInfo.getName());
+                    callTemp.setNumber(callLogInfo.getNumber());
+                    callTemp.setSocialStatus(Boolean.FALSE);
+                    temp.add(callTemp);
+                }
+                cnt++;
             }
             mainList = temp;
         }
@@ -117,17 +126,31 @@ public class CallLogUtils {
     public ArrayList<CallLogInfo> getMissedCalls(){
         if(mainList == null) {
             loadData();
+            int cnt=0;
             ArrayList<CallLogInfo> temp = new ArrayList<>();
             SocialScore socialScore = SocialScore.getInstance(context);
             for(CallLogInfo callLogInfo:missedCallList) {
-                CallLogInfo callTemp = new CallLogInfo();
-                callTemp.setCallType(callLogInfo.getCallType());
-                callTemp.setDate(callLogInfo.getDate());
-                callTemp.setDuration(callLogInfo.getDuration());
-                callTemp.setName(callLogInfo.getName());
-                callTemp.setNumber(callLogInfo.getNumber());
-                callTemp.setSocialStatus(socialScore.getSocial(callLogInfo.getNumber(),callLogInfo.getDate()));
-                temp.add(callTemp);
+                if(cnt<500) {
+                    CallLogInfo callTemp = new CallLogInfo();
+                    callTemp.setCallType(callLogInfo.getCallType());
+                    callTemp.setDate(callLogInfo.getDate());
+                    callTemp.setDuration(callLogInfo.getDuration());
+                    callTemp.setName(callLogInfo.getName());
+                    callTemp.setNumber(callLogInfo.getNumber());
+                    callTemp.setSocialStatus(socialScore.getSocial(callLogInfo.getNumber(), callLogInfo.getDate()));
+                    temp.add(callTemp);
+                }
+                else{
+                    CallLogInfo callTemp = new CallLogInfo();
+                    callTemp.setCallType(callLogInfo.getCallType());
+                    callTemp.setDate(callLogInfo.getDate());
+                    callTemp.setDuration(callLogInfo.getDuration());
+                    callTemp.setName(callLogInfo.getName());
+                    callTemp.setNumber(callLogInfo.getNumber());
+                    callTemp.setSocialStatus(Boolean.FALSE);
+                    temp.add(callTemp);
+                }
+                cnt++;
             }
             missedCallList = temp;
         }
@@ -138,16 +161,30 @@ public class CallLogUtils {
         if(mainList == null) {
             loadData();
             ArrayList<CallLogInfo> temp = new ArrayList<>();
+            int cnt=0;
             SocialScore socialScore = SocialScore.getInstance(context);
             for(CallLogInfo callLogInfo:incomingCallList) {
-                CallLogInfo callTemp = new CallLogInfo();
-                callTemp.setCallType(callLogInfo.getCallType());
-                callTemp.setDate(callLogInfo.getDate());
-                callTemp.setDuration(callLogInfo.getDuration());
-                callTemp.setName(callLogInfo.getName());
-                callTemp.setNumber(callLogInfo.getNumber());
-                callTemp.setSocialStatus(socialScore.getSocial(callLogInfo.getNumber(),callLogInfo.getDate()));
-                temp.add(callTemp);
+                if(cnt<500) {
+                    CallLogInfo callTemp = new CallLogInfo();
+                    callTemp.setCallType(callLogInfo.getCallType());
+                    callTemp.setDate(callLogInfo.getDate());
+                    callTemp.setDuration(callLogInfo.getDuration());
+                    callTemp.setName(callLogInfo.getName());
+                    callTemp.setNumber(callLogInfo.getNumber());
+                    callTemp.setSocialStatus(socialScore.getSocial(callLogInfo.getNumber(), callLogInfo.getDate()));
+                    temp.add(callTemp);
+                }
+                else{
+                    CallLogInfo callTemp = new CallLogInfo();
+                    callTemp.setCallType(callLogInfo.getCallType());
+                    callTemp.setDate(callLogInfo.getDate());
+                    callTemp.setDuration(callLogInfo.getDuration());
+                    callTemp.setName(callLogInfo.getName());
+                    callTemp.setNumber(callLogInfo.getNumber());
+                    callTemp.setSocialStatus(Boolean.FALSE);
+                    temp.add(callTemp);
+                }
+                cnt++;
             }
             incomingCallList = temp;
         }
@@ -157,21 +194,69 @@ public class CallLogUtils {
     public ArrayList<CallLogInfo> getOutgoingCalls(){
         if(mainList == null) {
             loadData();
+            int cnt=0;
             ArrayList<CallLogInfo> temp = new ArrayList<>();
             SocialScore socialScore = SocialScore.getInstance(context);
             for(CallLogInfo callLogInfo:outgoingCallList) {
-                CallLogInfo callTemp = new CallLogInfo();
-                callTemp.setCallType(callLogInfo.getCallType());
-                callTemp.setDate(callLogInfo.getDate());
-                callTemp.setDuration(callLogInfo.getDuration());
-                callTemp.setName(callLogInfo.getName());
-                callTemp.setNumber(callLogInfo.getNumber());
-                callTemp.setSocialStatus(socialScore.getSocial(callLogInfo.getNumber(),callLogInfo.getDate()));
-                temp.add(callTemp);
+                if(cnt<500) {
+                    CallLogInfo callTemp = new CallLogInfo();
+                    callTemp.setCallType(callLogInfo.getCallType());
+                    callTemp.setDate(callLogInfo.getDate());
+                    callTemp.setDuration(callLogInfo.getDuration());
+                    callTemp.setName(callLogInfo.getName());
+                    callTemp.setNumber(callLogInfo.getNumber());
+                    callTemp.setSocialStatus(socialScore.getSocial(callLogInfo.getNumber(), callLogInfo.getDate()));
+                    temp.add(callTemp);
+                }
+                else{
+                    CallLogInfo callTemp = new CallLogInfo();
+                    callTemp.setCallType(callLogInfo.getCallType());
+                    callTemp.setDate(callLogInfo.getDate());
+                    callTemp.setDuration(callLogInfo.getDuration());
+                    callTemp.setName(callLogInfo.getName());
+                    callTemp.setNumber(callLogInfo.getNumber());
+                    callTemp.setSocialStatus(Boolean.FALSE);
+                    temp.add(callTemp);
+                }
+                cnt++;
             }
             outgoingCallList = temp;
         }
         return outgoingCallList;
+    }
+
+    public long[] getAllCallState(String number){
+        long output[] = new long[2];
+        for(CallLogInfo callLogInfo : mainList){
+            if(callLogInfo.getNumber().equals(number)){
+                output[0]++;
+                if(Integer.parseInt(callLogInfo.getCallType()) != CallLog.Calls.MISSED_TYPE)
+                    output[1]+= callLogInfo.getDuration();
+            }
+        }
+        return output;
+    }
+
+    public long[] getIncomingCallState(String number){
+        long output[] = new long[2];
+        for(CallLogInfo callLogInfo : incomingCallList){
+            if(callLogInfo.getNumber().equals(number)){
+                output[0]++;
+                output[1]+= callLogInfo.getDuration();
+            }
+        }
+        return output;
+    }
+
+    public long[] getOutgoingCallState(String number){
+        long output[] = new long[2];
+        for(CallLogInfo callLogInfo : outgoingCallList){
+            if(callLogInfo.getNumber().equals(number)){
+                output[0]++;
+                output[1]+= callLogInfo.getDuration();
+            }
+        }
+        return output;
     }
 
     public ArrayList<CallLogInfo> getSocialCalls(){
@@ -198,7 +283,7 @@ public class CallLogUtils {
 //        System.out.println("TotalLogs: " + totalRemainingLogs);
         numberOfWeeks = totalRemainingLogs / 7;
         long remaining_days = totalRemainingLogs % 7;
-        return Math.max(numberOfWeeks,8);
+        return Math.min(numberOfWeeks,8);
     }
 
     //number.getClass().getSimpleName() //print type of object

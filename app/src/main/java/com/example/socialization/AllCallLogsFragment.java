@@ -19,11 +19,13 @@ public class AllCallLogsFragment extends Fragment {
     private static final String TAG = "call_log_fragment";
     RecyclerView recyclerView;
     CallLogAdapter adapter;
+    View view;
+    CallLogAdapter.OnCallLogItemClickListener onItemClickListener;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.call_log_fragment,container,false);
+        view = inflater.inflate(R.layout.call_log_fragment,container,false);
         recyclerView = view.findViewById(R.id.recyclerView);
         initComponents();
         return view;
