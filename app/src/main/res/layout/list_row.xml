@@ -24,7 +24,7 @@
         android:layout_toEndOf="@id/imageViewProfile"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/colorPrimaryDark"
         android:text="NAME"
@@ -32,10 +32,11 @@
 
     <TextView
         android:id="@+id/textViewCallNumber"
-        android:layout_width="fill_parent"
-        android:layout_toEndOf="@id/imageViewProfile"
+        android:layout_width="wrap_content"
+        android:layout_toRightOf="@id/imageViewProfile"
         android:layout_below="@id/textViewName"
         android:layout_height="wrap_content" />
+
 
     <TextView
         android:id="@+id/textViewCallDate"
@@ -45,6 +46,14 @@
         android:layout_height="wrap_content"
         android:text="date"
         />
+
+    <TextView
+        android:id="@+id/textViewPosition"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textViewCallNumber"
+        android:text="index"
+        android:textSize="15sp" />
 
     <TextView
         android:id="@+id/textViewCallDuration"

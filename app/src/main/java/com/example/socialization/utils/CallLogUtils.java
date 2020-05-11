@@ -6,7 +6,8 @@ import android.database.Cursor;
 import android.provider.CallLog;
 import android.util.Log;
 
-import com.example.socialization.CallLogInfo;
+import com.example.socialization.CallFeatures.CallLogInfo;
+import com.example.socialization.SocialScore;
 
 import java.time.DayOfWeek;
 import java.time.Instant;
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
+
 
 public class CallLogUtils {
 
@@ -24,8 +26,7 @@ public class CallLogUtils {
     private ArrayList<CallLogInfo> missedCallList = null;
     private ArrayList<CallLogInfo> outgoingCallList = null;
     private ArrayList<CallLogInfo> incomingCallList = null;
-    private long TotalLogs = 0;
-    private long NumberOfWeeks = 0;
+    private ArrayList<CallLogInfo> socialCallList = null;
 
     private CallLogUtils(Context context) {
         this.context = context;
@@ -42,6 +43,7 @@ public class CallLogUtils {
         missedCallList = new ArrayList<>();
         outgoingCallList = new ArrayList<>();
         incomingCallList = new ArrayList<>();
+        socialCallList = new ArrayList<>();
 
         String projection[] = {"_id", CallLog.Calls.NUMBER, CallLog.Calls.DATE, CallLog.Calls.DURATION, CallLog.Calls.TYPE, CallLog.Calls.CACHED_NAME};
         ContentResolver contentResolver = context.getApplicationContext().getContentResolver();
@@ -59,6 +61,7 @@ public class CallLogUtils {
 
         cursor.moveToFirst();
         while (!cursor.isAfterLast()){
+            SocialScore socialScore = SocialScore.getInstance(context);
             CallLogInfo callLogInfo = new CallLogInfo();
             callLogInfo.setName(cursor.getString(cursor.getColumnIndex(CallLog.Calls.CACHED_NAME)));
             callLogInfo.setNumber(cursor.getString(cursor.getColumnIndex( CallLog.Calls.NUMBER )));
@@ -67,7 +70,6 @@ public class CallLogUtils {
             callLogInfo.setDuration(cursor.getLong(cursor.getColumnIndex(CallLog.Calls.DURATION)));
             callLogInfo.setSocialStatus(Boolean.FALSE);
             mainList.add(callLogInfo);
-
             switch(Integer.parseInt(callLogInfo.getCallType()))
             {
                 case CallLog.Calls.OUTGOING_TYPE:
@@ -95,97 +97,122 @@ public class CallLogUtils {
 //                hash_Set.add(callLogInfo);
 //            }
 //            System.out.println("LoadData_main_list: "+hash_Set.size());
+            ArrayList<CallLogInfo> temp = new ArrayList<>();
+            SocialScore socialScore = SocialScore.getInstance(context);
+            for(CallLogInfo callLogInfo:mainList) {
+                CallLogInfo callTemp = new CallLogInfo();
+                callTemp.setCallType(callLogInfo.getCallType());
+                callTemp.setDate(callLogInfo.getDate());
+                callTemp.setDuration(callLogInfo.getDuration());
+                callTemp.setName(callLogInfo.getName());
+                callTemp.setNumber(callLogInfo.getNumber());
+                callTemp.setSocialStatus(socialScore.getSocial(callLogInfo.getNumber(),callLogInfo.getDate()));
+                temp.add(callTemp);
+            }
+            mainList = temp;
         }
         return mainList;
     }
 
     public ArrayList<CallLogInfo> getMissedCalls(){
-        if(mainList == null)
+        if(mainList == null) {
             loadData();
+            ArrayList<CallLogInfo> temp = new ArrayList<>();
+            SocialScore socialScore = SocialScore.getInstance(context);
+            for(CallLogInfo callLogInfo:missedCallList) {
+                CallLogInfo callTemp = new CallLogInfo();
+                callTemp.setCallType(callLogInfo.getCallType());
+                callTemp.setDate(callLogInfo.getDate());
+                callTemp.setDuration(callLogInfo.getDuration());
+                callTemp.setName(callLogInfo.getName());
+                callTemp.setNumber(callLogInfo.getNumber());
+                callTemp.setSocialStatus(socialScore.getSocial(callLogInfo.getNumber(),callLogInfo.getDate()));
+                temp.add(callTemp);
+            }
+            missedCallList = temp;
+        }
         return missedCallList;
     }
 
     public ArrayList<CallLogInfo> getIncomingCalls(){
         if(mainList == null) {
             loadData();
+            ArrayList<CallLogInfo> temp = new ArrayList<>();
+            SocialScore socialScore = SocialScore.getInstance(context);
+            for(CallLogInfo callLogInfo:incomingCallList) {
+                CallLogInfo callTemp = new CallLogInfo();
+                callTemp.setCallType(callLogInfo.getCallType());
+                callTemp.setDate(callLogInfo.getDate());
+                callTemp.setDuration(callLogInfo.getDuration());
+                callTemp.setName(callLogInfo.getName());
+                callTemp.setNumber(callLogInfo.getNumber());
+                callTemp.setSocialStatus(socialScore.getSocial(callLogInfo.getNumber(),callLogInfo.getDate()));
+                temp.add(callTemp);
+            }
+            incomingCallList = temp;
         }
         return incomingCallList;
     }
 
     public ArrayList<CallLogInfo> getOutgoingCalls(){
-        if(mainList == null)
+        if(mainList == null) {
             loadData();
+            ArrayList<CallLogInfo> temp = new ArrayList<>();
+            SocialScore socialScore = SocialScore.getInstance(context);
+            for(CallLogInfo callLogInfo:outgoingCallList) {
+                CallLogInfo callTemp = new CallLogInfo();
+                callTemp.setCallType(callLogInfo.getCallType());
+                callTemp.setDate(callLogInfo.getDate());
+                callTemp.setDuration(callLogInfo.getDuration());
+                callTemp.setName(callLogInfo.getName());
+                callTemp.setNumber(callLogInfo.getNumber());
+                callTemp.setSocialStatus(socialScore.getSocial(callLogInfo.getNumber(),callLogInfo.getDate()));
+                temp.add(callTemp);
+            }
+            outgoingCallList = temp;
+        }
         return outgoingCallList;
     }
 
-    public long[] getAllCallState(String number){
-        long output[] = new long[2];
-        for(CallLogInfo callLogInfo : mainList){
-            if(callLogInfo.getNumber().equals(number)){
-                output[0]++;
-                if(Integer.parseInt(callLogInfo.getCallType()) != CallLog.Calls.MISSED_TYPE)
-                    output[1]+= callLogInfo.getDuration();
+    public ArrayList<CallLogInfo> getSocialCalls(){
+        if(mainList == null) {
+            loadData();
+        }
+        for(CallLogInfo callLogInfo:mainList) {
+            if(callLogInfo.getSocialStatus()) {
+                socialCallList.add(callLogInfo);
             }
         }
-        return output;
+        return socialCallList;
     }
 
-    public long[] getIncomingCallState(String number){
-        long output[] = new long[2];
-        for(CallLogInfo callLogInfo : incomingCallList){
-            if(callLogInfo.getNumber().equals(number)){
-                output[0]++;
-                output[1]+= callLogInfo.getDuration();
+    public long getTotalNumberOfWeeks(long start_day){
+        long totalRemainingLogs = 0, numberOfWeeks = 0;
+        if(mainList == null)
+            readCallLogs();
+        for(CallLogInfo callLogInfo:mainList) {
+            if(callLogInfo.getDate()<start_day){
+                totalRemainingLogs++;
             }
         }
-        return output;
-    }
-
-    public long[] getOutgoingCallState(String number){
-        long output[] = new long[2];
-        for(CallLogInfo callLogInfo : outgoingCallList){
-            if(callLogInfo.getNumber().equals(number)){
-                output[0]++;
-                output[1]+= callLogInfo.getDuration();
-            }
-        }
-        return output;
-    }
-
-    public int getMissedCallState(String number){
-        int output =0;
-        for(CallLogInfo callLogInfo : missedCallList){
-            if(callLogInfo.getNumber().equals(number)){
-                output++;
-            }
-        }
-        return output;
-    }
-
-
-    public long getTotalNumberOfWeeks(){
-        if(TotalLogs!=0) {
-            if(mainList == null)
-                readCallLogs();
-            TotalLogs = mainList.size();
-            System.out.println("TotalLogs: "+ TotalLogs);
-            NumberOfWeeks = TotalLogs / 7;
-            long remaining_days = TotalLogs % 7;
-        }
-        return NumberOfWeeks;
+//        System.out.println("TotalLogs: " + totalRemainingLogs);
+        numberOfWeeks = totalRemainingLogs / 7;
+        long remaining_days = totalRemainingLogs % 7;
+        return Math.max(numberOfWeeks,8);
     }
 
     //number.getClass().getSimpleName() //print type of object
 
-    public long[] getNumberAndDuration(int WeekNumber){
+    public long[] getNumberAndDuration(int WeekNumber, long start_day){
         long result[] = new long[2];
-        LocalDateTime input = LocalDateTime.now();;
+        LocalDateTime input = Instant.ofEpochMilli(start_day).atZone(ZoneId.systemDefault()).toLocalDateTime();
         DayOfWeek day = input.getDayOfWeek();
-        LocalDateTime endOfLastWeek = input.minusWeeks(WeekNumber).with(day);
-        endOfLastWeek = endOfLastWeek.toLocalDate().atStartOfDay();
-        long endOfLastWeekMilli = endOfLastWeek.toInstant(ZoneOffset.ofTotalSeconds(0)).toEpochMilli();
-        LocalDateTime startOfLastWeek = endOfLastWeek.minusDays(6);
-        long startOfLastWeekMilli = startOfLastWeek.toInstant(ZoneOffset.ofTotalSeconds(0)).toEpochMilli();
+        LocalDateTime startOfLastWeek = input.minusWeeks(WeekNumber).with(day);
+        startOfLastWeek = startOfLastWeek.toLocalDate().atStartOfDay();
+
+        long endOfLastWeekMilli = input.minusWeeks(WeekNumber-1).with(day).toLocalDate().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        long startOfLastWeekMilli = startOfLastWeek.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+
         for(CallLogInfo callLogInfo : mainList){
             if(callLogInfo.getDate()<=endOfLastWeekMilli && callLogInfo.getDate()>=startOfLastWeekMilli) {
                 if (Integer.parseInt(callLogInfo.getCallType()) != CallLog.Calls.MISSED_TYPE && callLogInfo.getDuration()>0) {
@@ -197,15 +224,17 @@ public class CallLogUtils {
         return result;
     }
 
-    public long[] getNumberAndDurationOfNumber(String number, int WeekNumber){
+    public long[] getNumberAndDurationOfNumber(String number, int WeekNumber, long start_day){
         long result[] = new long[2];
-        LocalDateTime input = LocalDateTime.now();;
+
+        LocalDateTime input = Instant.ofEpochMilli(start_day).atZone(ZoneId.systemDefault()).toLocalDateTime();
         DayOfWeek day = input.getDayOfWeek();
-        LocalDateTime endOfLastWeek = input.minusWeeks(WeekNumber).with(day);
-        endOfLastWeek = endOfLastWeek.toLocalDate().atStartOfDay();
-        long endOfLastWeekMilli = endOfLastWeek.toInstant(ZoneOffset.ofTotalSeconds(0)).toEpochMilli();
-        LocalDateTime startOfLastWeek = endOfLastWeek.minusDays(6);
-        long startOfLastWeekMilli = startOfLastWeek.toInstant(ZoneOffset.ofTotalSeconds(0)).toEpochMilli();
+        LocalDateTime startOfLastWeek = input.minusWeeks(WeekNumber).with(day);
+        startOfLastWeek = startOfLastWeek.toLocalDate().atStartOfDay();
+
+        long endOfLastWeekMilli = input.minusWeeks(WeekNumber-1).with(day).toLocalDate().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        long startOfLastWeekMilli = startOfLastWeek.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+
         for(CallLogInfo callLogInfo : mainList){
             if(callLogInfo.getNumber().equals(number)){
                 if(callLogInfo.getDate()<=endOfLastWeekMilli && callLogInfo.getDate()>=startOfLastWeekMilli) {
@@ -259,12 +288,14 @@ public class CallLogUtils {
 
     public long getLastDayToCount(long start_day){
         LocalDateTime input = Instant.ofEpochMilli(start_day).atZone(ZoneId.systemDefault()).toLocalDateTime();
-        Log.d(TAG, "getLastDayToCount: " + input);;
+//        Log.d(TAG, "getLastDayToCount1: " + input);;
         DayOfWeek day = input.getDayOfWeek();
         LocalDateTime endOfLastWeek = input.minusWeeks(8).with(day);
         endOfLastWeek = endOfLastWeek.toLocalDate().atStartOfDay();
-        LocalDateTime startOfLastWeek = endOfLastWeek.minusDays(6);
-        long startOfLastWeekMilli = startOfLastWeek.toInstant(ZoneOffset.ofTotalSeconds(0)).toEpochMilli();
+//        Log.d(TAG, "getLastDayToCount2: " + endOfLastWeek);
+        LocalDateTime startOfLastWeek = endOfLastWeek;
+//        Log.d(TAG, "getLastDayToCount3: " + startOfLastWeek);
+        long startOfLastWeekMilli = startOfLastWeek.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
         return startOfLastWeekMilli;
     }
 }

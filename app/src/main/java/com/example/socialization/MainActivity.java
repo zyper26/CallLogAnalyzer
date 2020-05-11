@@ -4,10 +4,7 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 
-import com.example.socialization.DataCollection.CallReceiver;
-import com.example.socialization.utils.CallLogUtils;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
@@ -23,12 +20,12 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity  {
 
     public static String TAG = MainActivity.class.getSimpleName();
     CallLogViewPagerAdapter adapter;
     private ViewPager mViewPager;
-    CallReceiver callReceiver;
+//    CallReceiver callReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,24 +34,25 @@ public class MainActivity extends AppCompatActivity {
         ConstraintLayout content_main_layout = (ConstraintLayout) findViewById(R.id.contentView);
         mViewPager = (ViewPager) content_main_layout.findViewById(R.id.viewpager);
         initComponents();
-        callReceiver = new CallReceiver(getApplicationContext());
         //onStart(mViewPager);
+
     }
 
-//    public
-    public void onStart(View v){
-//        SocialStatusScheduler socialStatusScheduler = SocialStatusScheduler.getInstance(getApplicationContext());
-//        socialStatusScheduler.TimerActivity();
-        CallLogUtils callLogUtils = CallLogUtils.getInstance(getApplicationContext());
-        StatisticsFragment statisticsFragment = StatisticsFragment.getInstance(getApplicationContext());
-        ArrayList<CallLogInfo> allCalls = callLogUtils.readCallLogs();
-        for(CallLogInfo callLogInfo:allCalls){
-            if(statisticsFragment.getSocial(callLogInfo.getNumber(),callLogInfo.getDate())
-                    && callLogInfo.getDate() > callLogUtils.getLastDayToCount(callLogInfo.getDate())){
-                callLogInfo.setSocialStatus(Boolean.TRUE);
-            }
-        }
-    }
+
+    //    public
+//    public void onStart(View v){
+////        SocialStatusScheduler socialStatusScheduler = SocialStatusScheduler.getInstance(getApplicationContext());
+////        socialStatusScheduler.TimerActivity();
+//        CallLogUtils callLogUtils = CallLogUtils.getInstance(getApplicationContext());
+//        StatisticsFragment statisticsFragment = StatisticsFragment.getInstance(getApplicationContext());
+//        ArrayList<CallLogInfo> allCalls = callLogUtils.readCallLogs();
+//        for(CallLogInfo callLogInfo:allCalls){
+//            if(statisticsFragment.getSocial(callLogInfo.getNumber(),callLogInfo.getDate())
+//                    && callLogInfo.getDate() > callLogUtils.getLastDayToCount(callLogInfo.getDate())){
+//                callLogInfo.setSocialStatus(Boolean.TRUE);
+//            }
+//        }
+//    }
 
     private void initComponents(){
         if(getRuntimePermission())
@@ -66,9 +64,9 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(mViewPager);
         adapter = new CallLogViewPagerAdapter(getSupportFragmentManager());
         AllCallLogsFragment fragment1 = new AllCallLogsFragment();
-//        TimeLineFragment fragment2 = new TimeLineFragment();
+        SocialContactsFragment fragment2 = new SocialContactsFragment();
         adapter.addFragment1("All Calls",fragment1);
-//        adapter.addFragment2("TimeLine", fragment2);
+        adapter.addFragment2("TimeLine", fragment2);
         mViewPager.setAdapter(adapter);
 //        getDatesInWeek(1);
     }
@@ -93,6 +91,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
         public void addFragment1(String title, AllCallLogsFragment fragment){
+            mFragmentList.add(fragment);
+            mFragmentTitleList.add(title);
+        }
+
+        public void addFragment2(String title, SocialContactsFragment fragment){
             mFragmentList.add(fragment);
             mFragmentTitleList.add(title);
         }

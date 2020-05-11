@@ -1,4 +1,4 @@
-package com.example.socialization;
+package com.example.socialization.CallFeatures;
 
 public class CallLogInfo {
     private String name;

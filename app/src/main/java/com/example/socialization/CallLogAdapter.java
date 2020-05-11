@@ -1,16 +1,17 @@
 package com.example.socialization;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.provider.CallLog;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.socialization.CallFeatures.CallLogInfo;
 import com.example.socialization.utils.Utils;
 
 import java.text.SimpleDateFormat;
@@ -22,8 +23,6 @@ import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import static com.example.socialization.MainActivity.TAG;
-
 
 public class CallLogAdapter extends RecyclerView.Adapter<CallLogAdapter.CallLogViewHolder>{
 
@@ -34,7 +33,6 @@ public class CallLogAdapter extends RecyclerView.Adapter<CallLogAdapter.CallLogV
         this.context = context;
     }
 
-
     @NonNull
     @Override
     public CallLogViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -43,9 +41,10 @@ public class CallLogAdapter extends RecyclerView.Adapter<CallLogAdapter.CallLogV
         return new CallLogViewHolder(view);
     }
 
+    @SuppressLint("ResourceAsColor")
     @Override
     public void onBindViewHolder(@NonNull CallLogViewHolder holder, int position) {
-        Log.d(TAG, "onBindViewHolder: ");
+//        Log.d(TAG, "onBindViewHolder: ");
         switch(Integer.parseInt(callLogInfoArrayList.get(position).getCallType()))
         {
             case CallLog.Calls.OUTGOING_TYPE:
@@ -64,26 +63,33 @@ public class CallLogAdapter extends RecyclerView.Adapter<CallLogAdapter.CallLogV
                 DrawableCompat.setTint(holder.imageView.getDrawable(), ContextCompat.getColor(context, R.color.red));
                 break;
         }
-
+        holder.textViewName.setTextColor(R.color.blue);
         if(TextUtils.isEmpty(callLogInfoArrayList.get(position).getName())) {
             holder.textViewName.setText(callLogInfoArrayList.get(position).getNumber());
-            StatisticsFragment statisticsFragment = StatisticsFragment.getInstance(context);
-            if(callLogInfoArrayList.get(position).getSocialStatus())
+//            StatisticsFragment statisticsFragment = StatisticsFragment.getInstance(context);
+//            if(statisticsFragment.getSocial(callLogInfoArrayList.get(position).getNumber(), callLogInfoArrayList.get(position).getDate()))
+            if(callLogInfoArrayList.get(position).getSocialStatus()) {
                 holder.textViewName.setTextColor(Color.RED);
-
+                //Log.d(TAG, "onBindViewHolder: "+ callLogInfoArrayList.get(position).getName() + " " + callLogInfoArrayList.get(position).getSocialStatus() + " " + position);
+            }
         }
         else {
             holder.textViewName.setText(callLogInfoArrayList.get(position).getName());
-            StatisticsFragment statisticsFragment = StatisticsFragment.getInstance(context);
-            if(callLogInfoArrayList.get(position).getSocialStatus())
+//            StatisticsFragment statisticsFragment = StatisticsFragment.getInstance(context);
+//            if(statisticsFragment.getSocial(callLogInfoArrayList.get(position).getNumber(), callLogInfoArrayList.get(position).getDate()))
+            if(callLogInfoArrayList.get(position).getSocialStatus()){
                 holder.textViewName.setTextColor(Color.RED);
+                //Log.d(TAG, "onBindViewHolder: "+ callLogInfoArrayList.get(position).getName() + " " + callLogInfoArrayList.get(position).getSocialStatus() + " " + position);
+            }
 
         }
+        //Log.d(TAG, "onBindViewHolder: "+ callLogInfoArrayList.get(position).getName() + " " + callLogInfoArrayList.get(position).getSocialStatus() + " " + position);
         holder.textViewCallDuration.setText(Utils.formatSeconds(callLogInfoArrayList.get(position).getDuration()));
         Date dateObj = new Date(callLogInfoArrayList.get(position).getDate());
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy   hh:mm a");
         holder.textViewCallNumber.setText(callLogInfoArrayList.get(position).getNumber());
         holder.textViewCallDate.setText(formatter.format(dateObj));
+        holder.textViewPosition.setText(String.valueOf(position));
     }
 
     public void addCallLog(CallLogInfo callLogInfo){
@@ -107,7 +113,9 @@ public class CallLogAdapter extends RecyclerView.Adapter<CallLogAdapter.CallLogV
         TextView textViewCallDate;
         TextView textViewName;
         TextView textViewCallNumber;
+        TextView textViewPosition;
 
+        @SuppressLint("ResourceAsColor")
         public CallLogViewHolder(View view) {
             super(view.getRootView());
             imageView = view.findViewById(R.id.imageViewProfile);
@@ -115,6 +123,7 @@ public class CallLogAdapter extends RecyclerView.Adapter<CallLogAdapter.CallLogV
             textViewCallDuration = view.findViewById(R.id.textViewCallDuration);
             textViewCallNumber = view.findViewById(R.id.textViewCallNumber);
             textViewName = view.findViewById(R.id.textViewName);
+            textViewPosition = view.findViewById(R.id.textViewPosition);
         }
     }
 }

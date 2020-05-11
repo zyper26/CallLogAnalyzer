@@ -1,19 +1,6 @@
 package com.example.socialization.DataBaseSQL;
 
 
-/**
- *   ID INTEGER PRIMARY KEY AUTOINCREMENT,
- *   DAY INTEGER,
- *   HOUR INTEGER,
- *   LATITUDE REAL,
- *   LONGITUDE REAL,
- *   CALL_TYPE INTEGER,
- *   CONTACT_NAME TEXT,
- *   CONTACT_PHONE TEXT,
- *   DURATION INTEGER,
- *   APP_PACKAGE TEXT;
- */
-
 public class Features {
     private long date;
     private int callType;
