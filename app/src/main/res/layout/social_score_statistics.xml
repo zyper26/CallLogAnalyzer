@@ -18,13 +18,6 @@
         android:layout_marginTop="20dp"
         >
 
-        <ImageView
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:src="@drawable/ic_missed"
-            android:layout_margin="15dp"
-            />
-
         <LinearLayout
             android:layout_gravity="center_vertical"
             android:gravity="center_vertical"
@@ -54,18 +47,26 @@
                 android:textStyle="bold"
                 />
 
+            <TextView
+                android:text="Distinct Contacts"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textViewDistinctContacts"
+                android:textSize="15sp"
+                android:textColor="@color/colorPrimary"
+                />
+
         </LinearLayout>
 
     </LinearLayout>
 
-
     <TextView
-        android:text="VOICE CALLS"
+        android:text="INDIVIDUAL VOICE CALLS"
         android:textSize="20sp"
         android:textStyle="bold"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/textViewVoiceCalls"
+        android:id="@+id/textViewIndividualVoiceCalls"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/layoutHeader"
         android:layout_marginTop="25dp"
@@ -78,25 +79,25 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewVoiceCalls"
+        app:layout_constraintTop_toBottomOf="@+id/textViewIndividualVoiceCalls"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:id="@+id/separateViewVoiceCalls"
+        android:id="@+id/separateViewIndividualVoiceCalls"
         />
 
     <LinearLayout
-        android:id="@+id/layoutVoiceCalls"
+        android:id="@+id/layoutIndividualVoiceCalls"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/separateViewVoiceCalls"
+        app:layout_constraintTop_toBottomOf="@+id/separateViewIndividualVoiceCalls"
         >
 
         <LinearLayout
-            android:id="@+id/layoutIncomingCalls"
+            android:id="@+id/layoutIndividualIncomingCalls"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -125,7 +126,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|center_horizontal"
-                android:id="@+id/textViewCallCountIncoming"
+                android:id="@+id/textViewIndividualCallCountIncoming"
                 android:textSize="17sp"
                 android:layout_weight="0.8"
                 />
@@ -135,14 +136,14 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|center_horizontal"
-                android:id="@+id/textViewCallDurationsIncoming"
+                android:id="@+id/textViewIndividualCallDurationsIncoming"
                 android:textSize="17sp"
                 android:layout_weight="1"
                 />
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/layoutOutgoingCalls"
+            android:id="@+id/layoutIndividualOutgoingCalls"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -170,7 +171,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|center_horizontal"
-                android:id="@+id/textViewCallCountOutgoing"
+                android:id="@+id/textViewIndividualCallCountOutgoing"
                 android:textSize="17sp"
                 android:layout_weight="0.8"
                 />
@@ -180,14 +181,14 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|center_horizontal"
-                android:id="@+id/textViewCallDurationsOutgoing"
+                android:id="@+id/textViewIndividualCallDurationsOutgoing"
                 android:layout_weight="1"
                 android:textSize="17sp"
                 />
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/layoutAllCalls"
+            android:id="@+id/layoutIndividualAllCalls"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -217,7 +218,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|center_horizontal"
-                android:id="@+id/textViewCallCountTotal"
+                android:id="@+id/textViewIndividualCallCountTotal"
                 android:layout_weight="0.8"
                 android:textSize="17sp"
                 />
@@ -227,7 +228,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|center_horizontal"
-                android:id="@+id/textViewCallDurationsTotal"
+                android:id="@+id/textViewIndividualCallDurationsTotal"
                 android:layout_weight="1"
                 android:textSize="17sp"
                 />
@@ -235,4 +236,353 @@
 
     </LinearLayout>
 
+    <TextView
+        android:text="GLOBAL VOICE CALLS"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textViewGlobalVoiceCalls"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layoutIndividualVoiceCalls"
+        android:layout_marginTop="25dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"/>
+
+    <View
+        android:background="@color/colorPrimaryDark"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewGlobalVoiceCalls"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:id="@+id/separateViewGlobalVoiceCalls"
+        />
+
+
+    <LinearLayout
+        android:id="@+id/layoutVoiceCalls"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/separateViewGlobalVoiceCalls"
+        >
+
+        <LinearLayout
+            android:id="@+id/layoutGlobalIncomingCalls"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            >
+
+            <ImageView
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:src="@drawable/ic_missed"
+                android:tint="@color/blue"
+                android:padding="7dp"
+                android:layout_weight="0.2"
+                />
+
+            <TextView
+                android:text="Incoming"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textSize="17sp"
+                android:layout_weight="1"/>
+
+            <TextView
+                android:text="Call Count"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:id="@+id/textViewGlobalCallCountIncoming"
+                android:textSize="17sp"
+                android:layout_weight="0.8"
+                />
+
+            <TextView
+                android:text="Call Durations"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:id="@+id/textViewGlobalCallDurationsIncoming"
+                android:textSize="17sp"
+                android:layout_weight="1"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layoutGlobalOutgoingCalls"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp">
+
+            <ImageView
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:src="@drawable/ic_outgoing"
+                android:tint="@color/green"
+                android:padding="7dp"
+                android:layout_weight="0.2"
+                />
+
+            <TextView
+                android:text="Outgoing"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textSize="17sp"
+                android:layout_weight="1"/>
+
+            <TextView
+                android:text="Call Count"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:id="@+id/textViewGlobalCallCountOutgoing"
+                android:textSize="17sp"
+                android:layout_weight="0.8"
+                />
+
+            <TextView
+                android:text="Call Durations"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:id="@+id/textViewGlobalCallDurationsOutgoing"
+                android:layout_weight="1"
+                android:textSize="17sp"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layoutGlobalAllCalls"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp">
+
+            <ImageView
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:src="@drawable/ic_missed"
+                android:tint="@color/red"
+                android:padding="7dp"
+                android:layout_weight="0.2"
+                android:visibility="invisible"
+                />
+
+            <TextView
+                android:text="Total"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:textSize="17sp"
+                />
+
+            <TextView
+                android:text="Call Count"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:id="@+id/textViewGlobalCallCountTotal"
+                android:layout_weight="0.8"
+                android:textSize="17sp"
+                />
+
+            <TextView
+                android:text="Call Durations"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:id="@+id/textViewGlobalCallDurationsTotal"
+                android:layout_weight="1"
+                android:textSize="17sp"
+                />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:text="SOCIALIZING SCORE"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textViewSocializingScore"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layoutVoiceCalls"
+        android:layout_marginTop="25dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"/>
+
+    <View
+        android:background="@color/colorPrimaryDark"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewSocializingScore"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:id="@+id/separateViewSocializingScore"
+        />
+
+    <LinearLayout
+        android:id="@+id/layoutSocializingCalls"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/separateViewSocializingScore"
+        >
+
+        <LinearLayout
+            android:id="@+id/layoutGlobalScore1"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            tools:ignore="MissingConstraints">
+
+            <TextView
+                android:text="GlobalScore1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textSize="17sp"
+                android:layout_weight="1"
+                android:layout_marginLeft="15sp"/>
+
+            <TextView
+                android:text="Call Count"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:id="@+id/textViewGlobalScore1CallCount"
+                android:textSize="17sp"
+                android:layout_weight="0.8"
+                />
+
+            <TextView
+                android:text="Call Durations"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:id="@+id/textViewGlobalScore1CallDurations"
+                android:textSize="17sp"
+                android:layout_weight="1"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layoutIndividualScore1"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            tools:ignore="MissingConstraints">
+
+            <TextView
+                android:text="IndividualScore1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textSize="17sp"
+                android:layout_weight="1"
+                android:layout_marginLeft="15sp"/>
+
+            <TextView
+                android:text="Call Count"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:id="@+id/textViewIndividualScore1CallCount"
+                android:textSize="17sp"
+                android:layout_weight="0.8"
+                />
+
+            <TextView
+                android:text="Call Durations"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:id="@+id/textViewIndividualScore1CallCountDurations"
+                android:layout_weight="1"
+                android:textSize="17sp"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layoutGlobalScore3"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            tools:ignore="MissingConstraints">
+
+            <TextView
+                android:text="GlobalScore3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:textSize="17sp"
+                android:layout_marginLeft="15sp"
+                />
+
+            <TextView
+                android:text="Score"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:id="@+id/textViewGlobalScore3CallCount"
+                android:layout_weight="0.8"
+                android:textSize="17sp"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layoutIndividualScore3"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            tools:ignore="MissingConstraints">
+
+            <TextView
+                android:text="IndividualScore3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textSize="17sp"
+                android:layout_weight="1"
+                android:layout_marginLeft="15sp"/>
+
+            <TextView
+                android:text="Score"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:id="@+id/textViewIndividualScore3CallCount"
+                android:textSize="17sp"
+                android:layout_weight="0.8"
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

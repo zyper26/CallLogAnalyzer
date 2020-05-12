@@ -28,17 +28,18 @@ public class SocialScore {
         long result[] = new long[2];
         CallLogUtils callLogUtils = CallLogUtils.getInstance(context);
         long LastDayToCount = callLogUtils.getLastDayToCount(start_day);
+        start_day = callLogUtils.getStartOfDay(start_day);
         ArrayList<CallLogInfo> incomingCalls = callLogUtils.getIncomingCalls();
         ArrayList<CallLogInfo> outgoingCalls = callLogUtils.getOutgoingCalls();
         long totalCalls = 0,totalDuration = 0;
         for(CallLogInfo callLogInfo: incomingCalls) {
-            if (callLogInfo.getDate() > LastDayToCount && callLogInfo.getDate() < start_day){
+            if (callLogInfo.getDate() >= LastDayToCount && callLogInfo.getDate() <= start_day){
                 totalCalls++;
                 totalDuration += callLogInfo.getDuration();
             }
         }
         for(CallLogInfo callLogInfo: outgoingCalls){
-            if(callLogInfo.getDuration()>0 && callLogInfo.getDate()>LastDayToCount && callLogInfo.getDate() < start_day) {
+            if(callLogInfo.getDuration()>0 && callLogInfo.getDate()>=LastDayToCount && callLogInfo.getDate() <= start_day) {
                 totalCalls++;
                 totalDuration += callLogInfo.getDuration();
             }
@@ -97,23 +98,24 @@ public class SocialScore {
         long[] result = new long[2];
         CallLogUtils callLogUtils = CallLogUtils.getInstance(context);
         long LastDayToCount = callLogUtils.getLastDayToCount(start_day);
+        start_day = callLogUtils.getStartOfDay(start_day);
         ArrayList<CallLogInfo> incomingCalls = callLogUtils.getIncomingCalls();
         ArrayList<CallLogInfo> outgoingCalls = callLogUtils.getOutgoingCalls();
         long totalCalls = 0;
         long totalDuration = 0;
         for(CallLogInfo callLogInfo: incomingCalls){
-            if (callLogInfo.getDate() > LastDayToCount &&
+            if (callLogInfo.getDate() >= LastDayToCount &&
                     callLogInfo.getNumber().equals(number) &&
-                    callLogInfo.getDate() < start_day){
+                    callLogInfo.getDate() <= start_day){
                     totalCalls++;
                     totalDuration += callLogInfo.getDuration();
                 }
         }
         for(CallLogInfo callLogInfo: outgoingCalls){
-            if (callLogInfo.getDate() > LastDayToCount &&
+            if (callLogInfo.getDate() >= LastDayToCount &&
                     callLogInfo.getNumber().equals(number) &&
                     callLogInfo.getDuration() > 0 &&
-                    callLogInfo.getDate() < start_day){
+                    callLogInfo.getDate() <= start_day){
                     totalCalls++;
                     totalDuration += callLogInfo.getDuration();
                 }
@@ -224,6 +226,7 @@ public class SocialScore {
         long[][] result1 = getScore1(number, start_day);
         float[] result3 = getScore3(number, start_day);
 //        Boolean score1 = (result[0][0]*result[0][1])> (result[1][1]/(float)result[1][0]) *(result[1][0]*result[1][1]);
+        long threshold_score1 = getTotalIndividualContacts(start_day);
         Boolean score1 = (result1[0][0]*result1[0][1])> 0.1 *(result1[1][0]*result1[1][1]);
         Boolean score3 = result3[0] > 0.1 * (result3[1]);
         Boolean score5 = (result1[0][0] > 0.3 * result1[1][0]);
@@ -232,4 +235,24 @@ public class SocialScore {
             return true;
         else return false;
     }
+
+    private long getTotalIndividualContacts(long start_day) {
+        CallLogUtils callLogUtils = CallLogUtils.getInstance(context);
+        long LastDayToCount = callLogUtils.getLastDayToCount(start_day);
+        ArrayList<CallLogInfo> incomingCalls = callLogUtils.getIncomingCalls();
+        ArrayList<CallLogInfo> outgoingCalls = callLogUtils.getOutgoingCalls();
+        long totalCalls = 0;
+        for(CallLogInfo callLogInfo: incomingCalls) {
+            if (callLogInfo.getDate() >= LastDayToCount && callLogInfo.getDate() < start_day){
+                totalCalls++;
+            }
+        }
+        for(CallLogInfo callLogInfo: outgoingCalls){
+            if(callLogInfo.getDuration()>0 && callLogInfo.getDate()>=LastDayToCount && callLogInfo.getDate() < start_day) {
+                totalCalls++;
+            }
+        }
+        return totalCalls;
+    }
+
 }

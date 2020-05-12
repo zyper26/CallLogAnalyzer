@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.socialization.CallFeatures.CallLogInfo;
 import com.example.socialization.utils.Utils;
@@ -139,10 +138,12 @@ public class CallLogAdapter extends RecyclerView.Adapter<CallLogAdapter.CallLogV
 
         @Override
         public void onClick(View view) {
-            Toast.makeText(context, "clicked", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(context, "clicked", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(context, SocialScoreStatistics.class);
             intent.putExtra("number",callLogInfoArrayList.get(getAdapterPosition()).getNumber());
-            intent.putExtra("name",callLogInfoArrayList.get(getAdapterPosition()).getNumber());
+            intent.putExtra("name",callLogInfoArrayList.get(getAdapterPosition()).getName());
+            intent.putExtra("date",callLogInfoArrayList.get(getAdapterPosition()).getDate());
+            intent.putExtra("duration",callLogInfoArrayList.get(getAdapterPosition()).getDuration());
             context.startActivity(intent);
         }
     }

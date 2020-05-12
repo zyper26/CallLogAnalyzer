@@ -2,61 +2,207 @@ package com.example.socialization;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.socialization.CallFeatures.CallLogInfo;
 import com.example.socialization.utils.CallLogUtils;
 import com.example.socialization.utils.Utils;
+
+import java.time.Instant;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class SocialScoreStatistics extends AppCompatActivity {
 
-    TextView textViewCallCountTotal,textViewCallDurationsTotal,textViewCallCountIncoming,textViewCallDurationsIncoming,
-    textViewCallDurationsOutgoing,textViewCallCountOutgoing,textViewNumber,textViewName;
+    private static final String TAG = "SocialScoreStatistics";
+    TextView textViewIndividualCallCountTotal,textViewIndividualCallDurationsTotal,
+            textViewIndividualCallCountIncoming,textViewIndividualCallDurationsIncoming,
+            textViewIndividualCallDurationsOutgoing,textViewIndividualCallCountOutgoing,
+            textViewGlobalCallCountTotal,textViewGlobalCallDurationsTotal,
+            textViewGlobalCallCountIncoming,textViewGlobalCallDurationsIncoming,
+            textViewGlobalCallDurationsOutgoing,textViewGlobalCallCountOutgoing,
+            textViewGlobalScore1CallCount,textViewGlobalScore1CallDurations,
+            textViewIndividualScore1CallCount,textViewIndividualScore1CallDurations,
+            textViewGlobalScore3CallCount,
+            textViewIndividualScore3CallCount,
+            textViewNumber,textViewName,textViewDistinctContacts;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.social_score_statistics);
-        textViewCallCountTotal = findViewById(R.id.textViewCallCountTotal);
-        textViewCallDurationsTotal = findViewById(R.id.textViewCallDurationsTotal);
-        textViewCallCountIncoming = findViewById(R.id.textViewCallCountIncoming);
-        textViewCallDurationsIncoming = findViewById(R.id.textViewCallDurationsIncoming);
-        textViewCallDurationsOutgoing = findViewById(R.id.textViewCallDurationsOutgoing);
-        textViewCallCountOutgoing = findViewById(R.id.textViewCallCountOutgoing);
+        textViewIndividualCallCountTotal = findViewById(R.id.textViewIndividualCallCountTotal);
+        textViewIndividualCallDurationsTotal = findViewById(R.id.textViewIndividualCallDurationsTotal);
+        textViewIndividualCallCountIncoming = findViewById(R.id.textViewIndividualCallCountIncoming);
+        textViewIndividualCallDurationsIncoming = findViewById(R.id.textViewIndividualCallDurationsIncoming);
+        textViewIndividualCallDurationsOutgoing = findViewById(R.id.textViewIndividualCallDurationsOutgoing);
+        textViewIndividualCallCountOutgoing = findViewById(R.id.textViewIndividualCallCountOutgoing);
+        textViewGlobalCallCountTotal = findViewById(R.id.textViewGlobalCallCountTotal);
+        textViewGlobalCallDurationsTotal = findViewById(R.id.textViewGlobalCallDurationsTotal);
+        textViewGlobalCallCountIncoming = findViewById(R.id.textViewGlobalCallCountIncoming);
+        textViewGlobalCallDurationsIncoming = findViewById(R.id.textViewGlobalCallDurationsIncoming);
+        textViewGlobalCallDurationsOutgoing = findViewById(R.id.textViewGlobalCallDurationsOutgoing);
+        textViewGlobalCallCountOutgoing = findViewById(R.id.textViewGlobalCallCountOutgoing);
+        textViewGlobalScore1CallCount = findViewById(R.id.textViewGlobalScore1CallCount);
+        textViewGlobalScore1CallDurations = findViewById(R.id.textViewGlobalScore1CallDurations);
+        textViewIndividualScore1CallCount = findViewById(R.id.textViewIndividualScore1CallCount);
+        textViewIndividualScore1CallDurations = findViewById(R.id.textViewIndividualScore1CallDurations);
+        textViewGlobalScore3CallCount = findViewById(R.id.textViewGlobalScore3CallCount);
+        textViewIndividualScore3CallCount = findViewById(R.id.textViewIndividualScore3CallCount);
+
         textViewNumber = findViewById(R.id.textViewNumber);
         textViewName = findViewById(R.id.textViewName);
-        Toast.makeText(this, "clicked", Toast.LENGTH_SHORT).show();
+        textViewDistinctContacts = findViewById(R.id.textViewDistinctContacts);
+//        Toast.makeText(this, "clicked", Toast.LENGTH_SHORT).show();
         initValues();
     }
 
     private void initValues(){
         String number = getIntent().getStringExtra("number");
         String name = getIntent().getStringExtra("name");
+        long start_day = getIntent().getLongExtra("date",0);
+//        long duration= getIntent().getLongExtra("duration",0);
         if(number == null){
             finish();
             return;
         }
-
         CallLogUtils callLogUtils = CallLogUtils.getInstance(this);
-        long data[] = callLogUtils.getAllCallState(number);
-        textViewCallCountTotal.setText(data[0]+" calls");
-        textViewCallDurationsTotal.setText(Utils.formatSeconds(data[1]));
+        start_day = callLogUtils.getStartOfDay(start_day);
 
-        data = callLogUtils.getIncomingCallState(number);
-        textViewCallCountIncoming.setText(data[0]+" calls");
-        textViewCallDurationsIncoming.setText(Utils.formatSeconds(data[1]));
+//        ------------ Individual Scores ----------------
+        long LastDayToCount = callLogUtils.getLastDayToCount(start_day);
+        start_day = callLogUtils.getStartOfDay(start_day);
+        ArrayList<CallLogInfo> incomingCalls = callLogUtils.getIncomingCalls();
+        ArrayList<CallLogInfo> outgoingCalls = callLogUtils.getOutgoingCalls();
+        long totalCallsIncoming = 0, totalCallsOutgoing = 0;
+        long totalDurationIncoming = 0, totalDurationOutgoing=0;
+        for(CallLogInfo callLogInfo: incomingCalls){
+            if (callLogInfo.getDate() >= LastDayToCount &&
+                    callLogInfo.getNumber().equals(number) &&
+                    callLogInfo.getDate() <= start_day){
+                totalCallsIncoming++;
+                totalDurationIncoming += callLogInfo.getDuration();
+            }
+        }
+        for(CallLogInfo callLogInfo: outgoingCalls){
+            if (callLogInfo.getDate() >= LastDayToCount &&
+                    callLogInfo.getNumber().equals(number) &&
+                    callLogInfo.getDuration() > 0 &&
+                    callLogInfo.getDate() <= start_day){
+                totalCallsOutgoing++;
+                totalDurationOutgoing += callLogInfo.getDuration();
+            }
+        }
+        long totalCalls = totalCallsIncoming+totalCallsOutgoing;
+        long totalDurations = totalDurationIncoming+totalDurationOutgoing;
+//      ------------------------------------------------------
 
-        data = callLogUtils.getOutgoingCallState(number);
-        textViewCallCountOutgoing.setText(data[0]+" calls");
-        textViewCallDurationsOutgoing.setText(Utils.formatSeconds(data[1]));
+//        ---------------------Global Scores-----------------------
+        long AllCallsIncoming = 0, AllCallsOutgoing = 0;
+        long AllDurationIncoming = 0, AllDurationOutgoing=0;
+
+        for(CallLogInfo callLogInfo: incomingCalls) {
+            if (callLogInfo.getDate() >= LastDayToCount && callLogInfo.getDate() <= start_day){
+                AllCallsIncoming++;
+                AllDurationIncoming += callLogInfo.getDuration();
+            }
+        }
+        for(CallLogInfo callLogInfo: outgoingCalls){
+            if(callLogInfo.getDuration()>0 && callLogInfo.getDate()>=LastDayToCount && callLogInfo.getDate() <= start_day) {
+                AllCallsOutgoing++;
+                AllDurationOutgoing += callLogInfo.getDuration();
+            }
+        }
+
+        long AllCalls = AllCallsIncoming + AllCallsOutgoing;
+        long AllDurations = AllDurationIncoming + AllDurationOutgoing;
+//        ------------------------------------------------------------
+
+//        --------------------------Distinct Contacts ---------------------
+        HashMap<String, Long> distinctContactsMap = new HashMap<>();
+//        hm.put(100,"Amit");
+//        LastDayToCount = callLogUtils.getLastDayToCountTemp(start_day);
+        for(CallLogInfo callLogInfo: incomingCalls) {
+            if (callLogInfo.getDate() >= LastDayToCount && callLogInfo.getDate() <= start_day){
+                String key = callLogInfo.getNumber();
+                long duration = callLogInfo.getDuration();
+                if(distinctContactsMap.containsKey(key)){
+                    duration = duration + distinctContactsMap.get(key);
+                    distinctContactsMap.put(key,duration);
+                }
+                else{
+                    distinctContactsMap.put(key,duration);
+                }
+            }
+        }
+        for(CallLogInfo callLogInfo: outgoingCalls){
+            if(callLogInfo.getDuration()>0 && callLogInfo.getDate()>=LastDayToCount && callLogInfo.getDate() <= start_day) {
+                String key = callLogInfo.getNumber();
+                long duration = callLogInfo.getDuration();
+                if(distinctContactsMap.containsKey(key)){
+                    duration = duration + distinctContactsMap.get(key);
+                    distinctContactsMap.put(key,duration);
+                }
+                else{
+                    distinctContactsMap.put(key,duration);
+                }
+            }
+        }
+
+        Log.d(TAG, "distinctContacts: " + distinctContactsMap);
+
+
+//        --------------------------------------------------------------
+
+//       ------------------------- Assign Individual Values ------------------
+        textViewIndividualCallCountTotal.setText(String.valueOf(totalCalls));
+        textViewIndividualCallDurationsTotal.setText(Utils.formatSeconds(totalDurations));
+
+        textViewIndividualCallCountIncoming.setText(String.valueOf(totalCallsIncoming));
+        textViewIndividualCallDurationsIncoming.setText(Utils.formatSeconds(totalDurationIncoming));
+
+        textViewIndividualCallCountOutgoing.setText(String.valueOf(totalCallsOutgoing));
+        textViewIndividualCallDurationsOutgoing.setText(Utils.formatSeconds(totalDurationOutgoing));
+
+//       ----------------------------- Assign Global Values ---------------------
+        textViewGlobalCallCountTotal.setText(String.valueOf(AllCalls));
+        textViewGlobalCallDurationsTotal.setText(Utils.formatSeconds(AllDurations));
+
+        textViewGlobalCallCountIncoming.setText(String.valueOf(AllCallsIncoming));
+        textViewGlobalCallDurationsIncoming.setText(Utils.formatSeconds(AllDurationIncoming));
+
+        textViewGlobalCallCountOutgoing.setText(String.valueOf(AllCallsOutgoing));
+        textViewGlobalCallDurationsOutgoing.setText(Utils.formatSeconds(AllDurationOutgoing));
+
+//        ------------------------------Assign Scores---------------------------
+
+        SocialScore socialScore = SocialScore.getInstance(this);
+
+        long globalScore1[] = socialScore.getGlobalScore1(start_day);
+        long individualScore1[] = socialScore.getIndividualScore1(number,start_day);
+        float globalScore3 = socialScore.getGlobalScore3(start_day);
+        float individualScore3= socialScore.getIndividualScore3(number,start_day);
+
+        textViewGlobalScore1CallCount.setText(String.valueOf(globalScore1[0]));
+        textViewGlobalScore1CallDurations.setText(String.valueOf(globalScore1[1]));
+
+        textViewIndividualScore1CallCount.setText(String.valueOf(individualScore1[0]));
+        textViewIndividualScore1CallDurations.setText(String.valueOf(individualScore1[1]));
+
+        textViewGlobalScore3CallCount.setText(String.valueOf(globalScore3));
+
+        textViewIndividualScore3CallCount.setText(String.valueOf(individualScore3));
 
         textViewNumber.setText(number);
         textViewName.setText(TextUtils.isEmpty(name) ? number : name);
+        textViewDistinctContacts.setText(String.valueOf(distinctContactsMap.size()+ " Last Date Taken: "+ Instant.ofEpochMilli(LastDayToCount).atZone(ZoneId.systemDefault()).toLocalDateTime()));
     }
 
     @Override

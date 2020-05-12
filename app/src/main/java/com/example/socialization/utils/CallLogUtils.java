@@ -383,4 +383,22 @@ public class CallLogUtils {
         long startOfLastWeekMilli = startOfLastWeek.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
         return startOfLastWeekMilli;
     }
+
+    public long getStartOfDay(long start_day){
+        LocalDateTime input = Instant.ofEpochMilli(start_day).atZone(ZoneId.systemDefault()).toLocalDateTime();
+        input = input.toLocalDate().atStartOfDay();
+        LocalDateTime startOfDay = input;
+        return startOfDay.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+    }
+
+    public long getLastDayToCountTemp(long start_day) {
+        LocalDateTime input = Instant.ofEpochMilli(start_day).atZone(ZoneId.systemDefault()).toLocalDateTime();
+        DayOfWeek day = input.getDayOfWeek();
+        LocalDateTime endOfLastWeek = input.minusWeeks(1).with(day);
+        endOfLastWeek = endOfLastWeek.toLocalDate().atStartOfDay();
+        LocalDateTime startOfLastWeek = endOfLastWeek;
+        long startOfLastWeekMilli = startOfLastWeek.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        return startOfLastWeekMilli;
+    }
+
 }
