@@ -1,5 +1,10 @@
 package com.example.socialization.utils;
 
+import java.time.DayOfWeek;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+
 public class Utils {
     public static String formatSeconds(long timeInSeconds)
     {
@@ -28,5 +33,13 @@ public class Utils {
             formattedTime += seconds ;*/
 
         return formattedTime;
+    }
+
+    public static int getWeekend(long time){
+        LocalDateTime input = Instant.ofEpochMilli(time).atZone(ZoneId.systemDefault()).toLocalDateTime();
+        DayOfWeek dow = input.getDayOfWeek();
+        if(dow == DayOfWeek.SATURDAY || dow == DayOfWeek.SUNDAY)
+            return 1;
+        else return 0;
     }
 }

@@ -168,8 +168,13 @@ public class SocialScoreStatistics extends AppCompatActivity {
         textViewIndividualScore1CallDurations.setText(String.valueOf(HMIndividualUsersPerWeek));
 
         textViewGlobalScore3CallCount.setText(String.valueOf(TU));
-
         textViewIndividualScore3CallCount.setText(String.valueOf(IU));
+
+        float[] bias = Biases.getInstance(getApplicationContext()).getPercentageOfBiases(number,start_day);
+
+        textViewWeekDayBias.setText(String.valueOf(bias[0]));
+        textViewWeekEndBias.setText(String.valueOf(bias[1]));
+
 
 //        textViewNumber.setText(number);
 //        textViewName.setText(TextUtils.isEmpty(name) ? number : name);

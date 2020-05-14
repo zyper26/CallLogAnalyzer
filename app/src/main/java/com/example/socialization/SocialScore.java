@@ -270,14 +270,20 @@ public class SocialScore {
 //                score1 = Boolean.TRUE;
 
 //        Boolean score3 = result3[0] > 0.5 * result3[1];
-        Boolean score5 = (result1[0][0] > 0.3 * result1[1][0]);
 //        Boolean score6 = (HMIndividualUsersPerWeek > HMTotalUsersPerWeek/distinctContacts);
 //        Log.d(TAG, "getSocial: "+number+ " score: " +score1 + " " + score3 + " " + score5);
 //        Boolean score7 = (HMIndividualUsers>HMTotalUsers/distinctContacts);
+
+        float[] biases_value = Biases.getInstance(context).getPercentageOfBiases(number,start_day);
+
+
+        Boolean score5 = (result1[0][0] > 0.3 * result1[1][0]);
         Boolean score8 = (HMIndividualUsersPerWeek>HMTotalUsers/distinctContacts);
         if( score5 || score8)
             return true;
         else return false;
     }
+
+
 
 }

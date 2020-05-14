@@ -289,9 +289,7 @@ public class CallLogUtils {
                 minDate = Math.min(callLogInfo.getDate(),minDate);
             }
         }
-        numberOfWeeks = +TimeUnit.MILLISECONDS.toDays(start_day-minDate)/7;
-//        Log.d(TAG, "getTotalNumberOfWeeks1: " +TimeUnit.MILLISECONDS.toDays(start_day-minDate)/7);
-//        Log.d(TAG, "getTotalNumberOfWeeks: "+numberOfWeeks + " " + Instant.ofEpochSecond(minDate).until(Instant.ofEpochSecond(start_day), ChronoUnit.DAYS));
+        numberOfWeeks = TimeUnit.MILLISECONDS.toDays(start_day-minDate)/7;
         return Math.min(numberOfWeeks,8);
     }
 
@@ -389,7 +387,7 @@ public class CallLogUtils {
         LocalDateTime input = Instant.ofEpochMilli(start_day).atZone(ZoneId.systemDefault()).toLocalDateTime();
 //        Log.d(TAG, "getLastDayToCount1: " + input);
         DayOfWeek day = input.getDayOfWeek();
-        LocalDateTime endOfLastWeek = input.minusWeeks(8).with(day);
+        LocalDateTime endOfLastWeek = input.minusWeeks(getTotalNumberOfWeeks(start_day)).with(day);
         endOfLastWeek = endOfLastWeek.toLocalDate().atStartOfDay();
 //        Log.d(TAG, "getLastDayToCount2: " + endOfLastWeek);
         LocalDateTime startOfLastWeek = endOfLastWeek;
