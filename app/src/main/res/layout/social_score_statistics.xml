@@ -457,14 +457,23 @@
             android:layout_margin="5dp"
             tools:ignore="MissingConstraints">
 
+            <ImageView
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:src="@drawable/ic_missed"
+                android:tint="@color/red"
+                android:padding="7dp"
+                android:layout_weight="0.2"
+                android:visibility="invisible"
+                />
+
             <TextView
-                android:text="GlobalScore1"
+                android:text="AllDurationPW"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:textSize="17sp"
-                android:layout_weight="1"
-                android:layout_marginLeft="15sp"/>
+                android:layout_weight="1"/>
 
             <TextView
                 android:text="Call Count"
@@ -474,6 +483,7 @@
                 android:id="@+id/textViewGlobalScore1CallCount"
                 android:textSize="17sp"
                 android:layout_weight="0.8"
+                android:visibility="invisible"
                 />
 
             <TextView
@@ -495,14 +505,23 @@
             android:layout_margin="5dp"
             tools:ignore="MissingConstraints">
 
+            <ImageView
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:src="@drawable/ic_missed"
+                android:tint="@color/red"
+                android:padding="7dp"
+                android:layout_weight="0.2"
+                android:visibility="invisible"
+                />
+
             <TextView
-                android:text="IndividualScore1"
+                android:text="DurationPW"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:textSize="17sp"
-                android:layout_weight="1"
-                android:layout_marginLeft="15sp"/>
+                android:layout_weight="1"/>
 
             <TextView
                 android:text="Call Count"
@@ -512,6 +531,7 @@
                 android:id="@+id/textViewIndividualScore1CallCount"
                 android:textSize="17sp"
                 android:layout_weight="0.8"
+                android:visibility="invisible"
                 />
 
             <TextView
@@ -519,7 +539,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|center_horizontal"
-                android:id="@+id/textViewIndividualScore1CallCountDurations"
+                android:id="@+id/textViewIndividualScore1CallDurations"
                 android:layout_weight="1"
                 android:textSize="17sp"
                 />
@@ -533,14 +553,33 @@
             android:layout_margin="5dp"
             tools:ignore="MissingConstraints">
 
+            <ImageView
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:src="@drawable/ic_missed"
+                android:tint="@color/red"
+                android:padding="7dp"
+                android:layout_weight="0.2"
+                android:visibility="invisible"
+                />
+
             <TextView
-                android:text="GlobalScore3"
+                android:text="AllDuration"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_weight="1"
                 android:textSize="17sp"
-                android:layout_marginLeft="15sp"
+                android:layout_weight="1"/>
+
+            <TextView
+                android:text="Score"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:id="@+id/textViewGlobalScore3CallDurations"
+                android:layout_weight="0.8"
+                android:textSize="17sp"
+                android:visibility="invisible"
                 />
 
             <TextView
@@ -563,14 +602,34 @@
             android:layout_margin="5dp"
             tools:ignore="MissingConstraints">
 
+            <ImageView
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:src="@drawable/ic_missed"
+                android:tint="@color/red"
+                android:padding="7dp"
+                android:layout_weight="0.2"
+                android:visibility="invisible"
+                />
+
             <TextView
-                android:text="IndividualScore3"
+                android:text="ContactDuration"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:textSize="17sp"
-                android:layout_weight="1"
-                android:layout_marginLeft="15sp"/>
+                android:layout_weight="1"/>
+
+            <TextView
+                android:text="Score"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:id="@+id/textViewIndividualScore3CallDurations"
+                android:layout_weight="0.8"
+                android:textSize="17sp"
+                android:visibility="invisible"
+                />
 
             <TextView
                 android:text="Score"

@@ -74,7 +74,8 @@ public class SocialScore {
         float score = 0;
         for (int i=1; i<=numberOfWeeks; i++){
             ND = callLogUtils.getNumberAndDuration(i,start_day);
-            score += (float)(10/N)*((float)ND[1]*(float)ND[0]);
+            if(ND[0]!=0)
+                score += (float)(10/N)*((float)ND[1]/(float)ND[0]);
             N-=1;
         }
         return score;
@@ -157,11 +158,42 @@ public class SocialScore {
         float score = 0;
         for (int i=1; i<=numberOfWeeks; i++){
                 ND = callLogUtils.getNumberAndDurationOfNumber(number, i, start_day);
-                score += (float)(10/N)*((float)ND[1]*(float)ND[0]);
+                if(ND[0]!=0)
+                    score += (float)(10/N)*((float)ND[1]/(float)ND[0]);
                 N-=1;
         }
         return score;
     }
+
+    public float getHMGlobalPerWeek(long start_day){                                                                 //Per Week score of score1
+        CallLogUtils callLogUtils = CallLogUtils.getInstance(context);
+        long numberOfWeeks = callLogUtils.getTotalNumberOfWeeks(start_day);
+        long N = 1;
+        float ND;
+        float score = 0;
+        for (int i=1; i<=numberOfWeeks; i++){
+            ND = callLogUtils.getHMGlobalContactsPerWeek(i,start_day);
+            score += (float)(10/N)*(ND);
+            N+=1;
+        }
+        return score;
+    }
+
+    public float getHMIndividualPerWeek(String number, long start_day){
+        CallLogUtils callLogUtils = CallLogUtils.getInstance(context);
+        long numberOfWeeks = callLogUtils.getTotalNumberOfWeeks(start_day);
+        long N = 1;
+//        Log.d(TAG, "getIndividualScore3: "+numberOfWeeks);
+        float ND;
+        float score = 0;
+        for (int i=1; i<=numberOfWeeks; i++){
+            ND = callLogUtils.getHMIndividualContactsPerWeek(number, i, start_day);
+            score += (float)(10/N)*(ND);
+            N+=1;
+        }
+        return score;
+    }
+
 
 //    public float getIndividualScore4(String number){
 //        CallLogUtils callLogUtils = CallLogUtils.getInstance(context);
@@ -224,35 +256,28 @@ public class SocialScore {
 
     public Boolean getSocial(String number, long start_day){
         long[][] result1 = getScore1(number, start_day);
-        float[] result3 = getScore3(number, start_day);
+        float HMTotalUsers = CallLogUtils.getInstance(context).getHMGlobalContacts(start_day);
+        float HMIndividualUsers = CallLogUtils.getInstance(context).getHMIndividualContacts(number,start_day);
+        long distinctContacts = CallLogUtils.getInstance(context).getTotalDistinctContacts(start_day);
+
+        float HMTotalUsersPerWeek = getHMGlobalPerWeek(start_day);
+        float HMIndividualUsersPerWeek =  getHMIndividualPerWeek(number,start_day);
 //        Boolean score1 = (result[0][0]*result[0][1])> (result[1][1]/(float)result[1][0]) *(result[1][0]*result[1][1]);
-        long threshold_score1 = getTotalIndividualContacts(start_day);
-        Boolean score1 = (result1[0][0]*result1[0][1])> 0.1 *(result1[1][0]*result1[1][1]);
-        Boolean score3 = result3[0] > 0.1 * (result3[1]);
+//        Boolean score1 = Boolean.FALSE;
+//        if(result1[0][0]==0||result1[1][0]==0)
+//            score1 = Boolean.FALSE;
+//        else if((result1[0][1])/(result1[0][0]) > (result1[1][1]/result1[1][0]))
+//                score1 = Boolean.TRUE;
+
+//        Boolean score3 = result3[0] > 0.5 * result3[1];
         Boolean score5 = (result1[0][0] > 0.3 * result1[1][0]);
+//        Boolean score6 = (HMIndividualUsersPerWeek > HMTotalUsersPerWeek/distinctContacts);
 //        Log.d(TAG, "getSocial: "+number+ " score: " +score1 + " " + score3 + " " + score5);
-        if( score1 || score3 || score5 )
+//        Boolean score7 = (HMIndividualUsers>HMTotalUsers/distinctContacts);
+        Boolean score8 = (HMIndividualUsersPerWeek>HMTotalUsers/distinctContacts);
+        if( score5 || score8)
             return true;
         else return false;
-    }
-
-    private long getTotalIndividualContacts(long start_day) {
-        CallLogUtils callLogUtils = CallLogUtils.getInstance(context);
-        long LastDayToCount = callLogUtils.getLastDayToCount(start_day);
-        ArrayList<CallLogInfo> incomingCalls = callLogUtils.getIncomingCalls();
-        ArrayList<CallLogInfo> outgoingCalls = callLogUtils.getOutgoingCalls();
-        long totalCalls = 0;
-        for(CallLogInfo callLogInfo: incomingCalls) {
-            if (callLogInfo.getDate() >= LastDayToCount && callLogInfo.getDate() < start_day){
-                totalCalls++;
-            }
-        }
-        for(CallLogInfo callLogInfo: outgoingCalls){
-            if(callLogInfo.getDuration()>0 && callLogInfo.getDate()>=LastDayToCount && callLogInfo.getDate() < start_day) {
-                totalCalls++;
-            }
-        }
-        return totalCalls;
     }
 
 }

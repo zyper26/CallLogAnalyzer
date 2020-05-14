@@ -1,8 +1,6 @@
 package com.example.socialization;
 
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -14,7 +12,6 @@ import com.example.socialization.utils.Utils;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -126,38 +123,9 @@ public class SocialScoreStatistics extends AppCompatActivity {
 //        ------------------------------------------------------------
 
 //        --------------------------Distinct Contacts ---------------------
-        HashMap<String, Long> distinctContactsMap = new HashMap<>();
-//        hm.put(100,"Amit");
-//        LastDayToCount = callLogUtils.getLastDayToCountTemp(start_day);
-        for(CallLogInfo callLogInfo: incomingCalls) {
-            if (callLogInfo.getDate() >= LastDayToCount && callLogInfo.getDate() <= start_day){
-                String key = callLogInfo.getNumber();
-                long duration = callLogInfo.getDuration();
-                if(distinctContactsMap.containsKey(key)){
-                    duration = duration + distinctContactsMap.get(key);
-                    distinctContactsMap.put(key,duration);
-                }
-                else{
-                    distinctContactsMap.put(key,duration);
-                }
-            }
-        }
-        for(CallLogInfo callLogInfo: outgoingCalls){
-            if(callLogInfo.getDuration()>0 && callLogInfo.getDate()>=LastDayToCount && callLogInfo.getDate() <= start_day) {
-                String key = callLogInfo.getNumber();
-                long duration = callLogInfo.getDuration();
-                if(distinctContactsMap.containsKey(key)){
-                    duration = duration + distinctContactsMap.get(key);
-                    distinctContactsMap.put(key,duration);
-                }
-                else{
-                    distinctContactsMap.put(key,duration);
-                }
-            }
-        }
-
-        Log.d(TAG, "distinctContacts: " + distinctContactsMap);
-
+        long distinctContacts = callLogUtils.getTotalDistinctContacts(start_day);
+        float TU = callLogUtils.getHMGlobalContacts(start_day);
+        float IU = callLogUtils.getHMIndividualContacts(number,start_day);
 
 //        --------------------------------------------------------------
 
@@ -187,22 +155,29 @@ public class SocialScoreStatistics extends AppCompatActivity {
 
         long globalScore1[] = socialScore.getGlobalScore1(start_day);
         long individualScore1[] = socialScore.getIndividualScore1(number,start_day);
-        float globalScore3 = socialScore.getGlobalScore3(start_day);
-        float individualScore3= socialScore.getIndividualScore3(number,start_day);
+//        float globalScore3 = socialScore.getGlobalScore3(start_day);
+//        float individualScore3= socialScore.getIndividualScore3(number,start_day);
+
+        float HMTotalUsersPerWeek = socialScore.getHMGlobalPerWeek(start_day);
+        float HMIndividualUsersPerWeek =  socialScore.getHMIndividualPerWeek(number,start_day);
 
         textViewGlobalScore1CallCount.setText(String.valueOf(globalScore1[0]));
-        textViewGlobalScore1CallDurations.setText(String.valueOf(globalScore1[1]));
+        textViewGlobalScore1CallDurations.setText(String.valueOf(HMTotalUsersPerWeek));
 
         textViewIndividualScore1CallCount.setText(String.valueOf(individualScore1[0]));
-        textViewIndividualScore1CallDurations.setText(String.valueOf(individualScore1[1]));
+        textViewIndividualScore1CallDurations.setText(String.valueOf(HMIndividualUsersPerWeek));
 
-        textViewGlobalScore3CallCount.setText(String.valueOf(globalScore3));
+        textViewGlobalScore3CallCount.setText(String.valueOf(TU));
 
-        textViewIndividualScore3CallCount.setText(String.valueOf(individualScore3));
+        textViewIndividualScore3CallCount.setText(String.valueOf(IU));
 
-        textViewNumber.setText(number);
-        textViewName.setText(TextUtils.isEmpty(name) ? number : name);
-        textViewDistinctContacts.setText(String.valueOf(distinctContactsMap.size()+ " Last Date Taken: "+ Instant.ofEpochMilli(LastDayToCount).atZone(ZoneId.systemDefault()).toLocalDateTime()));
+//        textViewNumber.setText(number);
+//        textViewName.setText(TextUtils.isEmpty(name) ? number : name);
+
+        textViewNumber.setText("Anonymous");
+        textViewName.setText("Anonymous");
+
+        textViewDistinctContacts.setText(String.valueOf(distinctContacts+ " Last Date Taken: "+ Instant.ofEpochMilli(LastDayToCount).atZone(ZoneId.systemDefault()).toLocalDateTime()));
     }
 
     @Override
@@ -216,6 +191,5 @@ public class SocialScoreStatistics extends AppCompatActivity {
             finish();
         return super.onOptionsItemSelected(item);
     }
-
 
 }
