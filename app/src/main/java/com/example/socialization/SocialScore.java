@@ -276,6 +276,9 @@ public class SocialScore {
 
         float[] biases_value = Biases.getInstance(context).getPercentageOfBiases(number,start_day);
 
+        Biases biases = Biases.getInstance(context);
+        long[] duration1 = biases.getDurationInWeekDay(number,start_day);
+        float score_with_baises = HMIndividualUsersPerWeek + (biases_value[0]*(duration1[0]) + biases_value[1]*(duration1[1]));
 
         Boolean score5 = (result1[0][0] > 0.3 * result1[1][0]);
         Boolean score8 = (HMIndividualUsersPerWeek>HMTotalUsers/distinctContacts);

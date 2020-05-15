@@ -1,6 +1,7 @@
 package com.example.socialization;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -29,6 +30,7 @@ public class SocialScoreStatistics extends AppCompatActivity {
             textViewIndividualScore1CallCount,textViewIndividualScore1CallDurations,
             textViewGlobalScore3CallCount,
             textViewIndividualScore3CallCount,
+            textViewWeekDayBias,textViewWeekEndBias,
             textViewNumber,textViewName,textViewDistinctContacts;
 
     @Override
@@ -53,7 +55,8 @@ public class SocialScoreStatistics extends AppCompatActivity {
         textViewIndividualScore1CallDurations = findViewById(R.id.textViewIndividualScore1CallDurations);
         textViewGlobalScore3CallCount = findViewById(R.id.textViewGlobalScore3CallCount);
         textViewIndividualScore3CallCount = findViewById(R.id.textViewIndividualScore3CallCount);
-
+        textViewWeekDayBias = findViewById(R.id.textViewWeekdayBias);
+        textViewWeekEndBias = findViewById(R.id.textViewWeekendBias);
         textViewNumber = findViewById(R.id.textViewNumber);
         textViewName = findViewById(R.id.textViewName);
         textViewDistinctContacts = findViewById(R.id.textViewDistinctContacts);
@@ -176,11 +179,11 @@ public class SocialScoreStatistics extends AppCompatActivity {
         textViewWeekEndBias.setText(String.valueOf(bias[1]));
 
 
-//        textViewNumber.setText(number);
-//        textViewName.setText(TextUtils.isEmpty(name) ? number : name);
+        textViewNumber.setText(number);
+        textViewName.setText(TextUtils.isEmpty(name) ? number : name);
 
-        textViewNumber.setText("Anonymous");
-        textViewName.setText("Anonymous");
+//        textViewNumber.setText("Anonymous");
+//        textViewName.setText("Anonymous");
 
         textViewDistinctContacts.setText(String.valueOf(distinctContacts+ " Last Date Taken: "+ Instant.ofEpochMilli(LastDayToCount).atZone(ZoneId.systemDefault()).toLocalDateTime()));
     }
