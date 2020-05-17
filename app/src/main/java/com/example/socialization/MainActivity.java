@@ -3,10 +3,15 @@ package com.example.socialization;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 
+import com.example.socialization.CallFeatures.CallLogInfo;
+import com.example.socialization.utils.CallLogUtils;
 import com.google.android.material.tabs.TabLayout;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +30,7 @@ public class MainActivity extends AppCompatActivity  {
     public static String TAG = MainActivity.class.getSimpleName();
     CallLogViewPagerAdapter adapter;
     private ViewPager mViewPager;
+    private static String MODEL_PATH = Environment.getExternalStorageDirectory().toString()+"/CONTACT_DATA/";
 //    CallReceiver callReceiver;
 
     @Override
@@ -36,6 +42,32 @@ public class MainActivity extends AppCompatActivity  {
         initComponents();
         //onStart(mViewPager);
 
+        String filename = "call_log.csv";
+        CallLogUtils callLogUtils = CallLogUtils.getInstance(getApplicationContext());
+        ArrayList<CallLogInfo> mainList = callLogUtils.readCallLogs();
+        File directoryDownload = getDataDir();
+        File logDir = new File (directoryDownload, "CallLogReader"); //Creates a new folder in DOWNLOAD directory
+        if(!logDir.exists()) {
+//            Toast.makeText(this, "Created", Toast.LENGTH_SHORT).show();
+            logDir.mkdirs();
+        }
+
+        File file = new File(logDir, filename);
+        FileOutputStream outputStream;
+        try {
+            outputStream = new FileOutputStream(file, true);
+            for(CallLogInfo callLogInfo:mainList){
+                outputStream.write((callLogInfo.getDate() + ",").getBytes());
+                outputStream.write((callLogInfo.getName() + ",").getBytes());
+                outputStream.write((callLogInfo.getNumber() + ",").getBytes());
+                outputStream.write((callLogInfo.getCallType() + ",").getBytes());
+                outputStream.write((callLogInfo.getDuration() + ",").getBytes());
+                outputStream.write((callLogInfo.getSocialStatus() + "\n").getBytes());
+            }
+            outputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 

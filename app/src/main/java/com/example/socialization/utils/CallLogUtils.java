@@ -2,23 +2,30 @@ package com.example.socialization.utils;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.provider.CallLog;
 import android.util.Log;
 
 import com.example.socialization.CallFeatures.CallLogInfo;
 import com.example.socialization.SocialScore;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.time.DayOfWeek;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+
+import androidx.core.content.FileProvider;
+
+import static androidx.core.content.FileProvider.getUriForFile;
 
 
 public class CallLogUtils {
@@ -123,6 +130,7 @@ public class CallLogUtils {
                 cnt++;
             }
             mainList = temp;
+
         }
         return mainList;
     }

@@ -34,6 +34,7 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
+
     <include
         android:id="@+id/contentView"
         layout="@layout/content_main" />
