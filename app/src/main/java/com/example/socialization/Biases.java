@@ -8,6 +8,8 @@ import com.example.socialization.utils.Utils;
 
 import java.util.ArrayList;
 
+import static com.example.socialization.utils.Utils.getStartOfDay;
+
 public class Biases {
     private static final String TAG = "Biases";
     public Context context;
@@ -26,12 +28,12 @@ public class Biases {
     public long[] getCallsInWeekDay(String number, long start_day){             //Number of calls in weekend and weekday
         CallLogUtils callLogUtils = CallLogUtils.getInstance(context);
         long numberOfWeeks = callLogUtils.getTotalNumberOfWeeks(start_day);
-        start_day = callLogUtils.getStartOfDay(start_day);
+        start_day = getStartOfDay(start_day);
 
         ArrayList<CallLogInfo> incomingCalls = callLogUtils.getIncomingCalls();
         ArrayList<CallLogInfo> outgoingCalls = callLogUtils.getOutgoingCalls();
 
-        long LastDayToCount = callLogUtils.getLastDayToCount(start_day);
+        long LastDayToCount = Utils.getLastDayToCount(callLogUtils.getTotalNumberOfWeeks(start_day),start_day);
         long N_wd = 0, N_we = 0;
         for(CallLogInfo callLogInfo: incomingCalls){
             if (callLogInfo.getDate() >= LastDayToCount &&
@@ -61,12 +63,12 @@ public class Biases {
     public long[] getDurationInWeekDay(String number, long start_day){             //Number of calls in weekend and weekday
         CallLogUtils callLogUtils = CallLogUtils.getInstance(context);
         long numberOfWeeks = callLogUtils.getTotalNumberOfWeeks(start_day);
-        start_day = callLogUtils.getStartOfDay(start_day);
+        start_day = getStartOfDay(start_day);
 
         ArrayList<CallLogInfo> incomingCalls = callLogUtils.getIncomingCalls();
         ArrayList<CallLogInfo> outgoingCalls = callLogUtils.getOutgoingCalls();
 
-        long LastDayToCount = callLogUtils.getLastDayToCount(start_day);
+        long LastDayToCount = Utils.getLastDayToCount(callLogUtils.getTotalNumberOfWeeks(start_day),start_day);
         long D_wd = 0, D_we = 0;
         for(CallLogInfo callLogInfo: incomingCalls){
             if (callLogInfo.getDate() >= LastDayToCount &&

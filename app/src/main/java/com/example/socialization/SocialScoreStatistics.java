@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import static com.example.socialization.utils.Utils.getStartOfDay;
+
 public class SocialScoreStatistics extends AppCompatActivity {
 
     private static final String TAG = "SocialScoreStatistics";
@@ -74,11 +76,11 @@ public class SocialScoreStatistics extends AppCompatActivity {
             return;
         }
         CallLogUtils callLogUtils = CallLogUtils.getInstance(this);
-        start_day = callLogUtils.getStartOfDay(start_day);
+        start_day = getStartOfDay(start_day);
 
 //        ------------ Individual Scores ----------------
-        long LastDayToCount = callLogUtils.getLastDayToCount(start_day);
-        start_day = callLogUtils.getStartOfDay(start_day);
+        long LastDayToCount = Utils.getLastDayToCount(callLogUtils.getTotalNumberOfWeeks(start_day),start_day);
+        start_day = getStartOfDay(start_day);
         ArrayList<CallLogInfo> incomingCalls = callLogUtils.getIncomingCalls();
         ArrayList<CallLogInfo> outgoingCalls = callLogUtils.getOutgoingCalls();
         long totalCallsIncoming = 0, totalCallsOutgoing = 0;

@@ -4,8 +4,11 @@ import android.content.Context;
 
 import com.example.socialization.CallFeatures.CallLogInfo;
 import com.example.socialization.utils.CallLogUtils;
+import com.example.socialization.utils.Utils;
 
 import java.util.ArrayList;
+
+import static com.example.socialization.utils.Utils.getStartOfDay;
 
 public class SocialScore {
     private static String TAG = "StatisticsFragment";
@@ -27,8 +30,8 @@ public class SocialScore {
     public long[] getGlobalScore1(long start_day){                                                  // Number of times and duration of calls
         long result[] = new long[2];
         CallLogUtils callLogUtils = CallLogUtils.getInstance(context);
-        long LastDayToCount = callLogUtils.getLastDayToCount(start_day);
-        start_day = callLogUtils.getStartOfDay(start_day);
+        long LastDayToCount = Utils.getLastDayToCount(callLogUtils.getTotalNumberOfWeeks(start_day),start_day);
+        start_day = getStartOfDay(start_day);
         ArrayList<CallLogInfo> incomingCalls = callLogUtils.getIncomingCalls();
         ArrayList<CallLogInfo> outgoingCalls = callLogUtils.getOutgoingCalls();
         long totalCalls = 0,totalDuration = 0;
@@ -98,8 +101,8 @@ public class SocialScore {
     public long[] getIndividualScore1(String number, long start_day){
         long[] result = new long[2];
         CallLogUtils callLogUtils = CallLogUtils.getInstance(context);
-        long LastDayToCount = callLogUtils.getLastDayToCount(start_day);
-        start_day = callLogUtils.getStartOfDay(start_day);
+        long LastDayToCount = Utils.getLastDayToCount(callLogUtils.getTotalNumberOfWeeks(start_day),start_day);
+        start_day = getStartOfDay(start_day);
         ArrayList<CallLogInfo> incomingCalls = callLogUtils.getIncomingCalls();
         ArrayList<CallLogInfo> outgoingCalls = callLogUtils.getOutgoingCalls();
         long totalCalls = 0;
@@ -208,29 +211,6 @@ public class SocialScore {
 //        }
 //        return score;
 //    }
-
-    public float getPercentageOfCalls(String number){
-        CallLogUtils callLogUtils = CallLogUtils.getInstance(context);
-        ArrayList<CallLogInfo> incomingCalls = callLogUtils.getIncomingCalls();
-        ArrayList<CallLogInfo> outgoingCalls = callLogUtils.getOutgoingCalls();
-        int totalCalls = 0, Calls=0;
-        for(CallLogInfo callLogInfo: incomingCalls){
-            if(callLogInfo.getNumber().equals(number)) {
-                Calls++;
-            }
-            totalCalls++;
-        }
-        for(CallLogInfo callLogInfo: outgoingCalls){
-            if (callLogInfo.getDuration() > 0) {
-                if(callLogInfo.getNumber().equals(number)) {
-                    Calls++;
-                }
-                totalCalls++;
-            }
-        }
-//        System.out.println("getPercentageOfCalls: " + (float)Calls/(float)totalCalls);
-        return (float)Calls/(float)totalCalls;
-    }
 
     public long[][] getScore1(String number, long start_day){
         long[][] score = new long[2][2];
