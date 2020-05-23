@@ -9,34 +9,12 @@
     app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
     tools:context=".MainActivity">
 
-
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
+    <com.google.android.material.button.MaterialButton
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay">
-
-            <com.google.android.material.tabs.TabLayout
-                android:id="@+id/tabs"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                app:tabMode="scrollable"
-                app:tabGravity="fill"/>
-
-        </androidx.appcompat.widget.Toolbar>
-
-    </com.google.android.material.appbar.AppBarLayout>
-
-
-    <include
-        android:id="@+id/contentView"
-        layout="@layout/content_main" />
+        android:gravity="center"
+        android:text="Socializing Online(Call)"
+        android:id="@+id/socializingOnline"
+        android:layout_gravity="center"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
