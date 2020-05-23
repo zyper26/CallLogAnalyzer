@@ -7,6 +7,8 @@ import android.os.Environment;
 import android.util.Log;
 
 import com.example.socialization.CallFeatures.CallLogInfo;
+import com.example.socialization.Fragement.AllCallLogsFragment;
+import com.example.socialization.Fragement.SocialContactsFragment;
 import com.example.socialization.utils.CallLogUtils;
 import com.google.android.material.tabs.TabLayout;
 
@@ -157,23 +159,16 @@ public class MainActivity extends AppCompatActivity  {
                                            String permissions[], int[] grantResults) {
         switch (requestCode) {
             case 100: {
-                // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
                     Log.d(TAG,"Permission Granted");
                     setUpViewPager();
                 } else {
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
                     Log.d(TAG,"Permission Denied");
 
                 }
                 return;
             }
-            // other 'case' lines to check for other
-            // permissions this app might request.
         }
     }
 }

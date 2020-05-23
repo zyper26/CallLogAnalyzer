@@ -1,4 +1,4 @@
-package com.example.socialization;
+package com.example.socialization.Biases;
 
 import android.content.Context;
 
@@ -10,18 +10,18 @@ import java.util.ArrayList;
 
 import static com.example.socialization.utils.Utils.getStartOfDay;
 
-public class Biases {
+public class WeekDayBiases {
     private static final String TAG = "Biases";
     public Context context;
-    public static Biases instance;
+    public static WeekDayBiases instance;
 
-    private Biases(Context context) {
+    private WeekDayBiases(Context context) {
         this.context = context;
     }
 
-    public static Biases getInstance(Context context) {
+    public static WeekDayBiases getInstance(Context context) {
         if (instance == null)
-            instance = new Biases(context);
+            instance = new WeekDayBiases(context);
         return instance;
     }
 

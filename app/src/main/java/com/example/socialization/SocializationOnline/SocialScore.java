@@ -1,7 +1,10 @@
-package com.example.socialization;
+package com.example.socialization.SocializationOnline;
 
 import android.content.Context;
 
+import com.example.socialization.Biases.KnownUnknownBiases;
+import com.example.socialization.Biases.PastSocialContactBias;
+import com.example.socialization.Biases.WeekDayBiases;
 import com.example.socialization.CallFeatures.CallLogInfo;
 import com.example.socialization.utils.CallLogUtils;
 import com.example.socialization.utils.Utils;
@@ -9,6 +12,7 @@ import com.example.socialization.utils.Utils;
 import java.util.ArrayList;
 
 import static com.example.socialization.utils.Utils.getStartOfDay;
+import static com.example.socialization.utils.Utils.getWeekend;
 
 public class SocialScore {
     private static String TAG = "StatisticsFragment";
@@ -52,23 +56,6 @@ public class SocialScore {
         return result;                                                                              //return Number of calls and total duration
     }
 
-//    public float getGlobalScore2(long start_day){                                                                 //number of missed and unpicked calls
-//        long[] result = new long[2];
-//        CallLogUtils callLogUtils = CallLogUtils.getInstance(context);
-//        long LastDayToCount = callLogUtils.getLastDayToCount(start_day);
-//        ArrayList<CallLogInfo> missedCalls = callLogUtils.getMissedCalls();
-//        ArrayList<CallLogInfo> outgoingCalls = callLogUtils.getOutgoingCalls();
-//        int totalCalls = 0;
-//        totalCalls = missedCalls.size();
-//        for(CallLogInfo callLogInfo: outgoingCalls){
-//            if(callLogInfo.getDuration() == 0 ) {
-//                totalCalls++;
-//            }
-//        }
-//        result[0] = totalCalls;
-//        return (float)result[0];
-//    }
-
     public float getGlobalScore3(long start_day){                                                                 //Per Week score of score1
         CallLogUtils callLogUtils = CallLogUtils.getInstance(context);
         long numberOfWeeks = callLogUtils.getTotalNumberOfWeeks(start_day);
@@ -83,20 +70,6 @@ public class SocialScore {
         }
         return score;
     }
-
-//    public float getGlobalScore4(){                                                //Per Week score of score2
-//        CallLogUtils callLogUtils = CallLogUtils.getInstance(context);
-//        long numberOfWeeks = callLogUtils.getTotalNumberOfWeeks();
-//        long N = numberOfWeeks;
-//        long ND;
-//        float score = 0;
-//        for (int i=1; i<=numberOfWeeks; i++){
-//            ND = callLogUtils.getNumberMissedPerWeek(i);
-//            score += (float)(10/N)*((float)ND);
-//            N-=1;
-//        }
-//        return score;
-//    }
 
     public long[] getIndividualScore1(String number, long start_day){
         long[] result = new long[2];
@@ -130,28 +103,6 @@ public class SocialScore {
 //        System.out.println("getIndividualScore1: "+ result[1]*result[0]);
         return result;
     }
-
-//    public float getIndividualScore2(String number){
-//        long[] result = new long[2];
-//        CallLogUtils callLogUtils = CallLogUtils.getInstance(context);
-//        ArrayList<CallLogInfo> missedCalls = callLogUtils.getMissedCalls();
-//        ArrayList<CallLogInfo> outgoingCalls = callLogUtils.getOutgoingCalls();
-//        int totalCalls = 0;
-//        for(CallLogInfo callLogInfo: missedCalls){
-//            if(callLogInfo.getNumber().equals(number)) {
-//                totalCalls++;
-//            }
-//        }
-//        for(CallLogInfo callLogInfo: outgoingCalls){
-//            if(callLogInfo.getNumber().equals(number)) {
-//                if (callLogInfo.getDuration() == 0) {
-//                    totalCalls++;
-//                }
-//            }
-//        }
-//        result[0] = totalCalls;
-//        return (float)result[0];
-//    }
 
     public float getIndividualScore3(String number, long start_day){
         CallLogUtils callLogUtils = CallLogUtils.getInstance(context);
@@ -197,21 +148,6 @@ public class SocialScore {
         return score;
     }
 
-
-//    public float getIndividualScore4(String number){
-//        CallLogUtils callLogUtils = CallLogUtils.getInstance(context);
-//        long numberOfWeeks = callLogUtils.getTotalNumberOfWeeks();
-//        long N = numberOfWeeks;
-//        long ND;
-//        float score = 0;
-//        for (int i=1; i<=numberOfWeeks; i++){
-//            ND = callLogUtils.getNumberMissedPerWeekOfNumber(number,i);
-//            score += (float)(10/N)*((float)ND);
-//            N-=1;
-//        }
-//        return score;
-//    }
-
     public long[][] getScore1(String number, long start_day){
         long[][] score = new long[2][2];
         score[0] = getIndividualScore1(number, start_day);                                          //Number of calls and total duration
@@ -226,47 +162,39 @@ public class SocialScore {
         return score;
     }
 
-//    public float getScore3(String number){
-//        return getIndividualScore3(number)/getGlobalScore3();
-//    }
-
-//    public float getScore4(String number){
-//        return getIndividualScore4(number)/getGlobalScore4();
-//    }
 
     public Boolean getSocial(String number, long start_day){
         long[][] result1 = getScore1(number, start_day);
         float HMTotalUsers = CallLogUtils.getInstance(context).getHMGlobalContacts(start_day);
-        float HMIndividualUsers = CallLogUtils.getInstance(context).getHMIndividualContacts(number,start_day);
         long distinctContacts = CallLogUtils.getInstance(context).getTotalDistinctContacts(start_day);
 
-        float HMTotalUsersPerWeek = getHMGlobalPerWeek(start_day);
         float HMIndividualUsersPerWeek =  getHMIndividualPerWeek(number,start_day);
-//        Boolean score1 = (result[0][0]*result[0][1])> (result[1][1]/(float)result[1][0]) *(result[1][0]*result[1][1]);
-//        Boolean score1 = Boolean.FALSE;
-//        if(result1[0][0]==0||result1[1][0]==0)
-//            score1 = Boolean.FALSE;
-//        else if((result1[0][1])/(result1[0][0]) > (result1[1][1]/result1[1][0]))
-//                score1 = Boolean.TRUE;
+        HMTotalUsers/=distinctContacts;
 
-//        Boolean score3 = result3[0] > 0.5 * result3[1];
-//        Boolean score6 = (HMIndividualUsersPerWeek > HMTotalUsersPerWeek/distinctContacts);
-//        Log.d(TAG, "getSocial: "+number+ " score: " +score1 + " " + score3 + " " + score5);
-//        Boolean score7 = (HMIndividualUsers>HMTotalUsers/distinctContacts);
+        WeekDayBiases weekDayBiases = WeekDayBiases.getInstance(context);
+        float[] biases_value = weekDayBiases.getPercentageOfBiases(number,start_day);
+        long[] duration1 = weekDayBiases.getDurationInWeekDay(number,start_day);
 
-        float[] biases_value = Biases.getInstance(context).getPercentageOfBiases(number,start_day);
+        if(getWeekend(start_day)==1)
+            HMIndividualUsersPerWeek = HMIndividualUsersPerWeek + biases_value[1]*(duration1[1]);
+        else if(getWeekend(start_day)==0)
+            HMIndividualUsersPerWeek = HMIndividualUsersPerWeek + biases_value[0]*(duration1[0]);
 
-        Biases biases = Biases.getInstance(context);
-        long[] duration1 = biases.getDurationInWeekDay(number,start_day);
-        float score_with_baises = HMIndividualUsersPerWeek + (biases_value[0]*(duration1[0]) + biases_value[1]*(duration1[1]));
+        KnownUnknownBiases knownUnknownBiases = KnownUnknownBiases.getInstance(context);
+        HMTotalUsers += knownUnknownBiases.getUnknownBias(number, start_day);
+        HMIndividualUsersPerWeek += knownUnknownBiases.getKnownBias(number, start_day);
 
         Boolean score5 = (result1[0][0] > 0.3 * result1[1][0]);
-        Boolean score8 = (HMIndividualUsersPerWeek>HMTotalUsers/distinctContacts);
+        Boolean score8 = (HMIndividualUsersPerWeek>HMTotalUsers);
+
+        if (score8 == false){
+            HMIndividualUsersPerWeek += PastSocialContactBias.getInstance(context).getDifference(number,start_day);
+            score8 = HMIndividualUsersPerWeek>HMTotalUsers;
+        }
         if( score5 || score8)
             return true;
         else return false;
     }
-
 
 
 }

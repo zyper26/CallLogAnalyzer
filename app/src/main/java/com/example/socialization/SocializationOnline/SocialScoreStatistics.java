@@ -1,4 +1,4 @@
-package com.example.socialization;
+package com.example.socialization.SocializationOnline;
 
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -6,7 +6,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.example.socialization.Biases.KnownUnknownBiases;
+import com.example.socialization.Biases.WeekDayBiases;
 import com.example.socialization.CallFeatures.CallLogInfo;
+import com.example.socialization.R;
 import com.example.socialization.utils.CallLogUtils;
 import com.example.socialization.utils.Utils;
 
@@ -28,11 +31,11 @@ public class SocialScoreStatistics extends AppCompatActivity {
             textViewGlobalCallCountTotal,textViewGlobalCallDurationsTotal,
             textViewGlobalCallCountIncoming,textViewGlobalCallDurationsIncoming,
             textViewGlobalCallDurationsOutgoing,textViewGlobalCallCountOutgoing,
-            textViewGlobalScore1CallCount,textViewGlobalScore1CallDurations,
-            textViewIndividualScore1CallCount,textViewIndividualScore1CallDurations,
-            textViewGlobalScore3CallCount,
-            textViewIndividualScore3CallCount,
+
+            textViewIndividualScorePerWeekCallDurations, textViewHMTotalCallDurations,
             textViewWeekDayBias,textViewWeekEndBias,
+            textViewKnownBias,textViewUnknownBias,
+
             textViewNumber,textViewName,textViewDistinctContacts;
 
     @Override
@@ -51,14 +54,12 @@ public class SocialScoreStatistics extends AppCompatActivity {
         textViewGlobalCallDurationsIncoming = findViewById(R.id.textViewGlobalCallDurationsIncoming);
         textViewGlobalCallDurationsOutgoing = findViewById(R.id.textViewGlobalCallDurationsOutgoing);
         textViewGlobalCallCountOutgoing = findViewById(R.id.textViewGlobalCallCountOutgoing);
-        textViewGlobalScore1CallCount = findViewById(R.id.textViewGlobalScore1CallCount);
-        textViewGlobalScore1CallDurations = findViewById(R.id.textViewGlobalScore1CallDurations);
-        textViewIndividualScore1CallCount = findViewById(R.id.textViewIndividualScore1CallCount);
-        textViewIndividualScore1CallDurations = findViewById(R.id.textViewIndividualScore1CallDurations);
-        textViewGlobalScore3CallCount = findViewById(R.id.textViewGlobalScore3CallCount);
-        textViewIndividualScore3CallCount = findViewById(R.id.textViewIndividualScore3CallCount);
+        textViewIndividualScorePerWeekCallDurations = findViewById(R.id.textViewIndividualScorePerWeekCallDurations);
+        textViewHMTotalCallDurations = findViewById(R.id.textViewHMTotalCallDurations);
         textViewWeekDayBias = findViewById(R.id.textViewWeekdayBias);
         textViewWeekEndBias = findViewById(R.id.textViewWeekendBias);
+        textViewKnownBias = findViewById(R.id.textViewKnownBias);
+        textViewUnknownBias = findViewById(R.id.textViewUnknownBias);
         textViewNumber = findViewById(R.id.textViewNumber);
         textViewName = findViewById(R.id.textViewName);
         textViewDistinctContacts = findViewById(R.id.textViewDistinctContacts);
@@ -125,14 +126,8 @@ public class SocialScoreStatistics extends AppCompatActivity {
 
         long AllCalls = AllCallsIncoming + AllCallsOutgoing;
         long AllDurations = AllDurationIncoming + AllDurationOutgoing;
+
 //        ------------------------------------------------------------
-
-//        --------------------------Distinct Contacts ---------------------
-        long distinctContacts = callLogUtils.getTotalDistinctContacts(start_day);
-        float TU = callLogUtils.getHMGlobalContacts(start_day);
-        float IU = callLogUtils.getHMIndividualContacts(number,start_day);
-
-//        --------------------------------------------------------------
 
 //       ------------------------- Assign Individual Values ------------------
         textViewIndividualCallCountTotal.setText(String.valueOf(totalCalls));
@@ -154,32 +149,35 @@ public class SocialScoreStatistics extends AppCompatActivity {
         textViewGlobalCallCountOutgoing.setText(String.valueOf(AllCallsOutgoing));
         textViewGlobalCallDurationsOutgoing.setText(Utils.formatSeconds(AllDurationOutgoing));
 
-//        ------------------------------Assign Scores---------------------------
+//        --------------------------Distinct Contacts ---------------------
+
+        long distinctContacts = callLogUtils.getTotalDistinctContacts(start_day);
+
+//        ------------------------------Socializing Scores---------------------------
 
         SocialScore socialScore = SocialScore.getInstance(this);
 
-        long globalScore1[] = socialScore.getGlobalScore1(start_day);
-        long individualScore1[] = socialScore.getIndividualScore1(number,start_day);
-//        float globalScore3 = socialScore.getGlobalScore3(start_day);
-//        float individualScore3= socialScore.getIndividualScore3(number,start_day);
-
-        float HMTotalUsersPerWeek = socialScore.getHMGlobalPerWeek(start_day);
         float HMIndividualUsersPerWeek =  socialScore.getHMIndividualPerWeek(number,start_day);
+        float HMTotalCallDurations = callLogUtils.getHMGlobalContacts(start_day);
 
-        textViewGlobalScore1CallCount.setText(String.valueOf(globalScore1[0]));
-        textViewGlobalScore1CallDurations.setText(String.valueOf(HMTotalUsersPerWeek));
+        textViewIndividualScorePerWeekCallDurations.setText(String.valueOf(HMIndividualUsersPerWeek));
+        textViewHMTotalCallDurations.setText(String.valueOf(HMTotalCallDurations));
 
-        textViewIndividualScore1CallCount.setText(String.valueOf(individualScore1[0]));
-        textViewIndividualScore1CallDurations.setText(String.valueOf(HMIndividualUsersPerWeek));
 
-        textViewGlobalScore3CallCount.setText(String.valueOf(TU));
-        textViewIndividualScore3CallCount.setText(String.valueOf(IU));
+//        ----------------------------------Biases Scores-------------------------------------------
 
-        float[] bias = Biases.getInstance(getApplicationContext()).getPercentageOfBiases(number,start_day);
+        float[] DayOfWeekBias = WeekDayBiases.getInstance(getApplicationContext()).getPercentageOfBiases(number,start_day);
 
-        textViewWeekDayBias.setText(String.valueOf(bias[0]));
-        textViewWeekEndBias.setText(String.valueOf(bias[1]));
+        textViewWeekDayBias.setText(String.valueOf(DayOfWeekBias[0]));
+        textViewWeekEndBias.setText(String.valueOf(DayOfWeekBias[1]));
 
+        float knownBias = KnownUnknownBiases.getInstance(getApplicationContext()).getKnownBias(number, start_day);
+        float unknownBias = KnownUnknownBiases.getInstance(getApplicationContext()).getUnknownBias(number, start_day);
+
+        textViewKnownBias.setText(String.valueOf(knownBias));
+        textViewUnknownBias.setText(String.valueOf(unknownBias));
+
+//        ---------------------------------------Name and Number------------------------------------
 
         textViewNumber.setText(number);
         textViewName.setText(TextUtils.isEmpty(name) ? number : name);

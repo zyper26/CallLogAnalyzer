@@ -2,31 +2,18 @@ package com.example.socialization.utils;
 
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
 import android.provider.CallLog;
-import android.util.AtomicFile;
 import android.util.Log;
 
 import com.example.socialization.CallFeatures.CallLogInfo;
-import com.example.socialization.SocialScore;
+import com.example.socialization.SocializationOnline.SocialScore;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.time.DayOfWeek;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
-import androidx.core.content.FileProvider;
-
-import static androidx.core.content.FileProvider.getUriForFile;
 import static com.example.socialization.utils.Utils.getLastDayToCount;
 import static com.example.socialization.utils.Utils.getPerWeekDatesRange;
 import static com.example.socialization.utils.Utils.getStartOfDay;
@@ -42,6 +29,7 @@ public class CallLogUtils {
     private ArrayList<CallLogInfo> outgoingCallList = null;
     private ArrayList<CallLogInfo> incomingCallList = null;
     private ArrayList<CallLogInfo> socialCallList = null;
+    private ArrayList<CallLogInfo> incomingOutgoingList = null;
 
     private CallLogUtils(Context context) {
         this.context = context;
@@ -59,6 +47,7 @@ public class CallLogUtils {
         outgoingCallList = new ArrayList<>();
         incomingCallList = new ArrayList<>();
         socialCallList = new ArrayList<>();
+        incomingOutgoingList = new ArrayList<>();
 
         String projection[] = {"_id", CallLog.Calls.NUMBER, CallLog.Calls.DATE, CallLog.Calls.DURATION, CallLog.Calls.TYPE, CallLog.Calls.CACHED_NAME};
         ContentResolver contentResolver = context.getApplicationContext().getContentResolver();
@@ -89,10 +78,14 @@ public class CallLogUtils {
             {
                 case CallLog.Calls.OUTGOING_TYPE:
                     outgoingCallList.add(callLogInfo);
+                    if(callLogInfo.getDuration()>0){
+                        incomingOutgoingList.add(callLogInfo);
+                    }
                     break;
 
                 case CallLog.Calls.INCOMING_TYPE:
                     incomingCallList.add(callLogInfo);
+                    incomingOutgoingList.add(callLogInfo);
                     break;
 
                 case CallLog.Calls.MISSED_TYPE:
@@ -108,7 +101,7 @@ public class CallLogUtils {
         if (mainList == null) {
             loadData();
             mainList = updateSocialStatusList(mainList);
-
+//            return incomingOutgoingList;
         }
         return mainList;
     }
@@ -127,6 +120,14 @@ public class CallLogUtils {
             outgoingCallList = updateSocialStatusList(outgoingCallList);
         }
         return outgoingCallList;
+    }
+
+    public ArrayList<CallLogInfo> getIncomingOutgoingCalls(){
+        if(mainList == null) {
+            loadData();
+            incomingOutgoingList = updateSocialStatusList(incomingOutgoingList);
+        }
+        return incomingOutgoingList;
     }
 
 //    public ArrayList<CallLogInfo> getMissedCalls(){
@@ -280,7 +281,7 @@ public class CallLogUtils {
 
 
     public float getHMGlobalContacts(long start_day){
-        HashMap<String, ContactDetails> distinctContactsMap = new HashMap<>();
+        HashMap<String, ContactDetails> distinctContactsMap;
         long LastDayToCount = getLastDayToCount(getTotalNumberOfWeeks(start_day),start_day);
         start_day = getStartOfDay(start_day);
 
@@ -288,16 +289,14 @@ public class CallLogUtils {
 
         float numerator = 0;
         for (HashMap.Entry mapElement : distinctContactsMap.entrySet()) {
-            String key = (String)mapElement.getKey();
-            ContactDetails contactDetails = new ContactDetails();
-            contactDetails = (ContactDetails) mapElement.getValue();
+            ContactDetails contactDetails = (ContactDetails) mapElement.getValue();
             numerator += (float)contactDetails.getDuration()*(float)contactDetails.getTimes();
         }
         return numerator;
     }
 
     public long getTotalDistinctContacts(long start_day){
-        HashMap<String, ContactDetails> distinctContactsMap = new HashMap<>();
+        HashMap<String, ContactDetails> distinctContactsMap;
         long LastDayToCount = getLastDayToCount(getTotalNumberOfWeeks(start_day),start_day);
         start_day = getStartOfDay(start_day);
 
@@ -307,7 +306,7 @@ public class CallLogUtils {
     }
 
     public float getHMIndividualContacts(String number, long start_day){
-        HashMap<String, ContactDetails> distinctContactsMap = new HashMap<>();
+        HashMap<String, ContactDetails> distinctContactsMap;
 
         long LastDayToCount = getLastDayToCount(getTotalNumberOfWeeks(start_day),start_day);
         start_day = getStartOfDay(start_day);
@@ -316,9 +315,7 @@ public class CallLogUtils {
 
         float numerator = 0;
         for (HashMap.Entry mapElement : distinctContactsMap.entrySet()) {
-            String key = (String)mapElement.getKey();
-            ContactDetails contactDetails = new ContactDetails();
-            contactDetails = (ContactDetails) mapElement.getValue();
+            ContactDetails contactDetails = (ContactDetails) mapElement.getValue();
             numerator += (float)contactDetails.getDuration()/(float)contactDetails.getTimes();
         }
         return numerator;
@@ -327,19 +324,17 @@ public class CallLogUtils {
     public float getHMGlobalContactsPerWeek(int WeekNumber, long start_day){
         HashMap<String, ContactDetails> distinctContactsMap = new HashMap<>();
 
-        long LastDayToCount = getLastDayToCount(getTotalNumberOfWeeks(start_day),start_day);
         start_day = getStartOfDay(start_day);
 
         long[] temp = getPerWeekDatesRange(WeekNumber,start_day);
-        long endOfLastWeekMilli=temp[1],startOfLastWeekMilli=temp[0];
+        long LastDayToCount=temp[0];
+        start_day=temp[1];
 
         distinctContactsMap = getHashMap(LastDayToCount,start_day);
 
         float numerator = 0;
         for (HashMap.Entry mapElement : distinctContactsMap.entrySet()) {
-            String key = (String)mapElement.getKey();
-            ContactDetails contactDetails = new ContactDetails();
-            contactDetails = (ContactDetails) mapElement.getValue();
+            ContactDetails contactDetails = (ContactDetails) mapElement.getValue();
             numerator += (float)contactDetails.getDuration()/(float)contactDetails.getTimes();
         }
         return numerator;
@@ -348,6 +343,8 @@ public class CallLogUtils {
 
     public float getHMIndividualContactsPerWeek(String number, int WeekNumber, long start_day){
         HashMap<String, ContactDetails> distinctContactsMap = new HashMap<>();
+
+        start_day = getStartOfDay(start_day);
 
         long[] temp = getPerWeekDatesRange(WeekNumber,start_day);
         long LastDayToCount=temp[0];
@@ -435,6 +432,7 @@ public class CallLogUtils {
                 }
             }
         }
+
         return distinctContactsMap;
     }
 

@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.socialization.CallFeatures.CallLogInfo;
+import com.example.socialization.SocializationOnline.SocialScoreStatistics;
 import com.example.socialization.utils.Utils;
 
 import java.text.SimpleDateFormat;
