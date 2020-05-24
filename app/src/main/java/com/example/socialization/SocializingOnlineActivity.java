@@ -8,6 +8,7 @@ import android.util.Log;
 import com.example.socialization.CallFeatures.CallLogInfo;
 import com.example.socialization.Fragement.AllCallLogsFragment;
 import com.example.socialization.Fragement.SocialContactsFragment;
+import com.example.socialization.Fragement.SocializingOnlineChartFragment;
 import com.example.socialization.utils.CallLogUtils;
 import com.google.android.material.tabs.TabLayout;
 
@@ -78,8 +79,10 @@ public class SocializingOnlineActivity extends AppCompatActivity {
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
         adapter = new CallLogViewPagerAdapter(getSupportFragmentManager());
+        SocializingOnlineChartFragment fragment_chart = new SocializingOnlineChartFragment();
         AllCallLogsFragment fragment_all_calls = new AllCallLogsFragment();
         SocialContactsFragment fragment_social_calls = new SocialContactsFragment();
+        adapter.addFragmentChart("Chart", fragment_chart);
         adapter.addFragmentAllCalls("All Calls",fragment_all_calls);
         adapter.addFragmentSocialCalls("Social Calls", fragment_social_calls);
         mViewPager.setAdapter(adapter);
@@ -110,6 +113,11 @@ public class SocializingOnlineActivity extends AppCompatActivity {
             mFragmentTitleList.add(title);
         }
 
+        public void addFragmentChart(String title, SocializingOnlineChartFragment fragment) {
+            mFragmentList.add(fragment);
+            mFragmentTitleList.add(title);
+        }
+
         public void addFragmentSocialCalls(String title, SocialContactsFragment fragment){
             mFragmentList.add(fragment);
             mFragmentTitleList.add(title);
@@ -120,6 +128,7 @@ public class SocializingOnlineActivity extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             return mFragmentTitleList.get(position);
         }
+
     }
 
     private boolean getRuntimePermission(){
