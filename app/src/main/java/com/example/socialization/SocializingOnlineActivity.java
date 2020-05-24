@@ -78,10 +78,10 @@ public class SocializingOnlineActivity extends AppCompatActivity {
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
         adapter = new CallLogViewPagerAdapter(getSupportFragmentManager());
-        AllCallLogsFragment fragment1 = new AllCallLogsFragment();
-        SocialContactsFragment fragment2 = new SocialContactsFragment();
-        adapter.addFragment1("All Calls",fragment1);
-        adapter.addFragment2("TimeLine", fragment2);
+        AllCallLogsFragment fragment_all_calls = new AllCallLogsFragment();
+        SocialContactsFragment fragment_social_calls = new SocialContactsFragment();
+        adapter.addFragmentAllCalls("All Calls",fragment_all_calls);
+        adapter.addFragmentSocialCalls("Social Calls", fragment_social_calls);
         mViewPager.setAdapter(adapter);
 //        getDatesInWeek(1);
     }
@@ -105,12 +105,12 @@ public class SocializingOnlineActivity extends AppCompatActivity {
             return mFragmentList.size();
         }
 
-        public void addFragment1(String title, AllCallLogsFragment fragment){
+        public void addFragmentAllCalls(String title, AllCallLogsFragment fragment){
             mFragmentList.add(fragment);
             mFragmentTitleList.add(title);
         }
 
-        public void addFragment2(String title, SocialContactsFragment fragment){
+        public void addFragmentSocialCalls(String title, SocialContactsFragment fragment){
             mFragmentList.add(fragment);
             mFragmentTitleList.add(title);
         }
