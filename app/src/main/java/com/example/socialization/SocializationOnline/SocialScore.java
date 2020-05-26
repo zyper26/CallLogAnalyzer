@@ -1,6 +1,7 @@
 package com.example.socialization.SocializationOnline;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.example.socialization.Biases.KnownUnknownBiases;
 import com.example.socialization.Biases.PastSocialContactBias;
@@ -165,6 +166,21 @@ public class SocialScore {
 
     public Boolean getSocial(String number, long start_day){
         long[][] result1 = getScore1(number, start_day);
+
+        Boolean score5 = (result1[0][0] > 0.3 * result1[1][0]);
+        Boolean score8 = getSocialStatusUsingValues(number,start_day);
+
+        if( score5 || score8)
+            return true;
+        else return false;
+    }
+
+    public Boolean getSocialStatusUsingValues(String number, long start_day){
+        float[] result = getSocialScoreWithBiases(number,start_day);
+        return result[0]>result[1];
+    }
+
+    public float[] getSocialScoreWithBiases(String number,long start_day){
         float HMTotalUsers = CallLogUtils.getInstance(context).getHMGlobalContacts(start_day);
         long distinctContacts = CallLogUtils.getInstance(context).getTotalDistinctContacts(start_day);
 
@@ -174,7 +190,6 @@ public class SocialScore {
         WeekDayBiases weekDayBiases = WeekDayBiases.getInstance(context);
         float[] biases_value = weekDayBiases.getPercentageOfBiases(number,start_day);
         long[] duration1 = weekDayBiases.getDurationInWeekDay(number,start_day);
-
         if(getWeekend(start_day)==1)
             HMIndividualUsersPerWeek = HMIndividualUsersPerWeek + biases_value[1]*(duration1[1]);
         else if(getWeekend(start_day)==0)
@@ -184,17 +199,16 @@ public class SocialScore {
         HMTotalUsers += knownUnknownBiases.getUnknownBias(number, start_day);
         HMIndividualUsersPerWeek += knownUnknownBiases.getKnownBias(number, start_day);
 
-        Boolean score5 = (result1[0][0] > 0.3 * result1[1][0]);
-        Boolean score8 = (HMIndividualUsersPerWeek>HMTotalUsers);
 
-        if (score8 == false){
+        if (!(HMIndividualUsersPerWeek > HMTotalUsers)){
             HMIndividualUsersPerWeek += PastSocialContactBias.getInstance(context).getDifference(number,start_day);
-            score8 = HMIndividualUsersPerWeek>HMTotalUsers;
         }
-        if( score5 || score8)
-            return true;
-        else return false;
-    }
+        float[] result = new float[2];
+        result[0] = HMIndividualUsersPerWeek;
+        result[1] = HMTotalUsers;
+        Log.d(TAG, "getSocialvaluespercentage: " + HMIndividualUsersPerWeek/HMTotalUsers );
 
+        return result;
+    }
 
 }

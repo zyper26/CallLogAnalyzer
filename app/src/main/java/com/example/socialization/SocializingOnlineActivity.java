@@ -84,7 +84,7 @@ public class SocializingOnlineActivity extends AppCompatActivity {
         SocializingOnlineChartFragment fragment_chart = new SocializingOnlineChartFragment();
         AllCallLogsFragment fragment_all_calls = new AllCallLogsFragment();
         SocialContactsFragment fragment_social_calls = new SocialContactsFragment();
-        adapter.addFragmentChart("Chart", fragment_chart);
+        adapter.addFragmentChart("TimeLine", fragment_chart);
         adapter.addFragmentAllCalls("All Calls",fragment_all_calls);
         adapter.addFragmentSocialCalls("Social Calls", fragment_social_calls);
         mViewPager.setAdapter(adapter);

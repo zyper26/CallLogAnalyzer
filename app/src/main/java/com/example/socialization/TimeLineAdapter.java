@@ -2,7 +2,6 @@ package com.example.socialization;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Color;
 import android.provider.CallLog;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -12,6 +11,7 @@ import android.widget.TextView;
 
 import com.example.socialization.CallFeatures.CallLogInfo;
 import com.example.socialization.utils.Utils;
+import com.github.vipulasri.timelineview.TimelineView;
 
 import java.util.ArrayList;
 
@@ -46,44 +46,47 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineAdapter.TimeLi
     public void onBindViewHolder(@NonNull TimeLineAdapter.TimeLineViewHolder holder, final int position) {
 //        Log.d(TAG, "onBindViewHolder: ");
 
-        holder.textViewTime.setText(Utils.getTime(callLogInfoArrayList.get(position).getDate()));
-
 //        holder.textViewCallDuration.setText(Utils.formatSeconds(callLogInfoArrayList.get(position).getDuration()));
 
         holder.textViewName.setTextColor(R.color.blue);
 
         if(TextUtils.isEmpty(callLogInfoArrayList.get(position).getName())) {
             holder.textViewName.setText(callLogInfoArrayList.get(position).getNumber());
+            holder.textViewNameEnd.setText(callLogInfoArrayList.get(position).getNumber());
             switch(Integer.parseInt(callLogInfoArrayList.get(position).getCallType()))
             {
                 case CallLog.Calls.OUTGOING_TYPE:
                     holder.textViewName.setTextColor(R.color.blue);
+                    holder.textViewNameEnd.setTextColor(R.color.blue);
                     break;
 
                 case CallLog.Calls.INCOMING_TYPE:
-                    holder.textViewName.setTextColor(Color.GREEN);
+                    holder.textViewName.setTextColor(R.color.green);
+                    holder.textViewNameEnd.setTextColor(R.color.green);
                     break;
 
                 case CallLog.Calls.MISSED_TYPE:
-                    holder.textViewName.setTextColor(Color.RED);
+                    holder.textViewName.setTextColor(R.color.red);
+                    holder.textViewNameEnd.setTextColor(R.color.red);
                     break;
             }
         }
         else {
             holder.textViewName.setText(callLogInfoArrayList.get(position).getName());
-//            StatisticsFragment statisticsFragment = StatisticsFragment.getInstance(context);
-//            if(statisticsFragment.getSocial(callLogInfoArrayList.get(position).getNumber(), callLogInfoArrayList.get(position).getDate()))
-            if(callLogInfoArrayList.get(position).getSocialStatus()){
-                holder.textViewName.setTextColor(Color.RED);
-                //Log.d(TAG, "onBindViewHolder: "+ callLogInfoArrayList.get(position).getName() + " " + callLogInfoArrayList.get(position).getSocialStatus() + " " + position);
-            }
-
+            holder.textViewNameEnd.setText(callLogInfoArrayList.get(position).getName());
         }
-        //Log.d(TAG, "onBindViewHolder: "+ callLogInfoArrayList.get(position).getName() + " " + callLogInfoArrayList.get(position).getSocialStatus() + " " + position);
         holder.textViewCallNumber.setText(callLogInfoArrayList.get(position).getNumber());
+        holder.textViewCallNumberEnd.setText(callLogInfoArrayList.get(position).getNumber());
+
+        holder.textViewTime.setText(Utils.getTime(callLogInfoArrayList.get(position).getDate()));
+        holder.textViewTimeEnd.setText(Utils.getTime(callLogInfoArrayList.get(position).getDate() + callLogInfoArrayList.get(position).getDuration()*1000));
 
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        return TimelineView.getTimeLineViewType(position, getItemCount());
+    }
 
     public void addCallLog(CallLogInfo callLogInfo){
         callLogInfoArrayList.add(callLogInfo);
@@ -102,36 +105,28 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineAdapter.TimeLi
 
     class TimeLineViewHolder extends RecyclerView.ViewHolder{
 
-        TextView textViewTime;
-        TextView textViewName;
-        TextView textViewCallNumber;
+        TextView textViewTime,textViewName,textViewCallNumber;
+        TextView textViewTimeEnd,textViewNameEnd,textViewCallNumberEnd;
+        TimelineView mTimelineView, mTimelineViewEnd;
+
         CallLogAdapter.OnCallLogItemClickListener onCallLogItemClickListener;
 
         public TimeLineViewHolder(@NonNull View view, CallLogAdapter.OnCallLogItemClickListener onCallLogItemClickListener){
             super(view.getRootView());
+            mTimelineView = view.findViewById(R.id.timeline_view);
+            mTimelineViewEnd = view.findViewById(R.id.timeline_view_end);
+
             textViewTime = view.findViewById(R.id.textViewTime);
             textViewCallNumber = view.findViewById(R.id.textViewCallNumber);
             textViewName = view.findViewById(R.id.textViewName);
+
+            textViewTimeEnd = view.findViewById(R.id.textViewTimeEnd);
+            textViewCallNumberEnd = view.findViewById(R.id.textViewCallNumberEnd);
+            textViewNameEnd = view.findViewById(R.id.textViewNameEnd);
             this.onCallLogItemClickListener = onCallLogItemClickListener;
 //            view.setOnClickListener(this);
 
         }
 
-//        @Override
-//        public void onClick(View view) {
-//            Intent intent = new Intent(context, SocialScoreStatistics.class);
-//            context.startActivity(intent);
-//        }
-
-//        @Override
-//        public void onClick(View view) {
-////            Toast.makeText(context, "clicked", Toast.LENGTH_SHORT).show();
-//            Intent intent = new Intent(context, SocialScoreStatistics.class);
-//            intent.putExtra("number",callLogInfoArrayList.get(getAdapterPosition()).getNumber());
-//            intent.putExtra("name",callLogInfoArrayList.get(getAdapterPosition()).getName());
-//            intent.putExtra("date",callLogInfoArrayList.get(getAdapterPosition()).getDate());
-//            intent.putExtra("duration",callLogInfoArrayList.get(getAdapterPosition()).getDuration());
-//            context.startActivity(intent);
-//        }
     }
 }

@@ -82,6 +82,28 @@ public class Utils {
         LocalDateTime input = Instant.ofEpochMilli(start_day).atZone(ZoneId.systemDefault()).toLocalDateTime();
         int hour = input.getHour();
         int minute = input.getMinute();
+        if(minute==0|minute==1|minute==2|minute==3|minute==4|minute==5) {
+            if(hour<10){
+                return "0"+hour + ":" + minute+"0";
+            }
+            else if(hour>9) {
+                return hour + ":" + minute + "0";
+            }
+        }
+        if(minute<9) {
+            if(hour<10){
+                return "0"+hour + ":0" + minute;
+            }
+            else if(hour>9) {
+                return hour + ":0" + minute;
+            }
+        }
+        if(hour<10){
+            return "0"+hour + ":" + minute;
+        }
+        else if(hour>9) {
+            return hour + ":" + minute;
+        }
         return hour+":"+minute;
     }
 

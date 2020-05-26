@@ -38,22 +38,46 @@ public class SocializingOnlineChartFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-//        view = inflater.inflate(R.layout.socialization_chart,container,false);
-//        spinnerDay = view.findViewById(R.id.spinnerDay);
-//        spinnerMonth = view.findViewById(R.id.spinnerMonth);
-//        spinnerYear = view.findViewById(R.id.spinnerYear);
-//        spinnerAdapter();
-
-//        anyChartView = view.findViewById(R.id.resource_chart);
-//        anyChartView.setProgressBar(view.findViewById(R.id.progress_bar));
-
-        date = "2020-05-23 12:30";
 
         view = inflater.inflate(R.layout.timeline_log_fragment,container,false);
-        recyclerView = view.findViewById(R.id.recyclerView);
 
+        spinnerDay = view.findViewById(R.id.spinnerDay);
+        spinnerMonth = view.findViewById(R.id.spinnerMonth);
+        spinnerYear = view.findViewById(R.id.spinnerYear);
+        spinnerAdapter();
+
+        submitButton = view.findViewById(R.id.dateSelected);
+
+        if(LocalDateTime.now().getMonthValue()<10) {
+            if(LocalDateTime.now().getDayOfMonth()<10)
+                date = LocalDateTime.now().getYear()+"-0" +LocalDateTime.now().getMonthValue()+"-0"+LocalDateTime.now().getDayOfMonth() +" 12:30";
+            else if(LocalDateTime.now().getDayOfMonth()>9){
+                date = LocalDateTime.now().getYear()+"-0" +LocalDateTime.now().getMonthValue()+"-"+LocalDateTime.now().getDayOfMonth() +" 12:30";
+            }
+        }
+        else if(LocalDateTime.now().getMonthValue()>9){
+            if(LocalDateTime.now().getDayOfMonth()<10)
+                date = LocalDateTime.now().getYear()+"-" +LocalDateTime.now().getMonthValue()+"-0"+LocalDateTime.now().getDayOfMonth() +" 12:30";
+            else if(LocalDateTime.now().getDayOfMonth()>9){
+                date = LocalDateTime.now().getYear()+"-" +LocalDateTime.now().getMonthValue()+"-"+LocalDateTime.now().getDayOfMonth() +" 12:30";
+            }
+        }
+        recyclerView = view.findViewById(R.id.recyclerView);
         initComponents();
+
+        submitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                updateDate();
+                initComponents();
+            }
+        });
+
         return view;
+    }
+
+    public void updateDate(){
+        date = spinnerYear.getSelectedItem().toString() + "-" + spinnerMonth.getSelectedItem().toString() + "-" + spinnerDay.getSelectedItem().toString() + " 12:30";
     }
 
     public void spinnerAdapter(){

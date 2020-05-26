@@ -36,6 +36,7 @@ public class SocialScoreStatistics extends AppCompatActivity {
             textViewWeekDayBias,textViewWeekEndBias,
             textViewKnownBias,textViewUnknownBias,
 
+            textViewSocialPercentage,
             textViewNumber,textViewName,textViewDistinctContacts;
 
     @Override
@@ -157,8 +158,9 @@ public class SocialScoreStatistics extends AppCompatActivity {
 
         SocialScore socialScore = SocialScore.getInstance(this);
 
-        float HMIndividualUsersPerWeek =  socialScore.getHMIndividualPerWeek(number,start_day);
-        float HMTotalCallDurations = callLogUtils.getHMGlobalContacts(start_day);
+        float[] result = socialScore.getSocialScoreWithBiases(number,start_day);
+        float HMIndividualUsersPerWeek =  result[0];
+        float HMTotalCallDurations = result[1];
 
         textViewIndividualScorePerWeekCallDurations.setText(String.valueOf(HMIndividualUsersPerWeek));
         textViewHMTotalCallDurations.setText(String.valueOf(HMTotalCallDurations));

@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context=".SocializingOnlineActivity">
+
 <RelativeLayout
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
@@ -12,52 +19,107 @@
     android:id="@+id/parent_layout"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <com.github.vipulasri.timelineview.TimelineView
-        android:paddingLeft="20dp"
-        android:id="@+id/timeline_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:markerSize="20dp"
-        app:lineWidth="2dp"
-        app:startLineColor="@color/colorPrimary"
-        app:endLineColor="@color/colorPrimary"
-        tools:ignore="MissingConstraints"
-        app:linePadding="5dp"
-        app:markerInCenter="true"
-        app:lineOrientation="vertical"
-        app:lineStyle="dash"
-        android:paddingTop="20dp"/>
+        <com.github.vipulasri.timelineview.TimelineView
+            android:paddingLeft="20dp"
+            android:id="@+id/timeline_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:lineWidth="2dp"
+            app:startLineColor="@color/colorPrimary"
+            app:endLineColor="@color/colorPrimary"
+            tools:ignore="MissingConstraints"
+            app:markerInCenter="true"
+            app:lineOrientation="vertical"
+            app:lineStyle="normal"
+            android:paddingTop="25dp"/>
 
-    <TextView
-        android:textColor="@color/colorPrimaryDark"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textViewTime"
-        android:textStyle="bold"
-        android:layout_toRightOf="@id/timeline_view"
-        android:textSize="20dp"
-        android:text="Time"
-        android:paddingTop="10dp"
+        <TextView
+            android:textColor="@color/colorPrimaryDark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewTime"
+            android:textStyle="bold"
+            android:layout_toRightOf="@id/timeline_view"
+            android:textSize="20dp"
+            android:text="Time"
+            android:paddingTop="10dp"
+            android:gravity="center"
+                />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@id/textViewName"
+            android:text="Name"
+            android:paddingLeft="20dp"
+            android:textSize="20dp"
+            android:layout_toRightOf="@id/textViewTime"
             />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@id/textViewName"
-        android:text="meeting"
-        android:paddingLeft="20dp"
-        android:textSize="20dp"
-        android:layout_toRightOf="@id/textViewTime"
-        />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewCallNumber"
+            android:textSize="15dp"
+            android:text="Number"
+            android:paddingLeft="20dp"
+            android:layout_toRightOf="@id/textViewTime"
+            android:layout_below="@id/textViewName"
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/textViewCallNumber"
-        android:textSize="15dp"
-        android:text="MeetingOver"
-        android:paddingLeft="20dp"
-        android:layout_toRightOf="@id/textViewTime"
-        android:layout_below="@+id/textViewName"/>
+            />
+
+        <com.github.vipulasri.timelineview.TimelineView
+            android:paddingLeft="20dp"
+            android:id="@+id/timeline_view_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:markerSize="20dp"
+            app:lineWidth="2dp"
+            app:startLineColor="@color/colorPrimary"
+            app:endLineColor="@color/colorPrimary"
+            tools:ignore="MissingConstraints"
+            app:linePadding="5dp"
+            app:markerInCenter="true"
+            app:lineOrientation="vertical"
+            app:lineStyle="normal"
+            android:paddingTop="20dp"
+            android:layout_below="@+id/timeline_view"/>
+
+        <TextView
+            android:textColor="@color/colorPrimaryDark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewTimeEnd"
+            android:textStyle="bold"
+            android:layout_toRightOf="@id/timeline_view_end"
+            android:textSize="20dp"
+            android:text="Time"
+            android:gravity="center"
+            android:paddingTop="10dp"
+            android:layout_below="@+id/textViewTime"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@id/textViewNameEnd"
+            android:text="Name"
+            android:paddingLeft="20dp"
+            android:textSize="20dp"
+            android:layout_toRightOf="@id/textViewTimeEnd"
+            android:layout_below="@+id/textViewCallNumber"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewCallNumberEnd"
+            android:textSize="15dp"
+            android:text="Number"
+            android:paddingLeft="20dp"
+            android:layout_toRightOf="@id/textViewTimeEnd"
+            android:layout_below="@+id/textViewNameEnd"/>
 
     </RelativeLayout>
+
+</ScrollView>

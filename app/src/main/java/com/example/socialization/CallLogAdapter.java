@@ -13,9 +13,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.socialization.CallFeatures.CallLogInfo;
+import com.example.socialization.SocializationOnline.SocialScore;
 import com.example.socialization.SocializationOnline.SocialScoreStatistics;
 import com.example.socialization.utils.Utils;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -74,20 +76,15 @@ public class CallLogAdapter extends RecyclerView.Adapter<CallLogAdapter.CallLogV
         holder.textViewName.setTextColor(R.color.blue);
         if(TextUtils.isEmpty(callLogInfoArrayList.get(position).getName())) {
             holder.textViewName.setText(callLogInfoArrayList.get(position).getNumber());
-//            StatisticsFragment statisticsFragment = StatisticsFragment.getInstance(context);
-//            if(statisticsFragment.getSocial(callLogInfoArrayList.get(position).getNumber(), callLogInfoArrayList.get(position).getDate()))
+
             if(callLogInfoArrayList.get(position).getSocialStatus()) {
                 holder.textViewName.setTextColor(Color.RED);
-                //Log.d(TAG, "onBindViewHolder: "+ callLogInfoArrayList.get(position).getName() + " " + callLogInfoArrayList.get(position).getSocialStatus() + " " + position);
             }
         }
         else {
             holder.textViewName.setText(callLogInfoArrayList.get(position).getName());
-//            StatisticsFragment statisticsFragment = StatisticsFragment.getInstance(context);
-//            if(statisticsFragment.getSocial(callLogInfoArrayList.get(position).getNumber(), callLogInfoArrayList.get(position).getDate()))
             if(callLogInfoArrayList.get(position).getSocialStatus()){
                 holder.textViewName.setTextColor(Color.RED);
-                //Log.d(TAG, "onBindViewHolder: "+ callLogInfoArrayList.get(position).getName() + " " + callLogInfoArrayList.get(position).getSocialStatus() + " " + position);
             }
 
         }
@@ -98,6 +95,12 @@ public class CallLogAdapter extends RecyclerView.Adapter<CallLogAdapter.CallLogV
         holder.textViewCallNumber.setText(callLogInfoArrayList.get(position).getNumber());
         holder.textViewCallDate.setText(formatter.format(dateObj));
         holder.textViewPosition.setText(String.valueOf(position));
+
+        float[] result = SocialScore.getInstance(context).getSocialScoreWithBiases(callLogInfoArrayList.get(position).getNumber(),callLogInfoArrayList.get(position).getDate());
+        if(result[1]==0)
+            holder.textViewSocialPercentage.setText("NaN");
+        else
+            holder.textViewSocialPercentage.setText(new DecimalFormat("##.##").format(result[0]/result[1]));
     }
 
     public void addCallLog(CallLogInfo callLogInfo){
@@ -122,6 +125,7 @@ public class CallLogAdapter extends RecyclerView.Adapter<CallLogAdapter.CallLogV
         TextView textViewName;
         TextView textViewCallNumber;
         TextView textViewPosition;
+        TextView textViewSocialPercentage;
         OnCallLogItemClickListener onCallLogItemClickListener;
 
         public CallLogViewHolder(@NonNull View view, OnCallLogItemClickListener onCallLogItemClickListener){
@@ -132,6 +136,7 @@ public class CallLogAdapter extends RecyclerView.Adapter<CallLogAdapter.CallLogV
             textViewCallNumber = view.findViewById(R.id.textViewCallNumber);
             textViewName = view.findViewById(R.id.textViewName);
             textViewPosition = view.findViewById(R.id.textViewPosition);
+            textViewSocialPercentage = view.findViewById(R.id.textViewSocialPercentage);
             this.onCallLogItemClickListener = onCallLogItemClickListener;
             view.setOnClickListener(this);
 

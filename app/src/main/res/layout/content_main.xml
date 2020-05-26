@@ -19,9 +19,4 @@
             app:layout_constraintTop_toTopOf="parent"
         />
 
-<!--    </androidx.core.widget.NestedScrollView>-->
-
 </androidx.constraintlayout.widget.ConstraintLayout>
-<!--
-
-    -->

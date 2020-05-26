@@ -25,11 +25,21 @@
         android:layout_toEndOf="@id/imageViewProfile"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/colorPrimaryDark"
         android:text="NAME"
         />
+
+    <TextView
+        android:id="@+id/textViewSocialPercentage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/textViewName"
+        android:layout_alignParentRight="true"
+        android:gravity="right"
+        android:paddingRight="15dp"
+        android:text="NaN"/>
 
     <TextView
         android:id="@+id/textViewCallNumber"
