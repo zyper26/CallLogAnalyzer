@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/date_picker_actions"
+        android:gravity="center_horizontal"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent">
+
+        <TextView
+            android:id="@+id/selectDateForSocializingOnline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:importantForAutofill="no"
+            android:text="Date"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <Spinner
+            android:id="@+id/spinnerDay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            app:layout_constraintEnd_toStartOf="@+id/spinnerMonth"
+            app:layout_constraintStart_toEndOf="@+id/selectDateForSocializingOnline"
+            app:layout_constraintTop_toTopOf="@+id/selectDateForSocializingOnline"
+            />
+
+        <Spinner
+            android:id="@+id/spinnerMonth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toStartOf="@+id/spinnerYear"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/spinnerDate"
+            app:layout_constraintTop_toTopOf="@+id/spinnerDate"
+            />
+
+        <Spinner
+            android:id="@+id/spinnerYear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/spinnerMonth"
+            app:layout_constraintTop_toTopOf="@+id/spinnerMonth"
+            />
+
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Submit"
+            android:id="@+id/dateSelected"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/spinnerMonth"
+            app:layout_constraintTop_toTopOf="@+id/spinnerMonth"
+            />
+
+    </LinearLayout>
+
+    <include layout="@layout/socializing_score_timeline"
+        android:id="@+id/timeline_view_layout"
+        app:layout_constraintBottom_toBottomOf="@+id/date_picker_actions"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

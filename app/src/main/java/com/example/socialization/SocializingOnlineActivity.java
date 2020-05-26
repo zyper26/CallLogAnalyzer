@@ -40,8 +40,10 @@ public class SocializingOnlineActivity extends AppCompatActivity {
         ConstraintLayout content_main_layout = (ConstraintLayout) findViewById(R.id.contentView);
         mViewPager = (ViewPager) content_main_layout.findViewById(R.id.viewpager);
 
-        if(getRuntimePermission())
+        if (getRuntimePermission()){
             setUpViewPager();
+            createFileOfCallLogs(getDataDir());
+        }
     }
 
     public void createFileOfCallLogs(File dataDirectory) {

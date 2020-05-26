@@ -2,4 +2,8 @@
 <resources>
     <item name="textViewSocializingScore" type="id" />
     <item name="separateViewSocializingScore" type="id" />
+    <item name="spinnerMonth" type="id" />
+    <item name="selectDateForSocializingOnline" type="id" />
+    <item name="spinnerYear" type="id" />
+    <item name="spinnerDate" type="id" />
 </resources>

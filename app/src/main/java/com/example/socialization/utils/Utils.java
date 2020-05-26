@@ -4,6 +4,7 @@ import java.time.DayOfWeek;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 public class Utils {
     public static String formatSeconds(long timeInSeconds)
@@ -77,4 +78,16 @@ public class Utils {
         return startOfDay.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
     }
 
+    public static String getTime(long start_day) {
+        LocalDateTime input = Instant.ofEpochMilli(start_day).atZone(ZoneId.systemDefault()).toLocalDateTime();
+        int hour = input.getHour();
+        int minute = input.getMinute();
+        return hour+":"+minute;
+    }
+
+    public static long getLocalDateTimeFromString(String str){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        LocalDateTime dateTime = LocalDateTime.parse(str, formatter);
+        return dateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+    }
 }

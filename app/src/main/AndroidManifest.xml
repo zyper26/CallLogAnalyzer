@@ -20,11 +20,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SocializingOnlineCalls">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".SocializingOnlineActivity" />
+
         <activity android:name=".SocializationOnline.SocialScoreStatistics" />
 
     </application>

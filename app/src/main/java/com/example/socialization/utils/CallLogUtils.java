@@ -9,6 +9,9 @@ import android.util.Log;
 import com.example.socialization.CallFeatures.CallLogInfo;
 import com.example.socialization.SocializationOnline.SocialScore;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
@@ -128,6 +131,23 @@ public class CallLogUtils {
             incomingOutgoingList = updateSocialStatusList(incomingOutgoingList);
         }
         return incomingOutgoingList;
+    }
+
+    public ArrayList<CallLogInfo> getSocialCallsOnDate(long start_day){
+        ArrayList<CallLogInfo> result = new ArrayList<>();
+        LocalDateTime input = Instant.ofEpochMilli(start_day).atZone(ZoneId.systemDefault()).toLocalDateTime();
+        input = input.toLocalDate().atStartOfDay();
+        LocalDateTime end = input.plusDays(1).minusSeconds(1);
+        long start_time_milli = input.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        long end_time_milli = end.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+
+        for(CallLogInfo callLogInfo:mainList){
+            if(callLogInfo.getDate()>=start_time_milli && callLogInfo.getDate()<=end_time_milli && callLogInfo.getSocialStatus()){
+                result.add(callLogInfo);
+            }
+        }
+
+        return result;
     }
 
 //    public ArrayList<CallLogInfo> getMissedCalls(){
