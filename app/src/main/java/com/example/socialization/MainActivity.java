@@ -16,11 +16,20 @@ public class MainActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final Button button = findViewById(R.id.socializingOnline);
-        button.setOnClickListener(new View.OnClickListener() {
+        final Button socializing_calls_button = findViewById(R.id.socializingOnline);
+        socializing_calls_button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Code here executes on main thread after user presses button
                 Intent intent = new Intent(MainActivity.this, SocializingOnlineActivity.class);
+                startActivityForResult(intent, 1);
+            }
+        });
+
+        final Button socializing_apps_button = findViewById(R.id.socializingApps);
+        socializing_apps_button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Code here executes on main thread after user presses button
+                Intent intent = new Intent(MainActivity.this, SocializingOnlineAppsActivity.class);
                 startActivityForResult(intent, 1);
             }
         });

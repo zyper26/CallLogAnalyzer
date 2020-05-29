@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.socialization.CallFeatures.CallLogInfo;
 import com.example.socialization.Fragement.AllCallLogsFragment;
@@ -40,18 +41,21 @@ public class SocializingOnlineActivity extends AppCompatActivity {
         ConstraintLayout content_main_layout = (ConstraintLayout) findViewById(R.id.contentView);
         mViewPager = (ViewPager) content_main_layout.findViewById(R.id.viewpager);
 
-        if (getRuntimePermission()){
-            setUpViewPager();
-            createFileOfCallLogs(getDataDir());
-        }
+        initComponents();
+        createFileOfCallLogs();
     }
 
-    public void createFileOfCallLogs(File dataDirectory) {
+    private void initComponents(){
+        if(getRuntimePermission())
+            setUpViewPager();
+    }
+
+    public void createFileOfCallLogs() {
         String filename = "call_log.csv";
         CallLogUtils callLogUtils = CallLogUtils.getInstance(getApplicationContext());
         ArrayList<CallLogInfo> mainList = callLogUtils.readCallLogs();
-        File directoryDownload = dataDirectory;
-        File logDir = new File (directoryDownload, "CallLogReader"); //Creates a new folder in DOWNLOAD directory
+        File directoryDownload = getExternalFilesDir("CallLogCSV");
+        File logDir = new File (String.valueOf(directoryDownload));
         if(!logDir.exists()) {
 //            Toast.makeText(this, "Created", Toast.LENGTH_SHORT).show();
             logDir.mkdirs();
@@ -59,18 +63,46 @@ public class SocializingOnlineActivity extends AppCompatActivity {
 
         File file = new File(logDir, filename);
         FileOutputStream outputStream;
+        Log.d(TAG,  "createFileOfCallLogs: " + file);
         try {
-            outputStream = new FileOutputStream(file, true);
+            outputStream = new FileOutputStream(file,true);
+//            Toast.makeText(this, "file creating", Toast.LENGTH_SHORT).show();
             for(CallLogInfo callLogInfo:mainList){
                 outputStream.write((callLogInfo.getDate() + ",").getBytes());
                 outputStream.write((callLogInfo.getName() + ",").getBytes());
                 outputStream.write((callLogInfo.getNumber() + ",").getBytes());
                 outputStream.write((callLogInfo.getCallType() + ",").getBytes());
                 outputStream.write((callLogInfo.getDuration() + ",").getBytes());
-                outputStream.write((callLogInfo.getSocialStatus() + "\n").getBytes());
+                outputStream.write((callLogInfo.getSocialStatus() + ",").getBytes());
+                outputStream.write((callLogInfo.getCallIncomingCount() +",").getBytes());
+                outputStream.write((callLogInfo.getCallIncomingDuration() +",").getBytes());
+                outputStream.write((callLogInfo.getCallOutgoingCount() +",").getBytes());
+                outputStream.write((callLogInfo.getCallOutgoingDuration() +",").getBytes());
+                outputStream.write((callLogInfo.getCallIncomingOutgoingCount() +",").getBytes());
+                outputStream.write((callLogInfo.getCallIncomingOutgoingDuration() +",").getBytes());
+                outputStream.write((callLogInfo.getTotalIncomingCount() +",").getBytes());
+                outputStream.write((callLogInfo.getTotalIncomingDuration() +",").getBytes());
+                outputStream.write((callLogInfo.getTotalOutgoingCount() +",").getBytes());
+                outputStream.write((callLogInfo.getTotalOutgoingDuration() +",").getBytes());
+                outputStream.write((callLogInfo.getTotalIncomingOutgoingCount() +",").getBytes());
+                outputStream.write((callLogInfo.getTotalIncomingOutgoingDuration() +",").getBytes());
+                outputStream.write((callLogInfo.getTotalDistinctContacts() +",").getBytes());
+                outputStream.write((callLogInfo.getIndividualScore() +",").getBytes());
+                outputStream.write((callLogInfo.getGlobalScore() +",").getBytes());
+                outputStream.write((callLogInfo.getKnownBias() +",").getBytes());
+                outputStream.write((callLogInfo.getUnknownBias() +",").getBytes());
+                outputStream.write((callLogInfo.getWeekDayBias() +",").getBytes());
+                outputStream.write((callLogInfo.getWeekEndBias() +",").getBytes());
+                outputStream.write((callLogInfo.getWeekDayDuration() +",").getBytes());
+                outputStream.write((callLogInfo.getWeekEndDuration() +",").getBytes());
+                outputStream.write((callLogInfo.getPastSocializingContactBias() +",").getBytes());
+                outputStream.write((callLogInfo.getFinalIndividualScore() +",").getBytes());
+                outputStream.write((callLogInfo.getFinalGlobalScore() +"\n").getBytes());
             }
             outputStream.close();
+            Toast.makeText(this, "file created", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
+            Log.d(TAG, "createFileOfCallLogs: ");
             e.printStackTrace();
         }
     }

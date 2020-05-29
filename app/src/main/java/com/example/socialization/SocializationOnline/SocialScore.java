@@ -13,7 +13,6 @@ import com.example.socialization.utils.Utils;
 import java.util.ArrayList;
 
 import static com.example.socialization.utils.Utils.getStartOfDay;
-import static com.example.socialization.utils.Utils.getWeekend;
 
 public class SocialScore {
     private static String TAG = "StatisticsFragment";
@@ -156,21 +155,14 @@ public class SocialScore {
         return score;
     }
 
-    public float[] getScore3(String number, long start_day){
-        float[] score = new float[2];
-        float individualScorePerWeek = getIndividualScore3(number, start_day);                                          //Number of calls and total duration
-        float globalScorePerWeek = getGlobalScore3(start_day);                                                      //Number of calls and total duration
-        return score;
-    }
-
 
     public Boolean getSocial(String number, long start_day){
-        long[][] result1 = getScore1(number, start_day);
+//        long[][] result1 = getScore1(number, start_day);
 
-        Boolean score5 = (result1[0][0] > 0.3 * result1[1][0]);
+//        Boolean score5 = (result1[0][0] > 0.3 * result1[1][0]);
         Boolean score8 = getSocialStatusUsingValues(number,start_day);
 
-        if( score5 || score8)
+        if(score8)
             return true;
         else return false;
     }
@@ -187,18 +179,18 @@ public class SocialScore {
         float HMIndividualUsersPerWeek =  getHMIndividualPerWeek(number,start_day);
         HMTotalUsers/=distinctContacts;
 
-        WeekDayBiases weekDayBiases = WeekDayBiases.getInstance(context);
-        float[] biases_value = weekDayBiases.getPercentageOfBiases(number,start_day);
-        long[] duration1 = weekDayBiases.getDurationInWeekDay(number,start_day);
-        if(getWeekend(start_day)==1)
-            HMIndividualUsersPerWeek = HMIndividualUsersPerWeek + biases_value[1]*(duration1[1]);
-        else if(getWeekend(start_day)==0)
-            HMIndividualUsersPerWeek = HMIndividualUsersPerWeek + biases_value[0]*(duration1[0]);
-
         KnownUnknownBiases knownUnknownBiases = KnownUnknownBiases.getInstance(context);
         HMTotalUsers += knownUnknownBiases.getUnknownBias(number, start_day);
         HMIndividualUsersPerWeek += knownUnknownBiases.getKnownBias(number, start_day);
 
+        WeekDayBiases weekDayBiases = WeekDayBiases.getInstance(context);
+        float[] biases_value = weekDayBiases.getPercentageOfBiases(number,start_day);
+        long[] duration1 = weekDayBiases.getDurationInWeekDay(number,start_day);
+
+//        if(getWeekend(start_day)==1)
+        HMIndividualUsersPerWeek = HMIndividualUsersPerWeek + biases_value[1]*(duration1[1]) + biases_value[1]*(duration1[0]);
+//        if(getWeekend(start_day)==0)
+//            HMIndividualUsersPerWeek = HMIndividualUsersPerWeek + biases_value[0]*(duration1[0]);
 
         if (!(HMIndividualUsersPerWeek > HMTotalUsers)){
             HMIndividualUsersPerWeek += PastSocialContactBias.getInstance(context).getDifference(number,start_day);
