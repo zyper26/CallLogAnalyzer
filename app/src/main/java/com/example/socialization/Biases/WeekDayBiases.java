@@ -8,8 +8,6 @@ import com.example.socialization.utils.Utils;
 
 import java.util.ArrayList;
 
-import static com.example.socialization.utils.Utils.getStartOfDay;
-
 public class WeekDayBiases {
     private static final String TAG = "Biases";
     public Context context;
@@ -28,17 +26,18 @@ public class WeekDayBiases {
     public long[] getCallsInWeekDay(String number, long start_day){             //Number of calls in weekend and weekday
         CallLogUtils callLogUtils = CallLogUtils.getInstance(context);
         long numberOfWeeks = callLogUtils.getTotalNumberOfWeeks(start_day);
-        start_day = getStartOfDay(start_day);
 
         ArrayList<CallLogInfo> incomingCalls = callLogUtils.getIncomingCalls();
         ArrayList<CallLogInfo> outgoingCalls = callLogUtils.getOutgoingCalls();
+//        incomingCalls = callLogUtils.updatePastSocializingContacts(incomingCalls);
+//        outgoingCalls = callLogUtils.updatePastSocializingContacts(outgoingCalls);
 
         long LastDayToCount = Utils.getLastDayToCount(callLogUtils.getTotalNumberOfWeeks(start_day),start_day);
         long N_wd = 0, N_we = 0;
         for(CallLogInfo callLogInfo: incomingCalls){
             if (callLogInfo.getDate() >= LastDayToCount &&
                     callLogInfo.getNumber().equals(number) &&
-                    callLogInfo.getDate() <= start_day){
+                    callLogInfo.getDate() < start_day){
                 if(Utils.getWeekend(callLogInfo.getDate()) == 1){
                     N_we ++;
                 }
@@ -48,7 +47,7 @@ public class WeekDayBiases {
             if (callLogInfo.getDate() >= LastDayToCount &&
                     callLogInfo.getNumber().equals(number) &&
                     callLogInfo.getDuration() > 0 &&
-                    callLogInfo.getDate() <= start_day){
+                    callLogInfo.getDate() < start_day){
                 if(Utils.getWeekend(callLogInfo.getDate()) == 0 ){
                     N_wd ++;
                 }
@@ -63,17 +62,18 @@ public class WeekDayBiases {
     public long[] getDurationInWeekDay(String number, long start_day){             //Number of calls in weekend and weekday
         CallLogUtils callLogUtils = CallLogUtils.getInstance(context);
         long numberOfWeeks = callLogUtils.getTotalNumberOfWeeks(start_day);
-        start_day = getStartOfDay(start_day);
 
         ArrayList<CallLogInfo> incomingCalls = callLogUtils.getIncomingCalls();
         ArrayList<CallLogInfo> outgoingCalls = callLogUtils.getOutgoingCalls();
+//        incomingCalls = callLogUtils.updatePastSocializingContacts(incomingCalls);
+//        outgoingCalls = callLogUtils.updatePastSocializingContacts(outgoingCalls);
 
         long LastDayToCount = Utils.getLastDayToCount(callLogUtils.getTotalNumberOfWeeks(start_day),start_day);
         long D_wd = 0, D_we = 0;
         for(CallLogInfo callLogInfo: incomingCalls){
             if (callLogInfo.getDate() >= LastDayToCount &&
                     callLogInfo.getNumber().equals(number) &&
-                    callLogInfo.getDate() <= start_day){
+                    callLogInfo.getDate() < start_day){
                 if(Utils.getWeekend(callLogInfo.getDate()) == 1){
                     D_we += callLogInfo.getDuration();
                 }
@@ -83,9 +83,9 @@ public class WeekDayBiases {
             if (callLogInfo.getDate() >= LastDayToCount &&
                     callLogInfo.getNumber().equals(number) &&
                     callLogInfo.getDuration() > 0 &&
-                    callLogInfo.getDate() <= start_day){
+                    callLogInfo.getDate() < start_day){
                 if(Utils.getWeekend(callLogInfo.getDate()) == 0 ){
-                    D_we += callLogInfo.getDuration();
+                    D_wd += callLogInfo.getDuration();
                 }
             }
         }

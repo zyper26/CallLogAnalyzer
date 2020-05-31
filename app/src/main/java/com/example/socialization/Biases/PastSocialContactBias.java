@@ -1,6 +1,7 @@
 package com.example.socialization.Biases;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.example.socialization.CallFeatures.CallLogInfo;
 import com.example.socialization.SocializationOnline.SocialScore;
@@ -8,8 +9,6 @@ import com.example.socialization.utils.CallLogUtils;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
-
-import static com.example.socialization.utils.Utils.getStartOfDay;
 
 public class PastSocialContactBias {
     private static final String TAG = "PastSocialContactBias";
@@ -28,18 +27,18 @@ public class PastSocialContactBias {
 
     public float getDifference(String number, long start_day){
 //            long LastDayToCount = getLastDayToCount(CallLogUtils.getInstance(context).getTotalNumberOfWeeks(start_day),start_day);
-        start_day = getStartOfDay(start_day);
 
         CallLogUtils callLogUtils = CallLogUtils.getInstance(context);
         ArrayList<CallLogInfo> incomingOutgoingCallsList = callLogUtils.getIncomingOutgoingCalls();
 
         int cnt=0;
         for(CallLogInfo callLogInfo1:incomingOutgoingCallsList){
-            if(callLogInfo1.getDate()<=start_day) {
+            if(callLogInfo1.getDate()<start_day) {
                 if (callLogInfo1.getSocialStatus() == Boolean.TRUE) {
                     float global_score = callLogUtils.getHMGlobalContacts(start_day);
                     float ind_Score = SocialScore.getInstance(context).getHMIndividualPerWeek(number, start_day);
                     long distinct_contact = callLogUtils.getTotalDistinctContacts(start_day);
+                    Log.d(TAG, "getDifference: "+weekNumber(start_day, callLogInfo1.getDate())*(ind_Score - (global_score/(float)distinct_contact)));
                     return weekNumber(start_day, callLogInfo1.getDate())*(ind_Score - (global_score/(float)distinct_contact));
                 }
             }

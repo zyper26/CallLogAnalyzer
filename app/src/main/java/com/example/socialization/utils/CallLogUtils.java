@@ -16,6 +16,8 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -23,6 +25,7 @@ import java.util.concurrent.TimeUnit;
 import static com.example.socialization.utils.Utils.getLastDayToCount;
 import static com.example.socialization.utils.Utils.getPerWeekDatesRange;
 import static com.example.socialization.utils.Utils.getStartOfDay;
+import static java.lang.Math.min;
 
 
 public class CallLogUtils {
@@ -106,7 +109,7 @@ public class CallLogUtils {
         if (mainList == null) {
             loadData();
             mainList = updateSocialStatusList(mainList);
-//            return incomingOutgoingList;
+            mainList = updatePastSocializingContacts(mainList);
         }
         return mainList;
     }
@@ -115,6 +118,7 @@ public class CallLogUtils {
         if(mainList == null) {
             loadData();
             incomingCallList = updateSocialStatusList(incomingCallList);
+            incomingCallList = updatePastSocializingContacts(incomingCallList);
         }
         return incomingCallList;
     }
@@ -123,6 +127,7 @@ public class CallLogUtils {
         if(mainList == null) {
             loadData();
             outgoingCallList = updateSocialStatusList(outgoingCallList);
+            outgoingCallList = updatePastSocializingContacts(outgoingCallList);
         }
         return outgoingCallList;
     }
@@ -131,6 +136,7 @@ public class CallLogUtils {
         if(mainList == null) {
             loadData();
             incomingOutgoingList = updateSocialStatusList(incomingOutgoingList);
+            incomingOutgoingList = updatePastSocializingContacts(incomingOutgoingList);
         }
         return incomingOutgoingList;
     }
@@ -156,6 +162,7 @@ public class CallLogUtils {
         if(mainList == null) {
             loadData();
         }
+//        Collections.reverse(mainList);
         for(CallLogInfo callLogInfo:mainList) {
             if(callLogInfo.getSocialStatus()) {
                 socialCallList.add(callLogInfo);
@@ -242,60 +249,20 @@ public class CallLogUtils {
             readCallLogs();
         long minDate = start_day;
         for(CallLogInfo callLogInfo: incomingCallList) {
-            minDate = Math.min(callLogInfo.getDate(),minDate);
+            minDate = min(callLogInfo.getDate(),minDate);
         }
         for(CallLogInfo callLogInfo: outgoingCallList){
             if(callLogInfo.getDuration()>0) {
-                minDate = Math.min(callLogInfo.getDate(),minDate);
+                minDate = min(callLogInfo.getDate(),minDate);
             }
         }
         numberOfWeeks = TimeUnit.MILLISECONDS.toDays(start_day-minDate)/7;
-        return Math.min(numberOfWeeks,8);
-    }
-
-    //number.getClass().getSimpleName() //print type of object
-
-
-
-    public long[] getNumberAndDuration(int WeekNumber, long start_day){
-        long result[] = new long[2];
-
-        long[] temp = getPerWeekDatesRange(WeekNumber,start_day);
-        long endOfLastWeekMilli=temp[1],startOfLastWeekMilli=temp[0];
-
-        for(CallLogInfo callLogInfo : mainList){
-            if(callLogInfo.getDate()<=endOfLastWeekMilli && callLogInfo.getDate()>=startOfLastWeekMilli) {
-                if (Integer.parseInt(callLogInfo.getCallType()) != CallLog.Calls.MISSED_TYPE && callLogInfo.getDuration()>0) {
-                    result[1] += callLogInfo.getDuration();
-                    result[0]++;
-                }
-            }
-        }
-        return result;
-    }
-
-    public long[] getNumberAndDurationOfNumber(String number, int WeekNumber, long start_day){
-        long result[] = new long[2];
-
-        long[] temp = getPerWeekDatesRange(WeekNumber,start_day);
-        long endOfLastWeekMilli=temp[1],startOfLastWeekMilli=temp[0];
-
-        for(CallLogInfo callLogInfo : mainList){
-            if(callLogInfo.getNumber().equals(number)){
-                if(callLogInfo.getDate()<=endOfLastWeekMilli && callLogInfo.getDate()>=startOfLastWeekMilli) {
-                    result[0]++;
-                    if (Integer.parseInt(callLogInfo.getCallType()) != CallLog.Calls.MISSED_TYPE)
-                        result[1] += callLogInfo.getDuration();
-                }
-            }
-        }
-        return result;
+        return min(numberOfWeeks,8);
     }
 
     public float getHMGlobalContacts(long start_day){
         HashMap<String, ContactDetails> distinctContactsMap;
         long LastDayToCount = getLastDayToCount(getTotalNumberOfWeeks(start_day),start_day);
-        start_day = getStartOfDay(start_day);
 
         distinctContactsMap = getHashMap(LastDayToCount, start_day);
 
@@ -310,197 +277,195 @@ public class CallLogUtils {
     public long getTotalDistinctContacts(long start_day){
         HashMap<String, ContactDetails> distinctContactsMap;
         long LastDayToCount = getLastDayToCount(getTotalNumberOfWeeks(start_day),start_day);
-        start_day = getStartOfDay(start_day);
-
         distinctContactsMap = getHashMap(LastDayToCount,start_day);
-
         return distinctContactsMap.size();
     }
 
-    public float getHMIndividualContacts(String number, long start_day){
-        HashMap<String, ContactDetails> distinctContactsMap;
-
-        long LastDayToCount = getLastDayToCount(getTotalNumberOfWeeks(start_day),start_day);
-        start_day = getStartOfDay(start_day);
-
-        distinctContactsMap = getHashMapOfNumber(number, LastDayToCount,start_day);
-
-        float numerator = 0;
-        for (HashMap.Entry mapElement : distinctContactsMap.entrySet()) {
-            ContactDetails contactDetails = (ContactDetails) mapElement.getValue();
-            numerator += (float)contactDetails.getDuration()/(float)contactDetails.getTimes();
-        }
-        return numerator;
-    }
-
-    public float getHMGlobalContactsPerWeek(int WeekNumber, long start_day){
-        HashMap<String, ContactDetails> distinctContactsMap = new HashMap<>();
-
-        start_day = getStartOfDay(start_day);
-
-        long[] temp = getPerWeekDatesRange(WeekNumber,start_day);
-        long LastDayToCount=temp[0];
-        start_day=temp[1];
-
-        distinctContactsMap = getHashMap(LastDayToCount,start_day);
-
-        float numerator = 0;
-        for (HashMap.Entry mapElement : distinctContactsMap.entrySet()) {
-            ContactDetails contactDetails = (ContactDetails) mapElement.getValue();
-            numerator += (float)contactDetails.getDuration()/(float)contactDetails.getTimes();
-        }
-        return numerator;
-    }
-
-
     public float getHMIndividualContactsPerWeek(String number, int WeekNumber, long start_day){
-        HashMap<String, ContactDetails> distinctContactsMap = new HashMap<>();
-
-        start_day = getStartOfDay(start_day);
-
+        HashMap<String, ContactDetails> distinctContactsMap;
         long[] temp = getPerWeekDatesRange(WeekNumber,start_day);
         long LastDayToCount=temp[0];
         start_day=temp[1];
-
-        distinctContactsMap = getHashMapOfNumber(number,LastDayToCount,start_day);
-
+        distinctContactsMap = getHashMap(LastDayToCount,start_day);
         float numerator = 0;
         for (HashMap.Entry mapElement : distinctContactsMap.entrySet()) {
-            ContactDetails contactDetails = (ContactDetails) mapElement.getValue();
-            numerator += (float)contactDetails.getDuration()*(float)contactDetails.getTimes();
+//            Log.d(TAG, "getHMIndividualContactsPerWeek: " + mapElement.getKey().getClass().getName() + " " + temp[0] + " " + temp[1]);
+            if(String.valueOf(mapElement.getKey()).equals(number)) {
+                ContactDetails contactDetails = (ContactDetails) mapElement.getValue();
+                numerator += (float) contactDetails.getDuration() * (float) contactDetails.getTimes();
+//                Log.d(TAG, "getHMIndividualContactsPerWeekContacts: " + numerator);
+            }
         }
         return numerator;
     }
 
     public ArrayList<CallLogInfo> updateSocialStatusList(ArrayList<CallLogInfo> List){
-        int cnt = 0;
-        ArrayList<CallLogInfo> temp = new ArrayList<>();
-        SocialScore socialScore = SocialScore.getInstance(context);
-        for(CallLogInfo callLogInfo:List) {
-            if(cnt<500) {
-                CallLogInfo callTemp = new CallLogInfo();
-                callTemp.setCallType(callLogInfo.getCallType());
-                callTemp.setDate(callLogInfo.getDate());
-                callTemp.setDuration(callLogInfo.getDuration());
-                callTemp.setName(callLogInfo.getName());
-                callTemp.setNumber(callLogInfo.getNumber());
 
+        SocialScore socialScore = SocialScore.getInstance(context);
+        for(int i=0;i<List.size();i++) {
+            CallLogInfo callLogInfo = List.get(i);
+            CallLogInfo temp = new CallLogInfo();
+            if(i<500) {
+                temp.setDate(callLogInfo.getDate());
+                temp.setName(callLogInfo.getName());
+                temp.setNumber(callLogInfo.getNumber());
+                temp.setCallType(callLogInfo.getCallType());
+                temp.setDuration(callLogInfo.getDuration());
                 long[] IncomingCallsAndDuration = getIncomingCallsAndDuration(callLogInfo.getNumber(), callLogInfo.getDate());
-                callTemp.setCallIncomingCount(IncomingCallsAndDuration[0]);
-                callTemp.setCallIncomingDuration(IncomingCallsAndDuration[1]);
+                temp.setCallIncomingCount(IncomingCallsAndDuration[0]);
+                temp.setCallIncomingDuration(IncomingCallsAndDuration[1]);
                 long[] OutgoingCallsAndDuration = getOutgoingCallsAndDuration(callLogInfo.getNumber(), callLogInfo.getDate());
-                callTemp.setCallOutgoingCount(OutgoingCallsAndDuration[0]);
-                callTemp.setCallOutgoingDuration(OutgoingCallsAndDuration[1]);
-                callTemp.setCallIncomingOutgoingCount(IncomingCallsAndDuration[0]+OutgoingCallsAndDuration[0]);
-                callTemp.setCallIncomingOutgoingDuration(IncomingCallsAndDuration[1]+OutgoingCallsAndDuration[1]);
+                temp.setCallOutgoingCount(OutgoingCallsAndDuration[0]);
+                temp.setCallOutgoingDuration(OutgoingCallsAndDuration[1]);
+                temp.setCallIncomingOutgoingCount(IncomingCallsAndDuration[0]+OutgoingCallsAndDuration[0]);
+                temp.setCallIncomingOutgoingDuration(IncomingCallsAndDuration[1]+OutgoingCallsAndDuration[1]);
 
                 long[] TotalIncomingCallsAndDuration = getTotalIncomingCallsAndDuration(callLogInfo.getDate());
-                callTemp.setTotalIncomingCount(TotalIncomingCallsAndDuration[0]);
-                callTemp.setTotalIncomingDuration(TotalIncomingCallsAndDuration[1]);
+                temp.setTotalIncomingCount(TotalIncomingCallsAndDuration[0]);
+                temp.setTotalIncomingDuration(TotalIncomingCallsAndDuration[1]);
                 long[] TotalOutgoingCallsAndDuration = getTotalOutgoingCallsAndDuration(callLogInfo.getDate());
-                callTemp.setTotalOutgoingCount(TotalOutgoingCallsAndDuration[0]);
-                callTemp.setTotalOutgoingDuration(TotalOutgoingCallsAndDuration[1]);
-                callTemp.setTotalIncomingOutgoingCount(TotalIncomingCallsAndDuration[0]+TotalOutgoingCallsAndDuration[0]);
-                callTemp.setTotalIncomingOutgoingDuration(TotalIncomingCallsAndDuration[1]+TotalOutgoingCallsAndDuration[1]);
+                temp.setTotalOutgoingCount(TotalOutgoingCallsAndDuration[0]);
+                temp.setTotalOutgoingDuration(TotalOutgoingCallsAndDuration[1]);
+                temp.setTotalIncomingOutgoingCount(TotalIncomingCallsAndDuration[0]+TotalOutgoingCallsAndDuration[0]);
+                temp.setTotalIncomingOutgoingDuration(TotalIncomingCallsAndDuration[1]+TotalOutgoingCallsAndDuration[1]);
 
-                callTemp.setTotalDistinctContacts(getTotalDistinctContacts(callLogInfo.getDate()));
+                temp.setTotalDistinctContacts(getTotalDistinctContacts(callLogInfo.getDate()));
 
                 float HMIndividualUsersPerWeek = socialScore.getHMIndividualPerWeek(callLogInfo.getNumber(),callLogInfo.getDate());
-                callTemp.setIndividualScore(HMIndividualUsersPerWeek);
+                temp.setIndividualScore(HMIndividualUsersPerWeek);
                 float HMTotalUsers = getHMGlobalContacts(callLogInfo.getDate())/(float)getTotalDistinctContacts(callLogInfo.getDate());
-                callTemp.setGlobalScore(HMTotalUsers);
+                temp.setGlobalScore(HMTotalUsers);
 
                 KnownUnknownBiases knownUnknownBiases = KnownUnknownBiases.getInstance(context);
-                callTemp.setUnknownBias(knownUnknownBiases.getUnknownBias(callLogInfo.getNumber(), callLogInfo.getDate()));
-                callTemp.setKnownBias(knownUnknownBiases.getKnownBias(callLogInfo.getNumber(),callLogInfo.getDate()));
+
+                temp.setUnknownBias(knownUnknownBiases.getUnknownBias(callLogInfo.getNumber(), callLogInfo.getDate()));
+                temp.setKnownBias(knownUnknownBiases.getKnownBias(callLogInfo.getNumber(),callLogInfo.getDate()));
 
                 WeekDayBiases weekDayBiases = WeekDayBiases.getInstance(context);
                 float[] biases_value = weekDayBiases.getPercentageOfBiases(callLogInfo.getNumber(), callLogInfo.getDate());
                 long[] duration1 = weekDayBiases.getDurationInWeekDay(callLogInfo.getNumber(), callLogInfo.getDate());
-                callTemp.setWeekDayBias(biases_value[0]);
-                callTemp.setWeekEndBias(biases_value[1]);
-                callTemp.setWeekDayDuration(duration1[0]);
-                callTemp.setWeekEndDuration(duration1[1]);
+                temp.setWeekDayBias(biases_value[0]);
+                temp.setWeekEndBias(biases_value[1]);
+                temp.setWeekDayDuration(duration1[0]);
+                temp.setWeekEndDuration(duration1[1]);
 
                 float pastSocializingContactBias = PastSocialContactBias.getInstance(context).getDifference(callLogInfo.getNumber(), callLogInfo.getDate());
-                callTemp.setPastSocializingContactBias(pastSocializingContactBias);
+                temp.setPastSocializingContactBias(pastSocializingContactBias);
 
                 float finalHMIndividualUsersPerWeek = HMIndividualUsersPerWeek +
                                                     knownUnknownBiases.getKnownBias(callLogInfo.getNumber(), callLogInfo.getDate()) +
-                                                    biases_value[1]*(duration1[1]) + biases_value[1]*(duration1[0]) +
-                                                    pastSocializingContactBias;
-                float finalHMTotalUsers = knownUnknownBiases.getUnknownBias(callLogInfo.getNumber(), callLogInfo.getDate());
-                callTemp.setFinalIndividualScore(finalHMIndividualUsersPerWeek);
-                callTemp.setFinalGlobalScore(finalHMTotalUsers);
+                                                    biases_value[1]*(duration1[1]) + biases_value[0]*(duration1[0]);
+                float finalHMTotalUsers = HMTotalUsers + knownUnknownBiases.getUnknownBias(callLogInfo.getNumber(), callLogInfo.getDate());
+                temp.setFinalIndividualScore(finalHMIndividualUsersPerWeek);
+                temp.setFinalGlobalScore(finalHMTotalUsers);
 
-                callTemp.setSocialStatus(socialScore.getSocial(callLogInfo.getNumber(), callLogInfo.getDate()));
-                temp.add(callTemp);
+                temp.setSocialStatus(finalHMIndividualUsersPerWeek*10>finalHMTotalUsers);
             }
-            else{
-                CallLogInfo callTemp = new CallLogInfo();
-                callTemp.setCallType(callLogInfo.getCallType());
-                callTemp.setDate(callLogInfo.getDate());
-                callTemp.setDuration(callLogInfo.getDuration());
-                callTemp.setName(callLogInfo.getName());
-                callTemp.setNumber(callLogInfo.getNumber());
-                callTemp.setSocialStatus(Boolean.FALSE);
-                temp.add(callTemp);
-            }
-            cnt++;
+            List.set(i,temp);
         }
-        return temp;
+        return List;
     }
 
-    public HashMap<String, ContactDetails> getHashMapOfNumber(String number, long LastDayToCount,Long start_day){
-        HashMap<String, ContactDetails> distinctContactsMap = new HashMap<>();
-        for(CallLogInfo callLogInfo: incomingCallList) {
-            if (callLogInfo.getNumber().equals(number) && callLogInfo.getDate() >= LastDayToCount && callLogInfo.getDate() <= start_day){
-                String key = callLogInfo.getNumber();
-                long duration = callLogInfo.getDuration();
-                if(distinctContactsMap.containsKey(key)){
-                    ContactDetails contactDetails = new ContactDetails();
-                    contactDetails.setTimes(Objects.requireNonNull(distinctContactsMap.get(key)).getTimes()+1);
-                    contactDetails.setDuration(Objects.requireNonNull(distinctContactsMap.get(key)).getDuration()+duration);
-//                    ++distinctContactsMap.get(key);
-                    distinctContactsMap.put(key,contactDetails);
-                }
-                else{
-                    ContactDetails contactDetails = new ContactDetails();
-                    contactDetails.setTimes(1);
-                    contactDetails.setDuration(duration);
-                    distinctContactsMap.put(key,contactDetails);
-                }
-            }
-        }
-        for(CallLogInfo callLogInfo: outgoingCallList){
-            if(callLogInfo.getDuration()>0){
-                if (callLogInfo.getNumber().equals(number) && callLogInfo.getDate() >= LastDayToCount && callLogInfo.getDate() <= start_day){
-                    String key = callLogInfo.getNumber();
-                    long duration = callLogInfo.getDuration();
-                    if(distinctContactsMap.containsKey(key)){
-                        ContactDetails contactDetails = new ContactDetails();
-                        contactDetails.setTimes(Objects.requireNonNull(distinctContactsMap.get(key)).getTimes()+1);
-                        contactDetails.setDuration(Objects.requireNonNull(distinctContactsMap.get(key)).getDuration()+duration);
-//                    ++distinctContactsMap.get(key);
-                        distinctContactsMap.put(key,contactDetails);
-                    }
-                    else{
-                        ContactDetails contactDetails = new ContactDetails();
-                        contactDetails.setTimes(1);
-                        contactDetails.setDuration(duration);
-                        distinctContactsMap.put(key,contactDetails);
-                    }
-                }
-            }
-        }
+    public ArrayList<CallLogInfo> updatePastSocializingContacts(ArrayList<CallLogInfo> List){
+        for(int i=min(499,List.size()-1); i >=0; i--) {
+            CallLogInfo callLogInfo = List.get(i);
+            CallLogInfo temp = new CallLogInfo();
 
-        return distinctContactsMap;
+            temp.setDate(callLogInfo.getDate());
+            temp.setName(callLogInfo.getName());
+            temp.setNumber(callLogInfo.getNumber());
+            temp.setCallType(callLogInfo.getCallType());
+            temp.setDuration(callLogInfo.getDuration());
+
+            temp.setCallIncomingCount(callLogInfo.getCallIncomingCount());
+            temp.setCallIncomingDuration(callLogInfo.getCallIncomingDuration());
+            temp.setCallOutgoingCount(callLogInfo.getCallOutgoingCount());
+            temp.setCallOutgoingDuration(callLogInfo.getCallOutgoingDuration());
+            temp.setCallIncomingOutgoingCount(callLogInfo.getTotalIncomingOutgoingCount());
+            temp.setCallIncomingOutgoingDuration(callLogInfo.getTotalIncomingOutgoingDuration());
+
+            temp.setTotalIncomingCount(callLogInfo.getTotalIncomingCount());
+            temp.setTotalIncomingDuration(callLogInfo.getTotalIncomingDuration());
+            temp.setTotalOutgoingCount(callLogInfo.getTotalOutgoingCount());
+            temp.setTotalOutgoingDuration(callLogInfo.getTotalOutgoingDuration());
+            temp.setTotalIncomingOutgoingCount(callLogInfo.getTotalIncomingOutgoingCount());
+            temp.setTotalIncomingOutgoingDuration(callLogInfo.getTotalIncomingOutgoingDuration());
+
+            temp.setTotalDistinctContacts(callLogInfo.getTotalDistinctContacts());
+
+            temp.setIndividualScore(callLogInfo.getIndividualScore());
+            temp.setGlobalScore(callLogInfo.getGlobalScore());
+
+            temp.setUnknownBias(callLogInfo.getUnknownBias());
+            temp.setKnownBias(callLogInfo.getKnownBias());
+
+            temp.setWeekDayBias(callLogInfo.getWeekDayBias());
+            temp.setWeekEndBias(callLogInfo.getWeekEndBias());
+            temp.setWeekDayDuration(callLogInfo.getWeekDayDuration());
+            temp.setWeekEndDuration(callLogInfo.getWeekEndDuration());
+
+            float pastSocializingContactBias = PastSocialContactBias.getInstance(context).getDifference(callLogInfo.getNumber(), callLogInfo.getDate());
+            temp.setPastSocializingContactBias(pastSocializingContactBias);
+
+            float finalHMIndividualUsersPerWeek = callLogInfo.getFinalIndividualScore() + pastSocializingContactBias;
+            float finalHMTotalUsers = callLogInfo.getFinalGlobalScore();
+            temp.setFinalIndividualScore(finalHMIndividualUsersPerWeek);
+
+            temp.setSocialStatus(finalHMIndividualUsersPerWeek*10>finalHMTotalUsers);
+            List.set(i,temp);
+        }
+        return List;
     }
+
+//    public HashMap<String, ContactDetails> getHashMapOfNumber(String number, long LastDayToCount,Long start_day){
+//        HashMap<String, ContactDetails> distinctContactsMap = new HashMap<>();
+//        for(CallLogInfo callLogInfo: incomingCallList) {
+//            if (callLogInfo.getNumber().equals(number) && callLogInfo.getDate() >= LastDayToCount && callLogInfo.getDate() < start_day){
+//                String key = callLogInfo.getNumber();
+//                long duration = callLogInfo.getDuration();
+//                if(distinctContactsMap.containsKey(key)){
+//                    ContactDetails contactDetails = new ContactDetails();
+//                    contactDetails.setTimes(Objects.requireNonNull(distinctContactsMap.get(key)).getTimes()+1);
+//                    contactDetails.setDuration(Objects.requireNonNull(distinctContactsMap.get(key)).getDuration()+duration);
+//                    distinctContactsMap.put(key,contactDetails);
+//                }
+//                else{
+//                    ContactDetails contactDetails = new ContactDetails();
+//                    contactDetails.setTimes(1);
+//                    contactDetails.setDuration(duration);
+//                    distinctContactsMap.put(key,contactDetails);
+//                }
+//            }
+//        }
+//        for(CallLogInfo callLogInfo: outgoingCallList){
+//            if(callLogInfo.getDuration()>0){
+//                if (callLogInfo.getNumber().equals(number) && callLogInfo.getDate() >= LastDayToCount && callLogInfo.getDate() < start_day){
+//                    String key = callLogInfo.getNumber();
+//                    long duration = callLogInfo.getDuration();
+//                    if(distinctContactsMap.containsKey(key)){
+//                        ContactDetails contactDetails = new ContactDetails();
+//                        contactDetails.setTimes(Objects.requireNonNull(distinctContactsMap.get(key)).getTimes()+1);
+//                        contactDetails.setDuration(Objects.requireNonNull(distinctContactsMap.get(key)).getDuration()+duration);
+////                    ++distinctContactsMap.get(key);
+//                        distinctContactsMap.put(key,contactDetails);
+//                    }
+//                    else{
+//                        ContactDetails contactDetails = new ContactDetails();
+//                        contactDetails.setTimes(1);
+//                        contactDetails.setDuration(duration);
+//                        distinctContactsMap.put(key,contactDetails);
+//                    }
+//                }
+//            }
+//        }
+//
+//        return distinctContactsMap;
+//    }
 
     public HashMap<String, ContactDetails> getHashMap(long LastDayToCount,Long start_day){
         HashMap<String, ContactDetails> distinctContactsMap = new HashMap<>();
         for(CallLogInfo callLogInfo: incomingCallList) {
-            if (callLogInfo.getDate() >= LastDayToCount && callLogInfo.getDate() <= start_day){
+            if (callLogInfo.getDate() >= LastDayToCount && callLogInfo.getDate() < start_day){
                 String key = callLogInfo.getNumber();
                 long duration = callLogInfo.getDuration();
                 if(distinctContactsMap.containsKey(key)){
@@ -520,7 +485,7 @@ public class CallLogUtils {
         }
         for(CallLogInfo callLogInfo: outgoingCallList){
             if(callLogInfo.getDuration()>0){
-                if (callLogInfo.getDate() >= LastDayToCount && callLogInfo.getDate() <= start_day){
+                if (callLogInfo.getDate() >= LastDayToCount && callLogInfo.getDate() < start_day){
                     String key = callLogInfo.getNumber();
                     long duration = callLogInfo.getDuration();
                     if(distinctContactsMap.containsKey(key)){

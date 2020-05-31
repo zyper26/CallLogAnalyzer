@@ -15,6 +15,8 @@ import com.google.android.material.tabs.TabLayout;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.time.Instant;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,11 +66,44 @@ public class SocializingOnlineActivity extends AppCompatActivity {
         File file = new File(logDir, filename);
         FileOutputStream outputStream;
         Log.d(TAG,  "createFileOfCallLogs: " + file);
+        if(file.exists()){
+            file.delete();
+        }
         try {
             outputStream = new FileOutputStream(file,true);
 //            Toast.makeText(this, "file creating", Toast.LENGTH_SHORT).show();
+            outputStream.write(("Date" + ",").getBytes());
+            outputStream.write(("Name" + ",").getBytes());
+            outputStream.write(("Number" + ",").getBytes());
+            outputStream.write(("CallType" + ",").getBytes());
+            outputStream.write(("Duration" + ",").getBytes());
+            outputStream.write(("SocialStatus" + ",").getBytes());
+            outputStream.write(("CallIncomingCount" +",").getBytes());
+            outputStream.write(("CallIncomingDuration" +",").getBytes());
+            outputStream.write(("CallOutgoingCount" +",").getBytes());
+            outputStream.write(("CallOutgoingDuration" +",").getBytes());
+            outputStream.write(("CallIncomingOutgoingCount" +",").getBytes());
+            outputStream.write(("CallIncomingOutgoingDuration" +",").getBytes());
+            outputStream.write(("TotalIncomingCount" +",").getBytes());
+            outputStream.write(("TotalIncomingDuration" +",").getBytes());
+            outputStream.write(("TotalOutgoingCount" +",").getBytes());
+            outputStream.write(("TotalOutgoingDuration" +",").getBytes());
+            outputStream.write(("TotalIncomingOutgoingCount" +",").getBytes());
+            outputStream.write(("TotalIncomingOutgoingDuration" +",").getBytes());
+            outputStream.write(("TotalDistinctContacts" +",").getBytes());
+            outputStream.write(("IndividualScore" +",").getBytes());
+            outputStream.write(("GlobalScore" +",").getBytes());
+            outputStream.write(("KnownBias" +",").getBytes());
+            outputStream.write(("UnknownBias" +",").getBytes());
+            outputStream.write(("WeekDayBias" +",").getBytes());
+            outputStream.write(("WeekEndBias" +",").getBytes());
+            outputStream.write(("WeekDayDuration" +",").getBytes());
+            outputStream.write(("WeekEndDuration" +",").getBytes());
+            outputStream.write(("PastSocializingContactBias" +",").getBytes());
+            outputStream.write(("FinalIndividualScore" +",").getBytes());
+            outputStream.write(("getFinalGlobalScore" +"\n").getBytes());
             for(CallLogInfo callLogInfo:mainList){
-                outputStream.write((callLogInfo.getDate() + ",").getBytes());
+                outputStream.write((Instant.ofEpochMilli(callLogInfo.getDate()).atZone(ZoneId.systemDefault()).toLocalDateTime() + ",").getBytes());
                 outputStream.write((callLogInfo.getName() + ",").getBytes());
                 outputStream.write((callLogInfo.getNumber() + ",").getBytes());
                 outputStream.write((callLogInfo.getCallType() + ",").getBytes());

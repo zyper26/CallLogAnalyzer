@@ -6,8 +6,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import com.example.socialization.Biases.KnownUnknownBiases;
-import com.example.socialization.Biases.WeekDayBiases;
 import com.example.socialization.CallFeatures.CallLogInfo;
 import com.example.socialization.R;
 import com.example.socialization.utils.CallLogUtils;
@@ -19,8 +17,6 @@ import java.util.ArrayList;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
-import static com.example.socialization.utils.Utils.getStartOfDay;
 
 public class SocialScoreStatistics extends AppCompatActivity {
 
@@ -72,112 +68,62 @@ public class SocialScoreStatistics extends AppCompatActivity {
         String number = getIntent().getStringExtra("number");
         String name = getIntent().getStringExtra("name");
         long start_day = getIntent().getLongExtra("date",0);
+//        ArrayList<Parcelable> callLogInfo1 = getIntent().getParcelableArrayListExtra("CallLogInfo");
 //        long duration= getIntent().getLongExtra("duration",0);
         if(number == null){
             finish();
             return;
         }
         CallLogUtils callLogUtils = CallLogUtils.getInstance(this);
-        start_day = getStartOfDay(start_day);
 
 //        ------------ Individual Scores ----------------
+        CallLogInfo callLogInfo = new CallLogInfo();
+        ArrayList<CallLogInfo> allCallLogs = callLogUtils.readCallLogs();
+//        allCallLogs = callLogUtils.updatePastSocializingContacts(allCallLogs);
+        for(CallLogInfo callLogInfo1:allCallLogs){
+            if(callLogInfo1.getNumber().equals(number) && callLogInfo1.getDate() ==start_day){
+                callLogInfo=callLogInfo1;
+                break;
+            }
+        }
         long LastDayToCount = Utils.getLastDayToCount(callLogUtils.getTotalNumberOfWeeks(start_day),start_day);
-        start_day = getStartOfDay(start_day);
-        ArrayList<CallLogInfo> incomingCalls = callLogUtils.getIncomingCalls();
-        ArrayList<CallLogInfo> outgoingCalls = callLogUtils.getOutgoingCalls();
-        long totalCallsIncoming = 0, totalCallsOutgoing = 0;
-        long totalDurationIncoming = 0, totalDurationOutgoing=0;
-        for(CallLogInfo callLogInfo: incomingCalls){
-            if (callLogInfo.getDate() >= LastDayToCount &&
-                    callLogInfo.getNumber().equals(number) &&
-                    callLogInfo.getDate() <= start_day){
-                totalCallsIncoming++;
-                totalDurationIncoming += callLogInfo.getDuration();
-            }
-        }
-        for(CallLogInfo callLogInfo: outgoingCalls){
-            if (callLogInfo.getDate() >= LastDayToCount &&
-                    callLogInfo.getNumber().equals(number) &&
-                    callLogInfo.getDuration() > 0 &&
-                    callLogInfo.getDate() <= start_day){
-                totalCallsOutgoing++;
-                totalDurationOutgoing += callLogInfo.getDuration();
-            }
-        }
-        long totalCalls = totalCallsIncoming+totalCallsOutgoing;
-        long totalDurations = totalDurationIncoming+totalDurationOutgoing;
-//      ------------------------------------------------------
-
-//        ---------------------Global Scores-----------------------
-        long AllCallsIncoming = 0, AllCallsOutgoing = 0;
-        long AllDurationIncoming = 0, AllDurationOutgoing=0;
-
-        for(CallLogInfo callLogInfo: incomingCalls) {
-            if (callLogInfo.getDate() >= LastDayToCount && callLogInfo.getDate() <= start_day){
-                AllCallsIncoming++;
-                AllDurationIncoming += callLogInfo.getDuration();
-            }
-        }
-        for(CallLogInfo callLogInfo: outgoingCalls){
-            if(callLogInfo.getDuration()>0 && callLogInfo.getDate()>=LastDayToCount && callLogInfo.getDate() <= start_day) {
-                AllCallsOutgoing++;
-                AllDurationOutgoing += callLogInfo.getDuration();
-            }
-        }
-
-        long AllCalls = AllCallsIncoming + AllCallsOutgoing;
-        long AllDurations = AllDurationIncoming + AllDurationOutgoing;
 
 //        ------------------------------------------------------------
 
 //       ------------------------- Assign Individual Values ------------------
-        textViewIndividualCallCountTotal.setText(String.valueOf(totalCalls));
-        textViewIndividualCallDurationsTotal.setText(Utils.formatSeconds(totalDurations));
+        textViewIndividualCallCountTotal.setText(String.valueOf(callLogInfo.getCallIncomingOutgoingCount()));
+        textViewIndividualCallDurationsTotal.setText(Utils.formatSeconds(callLogInfo.getCallIncomingOutgoingDuration()));
 
-        textViewIndividualCallCountIncoming.setText(String.valueOf(totalCallsIncoming));
-        textViewIndividualCallDurationsIncoming.setText(Utils.formatSeconds(totalDurationIncoming));
+        textViewIndividualCallCountIncoming.setText(String.valueOf(callLogInfo.getCallIncomingCount()));
+        textViewIndividualCallDurationsIncoming.setText(Utils.formatSeconds(callLogInfo.getCallIncomingDuration()));
 
-        textViewIndividualCallCountOutgoing.setText(String.valueOf(totalCallsOutgoing));
-        textViewIndividualCallDurationsOutgoing.setText(Utils.formatSeconds(totalDurationOutgoing));
+        textViewIndividualCallCountOutgoing.setText(String.valueOf(callLogInfo.getCallOutgoingCount()));
+        textViewIndividualCallDurationsOutgoing.setText(Utils.formatSeconds(callLogInfo.getCallOutgoingDuration()));
 
 //       ----------------------------- Assign Global Values ---------------------
-        textViewGlobalCallCountTotal.setText(String.valueOf(AllCalls));
-        textViewGlobalCallDurationsTotal.setText(Utils.formatSeconds(AllDurations));
+        textViewGlobalCallCountTotal.setText(String.valueOf(callLogInfo.getTotalIncomingOutgoingCount()));
+        textViewGlobalCallDurationsTotal.setText(Utils.formatSeconds(callLogInfo.getTotalIncomingOutgoingDuration()));
 
-        textViewGlobalCallCountIncoming.setText(String.valueOf(AllCallsIncoming));
-        textViewGlobalCallDurationsIncoming.setText(Utils.formatSeconds(AllDurationIncoming));
+        textViewGlobalCallCountIncoming.setText(String.valueOf(callLogInfo.getTotalIncomingCount()));
+        textViewGlobalCallDurationsIncoming.setText(Utils.formatSeconds(callLogInfo.getTotalIncomingDuration()));
 
-        textViewGlobalCallCountOutgoing.setText(String.valueOf(AllCallsOutgoing));
-        textViewGlobalCallDurationsOutgoing.setText(Utils.formatSeconds(AllDurationOutgoing));
+        textViewGlobalCallCountOutgoing.setText(String.valueOf(callLogInfo.getTotalOutgoingCount()));
+        textViewGlobalCallDurationsOutgoing.setText(Utils.formatSeconds(callLogInfo.getTotalOutgoingDuration()));
 
-//        --------------------------Distinct Contacts ---------------------
-
-        long distinctContacts = callLogUtils.getTotalDistinctContacts(start_day);
 
 //        ------------------------------Socializing Scores---------------------------
 
-        SocialScore socialScore = SocialScore.getInstance(this);
-
-        float[] result = socialScore.getSocialScoreWithBiases(number,start_day);
-        float HMIndividualUsersPerWeek =  result[0];
-        float HMTotalCallDurations = result[1];
-
-        textViewIndividualScorePerWeekCallDurations.setText(String.valueOf(HMIndividualUsersPerWeek));
-        textViewHMTotalCallDurations.setText(String.valueOf(HMTotalCallDurations));
+        textViewIndividualScorePerWeekCallDurations.setText(String.valueOf(callLogInfo.getIndividualScore()));
+        textViewHMTotalCallDurations.setText(String.valueOf(callLogInfo.getGlobalScore()));
 
 
 //        ----------------------------------Biases Scores-------------------------------------------
 
-        float[] DayOfWeekBias = WeekDayBiases.getInstance(getApplicationContext()).getPercentageOfBiases(number,start_day);
+        textViewWeekDayBias.setText(String.valueOf(callLogInfo.getWeekDayBias()));
+        textViewWeekEndBias.setText(String.valueOf(callLogInfo.getWeekEndBias()));
 
-        textViewWeekDayBias.setText(String.valueOf(DayOfWeekBias[0]));
-        textViewWeekEndBias.setText(String.valueOf(DayOfWeekBias[1]));
-
-        float knownBias = KnownUnknownBiases.getInstance(getApplicationContext()).getKnownBias(number, start_day);
-        float unknownBias = KnownUnknownBiases.getInstance(getApplicationContext()).getUnknownBias(number, start_day);
-
-        textViewKnownBias.setText(String.valueOf(knownBias));
-        textViewUnknownBias.setText(String.valueOf(unknownBias));
+        textViewKnownBias.setText(String.valueOf(callLogInfo.getKnownBias()));
+        textViewUnknownBias.setText(String.valueOf(callLogInfo.getUnknownBias()));
 
 //        ---------------------------------------Name and Number------------------------------------
 
@@ -187,7 +133,7 @@ public class SocialScoreStatistics extends AppCompatActivity {
 //        textViewNumber.setText("Anonymous");
 //        textViewName.setText("Anonymous");
 
-        textViewDistinctContacts.setText(String.valueOf(distinctContacts+ " Last Date Taken: "+ Instant.ofEpochMilli(LastDayToCount).atZone(ZoneId.systemDefault()).toLocalDateTime()));
+        textViewDistinctContacts.setText(String.valueOf(callLogInfo.getTotalDistinctContacts()+ " Last Date Taken: "+ Instant.ofEpochMilli(LastDayToCount).atZone(ZoneId.systemDefault()).toLocalDateTime()));
     }
 
     @Override

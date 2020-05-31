@@ -7,6 +7,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 public class Utils {
+    private static final String TAG = "Utils";
     public static String formatSeconds(long timeInSeconds)
     {
         int hours = (int) (timeInSeconds / 3600);
@@ -50,25 +51,26 @@ public class Utils {
         DayOfWeek day = input.getDayOfWeek();
         LocalDateTime startOfLastWeek = input.minusWeeks(WeekNumber).with(day);
         startOfLastWeek = startOfLastWeek.toLocalDate().atStartOfDay();
-
-        long endOfLastWeekMilli = input.minusWeeks(WeekNumber-1).with(day).toLocalDate().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        long endOfLastWeekMilli;
+        if(WeekNumber!=1)
+            endOfLastWeekMilli = input.minusWeeks(WeekNumber-1).with(day).toLocalDate().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        else
+            endOfLastWeekMilli = input.minusWeeks(WeekNumber-1).with(day).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+//        Log.d(TAG, "getPerWeekDatesRange: " + WeekNumber + " " + Instant.ofEpochMilli(endOfLastWeekMilli).atZone(ZoneId.systemDefault()).toLocalDateTime());;
         long startOfLastWeekMilli = startOfLastWeek.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
         result[1] = endOfLastWeekMilli;
         result[0] = startOfLastWeekMilli;
         return result;
     }
 
-    public static long getLastDayToCount(long number_of_weeks,long start_day){
-        LocalDateTime input = Instant.ofEpochMilli(start_day).atZone(ZoneId.systemDefault()).toLocalDateTime();
-//        Log.d(TAG, "getLastDayToCount1: " + input);
-        DayOfWeek day = input.getDayOfWeek();
-        LocalDateTime endOfLastWeek = input.minusWeeks(number_of_weeks).with(day);
-        endOfLastWeek = endOfLastWeek.toLocalDate().atStartOfDay();
-//        Log.d(TAG, "getLastDayToCount2: " + endOfLastWeek);
-        LocalDateTime startOfLastWeek = endOfLastWeek;
-//        Log.d(TAG, "getLastDayToCount3: " + startOfLastWeek);
-        long startOfLastWeekMilli = startOfLastWeek.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-        return startOfLastWeekMilli;
+    public static long getLastDayToCount(long number_of_weeks,long start_day) {
+        LocalDateTime LastDayLDT = Instant.ofEpochMilli(start_day).atZone(ZoneId.systemDefault()).toLocalDateTime();
+        DayOfWeek day = LastDayLDT.getDayOfWeek();
+        LocalDateTime FirstDay = LastDayLDT.minusWeeks(number_of_weeks).with(day);
+        FirstDay = FirstDay.toLocalDate().atStartOfDay();
+        LocalDateTime FirstDayLDT = FirstDay;
+        long FirstDayMilli = FirstDayLDT.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        return FirstDayMilli;
     }
 
     public static long getStartOfDay(long start_day){

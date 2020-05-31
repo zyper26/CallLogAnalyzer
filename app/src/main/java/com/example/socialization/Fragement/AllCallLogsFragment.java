@@ -5,9 +5,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.socialization.CallFeatures.CallLogInfo;
 import com.example.socialization.CallLogAdapter;
 import com.example.socialization.R;
 import com.example.socialization.utils.CallLogUtils;
+
+import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -43,7 +46,10 @@ public class AllCallLogsFragment extends Fragment {
 
     public void loadData(){
         CallLogUtils callLogUtils = CallLogUtils.getInstance(getContext());
-        adapter.addAllCallLog(callLogUtils.readCallLogs());
+        ArrayList<CallLogInfo> allCallLogs = callLogUtils.readCallLogs();
+//        allCallLogs = callLogUtils.updateSocialStatusList(allCallLogs);
+//        allCallLogs = callLogUtils.updatePastSocializingContacts(allCallLogs);
+        adapter.addAllCallLog(allCallLogs);
         adapter.notifyDataSetChanged();
     }
 }

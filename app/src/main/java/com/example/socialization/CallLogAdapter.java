@@ -150,6 +150,7 @@ public class CallLogAdapter extends RecyclerView.Adapter<CallLogAdapter.CallLogV
             intent.putExtra("name",callLogInfoArrayList.get(getAdapterPosition()).getName());
             intent.putExtra("date",callLogInfoArrayList.get(getAdapterPosition()).getDate());
             intent.putExtra("duration",callLogInfoArrayList.get(getAdapterPosition()).getDuration());
+//            intent.putExtra("CallLogInfo", (CallLogInfo) callLogInfoArrayList.get(getAdapterPosition()));
             context.startActivity(intent);
         }
     }
