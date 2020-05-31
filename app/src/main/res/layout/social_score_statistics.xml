@@ -68,12 +68,12 @@
         </LinearLayout>
 
         <TextView
-            android:text="INDIVIDUAL VOICE CALLS"
+            android:text="WEEKLY VOICE CALLS"
             android:textSize="20sp"
             android:textStyle="bold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/textViewIndividualVoiceCalls"
+            android:id="@+id/textViewWeeklyVoiceCalls"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/layoutHeader"
             android:layout_marginTop="20dp"
@@ -86,42 +86,34 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewIndividualVoiceCalls"
+            app:layout_constraintTop_toBottomOf="@+id/textViewWeeklyVoiceCalls"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="10dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:id="@+id/separateViewIndividualVoiceCalls"
+            android:id="@+id/separateViewWeeklyVoiceCalls"
             />
 
         <LinearLayout
-            android:id="@+id/layoutIndividualVoiceCalls"
+            android:id="@+id/layoutWeek1VoiceCalls"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/separateViewIndividualVoiceCalls"
+            app:layout_constraintTop_toBottomOf="@+id/separateViewWeeklyVoiceCalls"
             >
 
             <LinearLayout
-                android:id="@+id/layoutIndividualIncomingCalls"
+                android:id="@+id/layoutWeek1Calls"
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
+                android:layout_margin="10dp"
+                android:paddingLeft="15dp"
                 >
 
-                <ImageView
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:src="@drawable/ic_missed"
-                    android:tint="@color/blue"
-                    android:padding="7dp"
-                    android:layout_weight="0.2"
-                    />
-
                 <TextView
-                    android:text="Incoming"
+                    android:text="Week 1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -133,7 +125,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical|center_horizontal"
-                    android:id="@+id/textViewIndividualCallCountIncoming"
+                    android:id="@+id/textViewWeek1Frequency"
                     android:textSize="17sp"
                     android:layout_weight="0.8"
                     />
@@ -143,162 +135,34 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical|center_horizontal"
-                    android:id="@+id/textViewIndividualCallDurationsIncoming"
+                    android:id="@+id/textViewWeek1Duration"
                     android:textSize="17sp"
                     android:layout_weight="1"
-                    />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/layoutIndividualOutgoingCalls"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp">
-
-                <ImageView
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:src="@drawable/ic_outgoing"
-                    android:tint="@color/green"
-                    android:padding="7dp"
-                    android:layout_weight="0.2"
-                    />
-
-                <TextView
-                    android:text="Outgoing"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:textSize="17sp"
-                    android:layout_weight="1"/>
-
-                <TextView
-                    android:text="Call Count"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|center_horizontal"
-                    android:id="@+id/textViewIndividualCallCountOutgoing"
-                    android:textSize="17sp"
-                    android:layout_weight="0.8"
-                    />
-
-                <TextView
-                    android:text="Call Durations"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|center_horizontal"
-                    android:id="@+id/textViewIndividualCallDurationsOutgoing"
-                    android:layout_weight="1"
-                    android:textSize="17sp"
-                    />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/layoutIndividualAllCalls"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp">
-
-                <ImageView
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:src="@drawable/ic_missed"
-                    android:tint="@color/red"
-                    android:padding="7dp"
-                    android:layout_weight="0.2"
-                    android:visibility="invisible"
-                    />
-
-                <TextView
-                    android:text="Total"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
-                    android:textSize="17sp"
-                    />
-
-                <TextView
-                    android:text="Call Count"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|center_horizontal"
-                    android:id="@+id/textViewIndividualCallCountTotal"
-                    android:layout_weight="0.8"
-                    android:textSize="17sp"
-                    />
-
-                <TextView
-                    android:text="Call Durations"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|center_horizontal"
-                    android:id="@+id/textViewIndividualCallDurationsTotal"
-                    android:layout_weight="1"
-                    android:textSize="17sp"
                     />
             </LinearLayout>
 
         </LinearLayout>
 
-        <TextView
-            android:text="GLOBAL VOICE CALLS"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/textViewGlobalVoiceCalls"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/layoutIndividualVoiceCalls"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"/>
-
-        <View
-            android:background="@color/colorPrimaryDark"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewGlobalVoiceCalls"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:id="@+id/separateViewGlobalVoiceCalls"
-            />
-
-
         <LinearLayout
-            android:id="@+id/layoutVoiceCalls"
+            android:id="@+id/layoutWeek2VoiceCalls"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/separateViewGlobalVoiceCalls"
+            app:layout_constraintTop_toBottomOf="@+id/layoutWeek1VoiceCalls"
             >
 
             <LinearLayout
-                android:id="@+id/layoutGlobalIncomingCalls"
+                android:id="@+id/layoutWeek2Calls"
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
+                android:layout_margin="10dp"
+                android:paddingLeft="15dp"
                 >
 
-                <ImageView
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:src="@drawable/ic_missed"
-                    android:tint="@color/blue"
-                    android:padding="7dp"
-                    android:layout_weight="0.2"
-                    />
-
                 <TextView
-                    android:text="Incoming"
+                    android:text="Week 2"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -310,7 +174,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical|center_horizontal"
-                    android:id="@+id/textViewGlobalCallCountIncoming"
+                    android:id="@+id/textViewWeek2Frequency"
                     android:textSize="17sp"
                     android:layout_weight="0.8"
                     />
@@ -320,105 +184,309 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical|center_horizontal"
-                    android:id="@+id/textViewGlobalCallDurationsIncoming"
+                    android:id="@+id/textViewWeek2Duration"
                     android:textSize="17sp"
                     android:layout_weight="1"
-                    />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/layoutGlobalOutgoingCalls"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp">
-
-                <ImageView
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:src="@drawable/ic_outgoing"
-                    android:tint="@color/green"
-                    android:padding="7dp"
-                    android:layout_weight="0.2"
-                    />
-
-                <TextView
-                    android:text="Outgoing"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:textSize="17sp"
-                    android:layout_weight="1"/>
-
-                <TextView
-                    android:text="Call Count"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|center_horizontal"
-                    android:id="@+id/textViewGlobalCallCountOutgoing"
-                    android:textSize="17sp"
-                    android:layout_weight="0.8"
-                    />
-
-                <TextView
-                    android:text="Call Durations"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|center_horizontal"
-                    android:id="@+id/textViewGlobalCallDurationsOutgoing"
-                    android:layout_weight="1"
-                    android:textSize="17sp"
-                    />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/layoutGlobalAllCalls"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp">
-
-                <ImageView
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:src="@drawable/ic_missed"
-                    android:tint="@color/red"
-                    android:padding="7dp"
-                    android:layout_weight="0.2"
-                    android:visibility="invisible"
-                    />
-
-                <TextView
-                    android:text="Total"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
-                    android:textSize="17sp"
-                    />
-
-                <TextView
-                    android:text="Call Count"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|center_horizontal"
-                    android:id="@+id/textViewGlobalCallCountTotal"
-                    android:layout_weight="0.8"
-                    android:textSize="17sp"
-                    />
-
-                <TextView
-                    android:text="Call Durations"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|center_horizontal"
-                    android:id="@+id/textViewGlobalCallDurationsTotal"
-                    android:layout_weight="1"
-                    android:textSize="17sp"
                     />
             </LinearLayout>
 
         </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layoutWeek3VoiceCalls"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layoutWeek2VoiceCalls"
+            >
+
+            <LinearLayout
+                android:id="@+id/layoutWeek3Calls"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:paddingLeft="15dp"
+                >
+
+                <TextView
+                    android:text="Week 3"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:textSize="17sp"
+                    android:layout_weight="1"/>
+
+                <TextView
+                    android:text="Call Count"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:id="@+id/textViewWeek3Frequency"
+                    android:textSize="17sp"
+                    android:layout_weight="0.8"
+                    />
+
+                <TextView
+                    android:text="Call Durations"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:id="@+id/textViewWeek3Duration"
+                    android:textSize="17sp"
+                    android:layout_weight="1"
+                    />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layoutWeek4VoiceCalls"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layoutWeek3VoiceCalls"
+            >
+
+            <LinearLayout
+                android:id="@+id/layoutWeek4Calls"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:paddingLeft="15dp"
+                >
+
+                <TextView
+                    android:text="Week 4"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:textSize="17sp"
+                    android:layout_weight="1"/>
+
+                <TextView
+                    android:text="Call Count"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:id="@+id/textViewWeek4Frequency"
+                    android:textSize="17sp"
+                    android:layout_weight="0.8"
+                    />
+
+                <TextView
+                    android:text="Call Durations"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:id="@+id/textViewWeek4Duration"
+                    android:textSize="17sp"
+                    android:layout_weight="1"
+                    />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layoutWeek5VoiceCalls"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layoutWeek4VoiceCalls"
+            >
+
+            <LinearLayout
+                android:id="@+id/layoutWeek5Calls"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:paddingLeft="15dp"
+                >
+
+                <TextView
+                    android:text="Week 5"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:textSize="17sp"
+                    android:layout_weight="1"/>
+
+                <TextView
+                    android:text="Call Count"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:id="@+id/textViewWeek5Frequency"
+                    android:textSize="17sp"
+                    android:layout_weight="0.8"
+                    />
+
+                <TextView
+                    android:text="Call Durations"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:id="@+id/textViewWeek5Duration"
+                    android:textSize="17sp"
+                    android:layout_weight="1"
+                    />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layoutWeek6VoiceCalls"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layoutWeek5VoiceCalls"
+            >
+
+            <LinearLayout
+                android:id="@+id/layoutWeek6Calls"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:paddingLeft="15dp"
+                >
+
+                <TextView
+                    android:text="Week 6"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:textSize="17sp"
+                    android:layout_weight="1"/>
+
+                <TextView
+                    android:text="Call Count"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:id="@+id/textViewWeek6Frequency"
+                    android:textSize="17sp"
+                    android:layout_weight="0.8"
+                    />
+
+                <TextView
+                    android:text="Call Durations"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:id="@+id/textViewWeek6Duration"
+                    android:textSize="17sp"
+                    android:layout_weight="1"
+                    />
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/layoutWeek7VoiceCalls"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layoutWeek6VoiceCalls"
+            >
+
+            <LinearLayout
+                android:id="@+id/layoutWeek7Calls"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:paddingLeft="15dp"
+                >
+
+                <TextView
+                    android:text="Week 7"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:textSize="17sp"
+                    android:layout_weight="1"/>
+
+                <TextView
+                    android:text="Call Count"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:id="@+id/textViewWeek7Frequency"
+                    android:textSize="17sp"
+                    android:layout_weight="0.8"
+                    />
+
+                <TextView
+                    android:text="Call Durations"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:id="@+id/textViewWeek7Duration"
+                    android:textSize="17sp"
+                    android:layout_weight="1"
+                    />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layoutWeek8VoiceCalls"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layoutWeek7VoiceCalls"
+            >
+
+            <LinearLayout
+                android:id="@+id/layoutWeek8Calls"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:paddingLeft="15dp"
+                >
+
+                <TextView
+                    android:text="Week 8"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:textSize="17sp"
+                    android:layout_weight="1"/>
+
+                <TextView
+                    android:text="Call Count"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:id="@+id/textViewWeek8Frequency"
+                    android:textSize="17sp"
+                    android:layout_weight="0.8"
+                    />
+
+                <TextView
+                    android:text="Call Durations"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:id="@+id/textViewWeek8Duration"
+                    android:textSize="17sp"
+                    android:layout_weight="1"
+                    />
+            </LinearLayout>
+
+        </LinearLayout>
+
 
         <TextView
             android:text="SOCIALIZING SCORE"
@@ -428,7 +496,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/textViewSocializingScore"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/layoutVoiceCalls"
+            app:layout_constraintTop_toBottomOf="@+id/layoutWeek8VoiceCalls"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="5dp"
             android:layout_marginLeft="20dp"

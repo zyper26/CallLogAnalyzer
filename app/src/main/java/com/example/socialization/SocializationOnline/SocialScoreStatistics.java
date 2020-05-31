@@ -21,12 +21,14 @@ import androidx.appcompat.app.AppCompatActivity;
 public class SocialScoreStatistics extends AppCompatActivity {
 
     private static final String TAG = "SocialScoreStatistics";
-    TextView textViewIndividualCallCountTotal,textViewIndividualCallDurationsTotal,
-            textViewIndividualCallCountIncoming,textViewIndividualCallDurationsIncoming,
-            textViewIndividualCallDurationsOutgoing,textViewIndividualCallCountOutgoing,
-            textViewGlobalCallCountTotal,textViewGlobalCallDurationsTotal,
-            textViewGlobalCallCountIncoming,textViewGlobalCallDurationsIncoming,
-            textViewGlobalCallDurationsOutgoing,textViewGlobalCallCountOutgoing,
+    TextView textViewWeek1Frequency, textViewWeek1Duration,
+            textViewWeek2Frequency, textViewWeek2Duration,
+            textViewWeek3Frequency, textViewWeek3Duration,
+            textViewWeek4Frequency, textViewWeek4Duration,
+            textViewWeek5Frequency, textViewWeek5Duration,
+            textViewWeek6Frequency, textViewWeek6Duration,
+            textViewWeek7Frequency, textViewWeek7Duration,
+            textViewWeek8Frequency, textViewWeek8Duration,
 
             textViewIndividualScorePerWeekCallDurations, textViewHMTotalCallDurations,
             textViewWeekDayBias,textViewWeekEndBias,
@@ -39,18 +41,22 @@ public class SocialScoreStatistics extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.social_score_statistics);
-        textViewIndividualCallCountTotal = findViewById(R.id.textViewIndividualCallCountTotal);
-        textViewIndividualCallDurationsTotal = findViewById(R.id.textViewIndividualCallDurationsTotal);
-        textViewIndividualCallCountIncoming = findViewById(R.id.textViewIndividualCallCountIncoming);
-        textViewIndividualCallDurationsIncoming = findViewById(R.id.textViewIndividualCallDurationsIncoming);
-        textViewIndividualCallDurationsOutgoing = findViewById(R.id.textViewIndividualCallDurationsOutgoing);
-        textViewIndividualCallCountOutgoing = findViewById(R.id.textViewIndividualCallCountOutgoing);
-        textViewGlobalCallCountTotal = findViewById(R.id.textViewGlobalCallCountTotal);
-        textViewGlobalCallDurationsTotal = findViewById(R.id.textViewGlobalCallDurationsTotal);
-        textViewGlobalCallCountIncoming = findViewById(R.id.textViewGlobalCallCountIncoming);
-        textViewGlobalCallDurationsIncoming = findViewById(R.id.textViewGlobalCallDurationsIncoming);
-        textViewGlobalCallDurationsOutgoing = findViewById(R.id.textViewGlobalCallDurationsOutgoing);
-        textViewGlobalCallCountOutgoing = findViewById(R.id.textViewGlobalCallCountOutgoing);
+        textViewWeek1Frequency = findViewById(R.id.textViewWeek1Frequency);
+        textViewWeek1Duration = findViewById(R.id.textViewWeek1Duration);
+        textViewWeek2Frequency = findViewById(R.id.textViewWeek2Frequency);
+        textViewWeek2Duration = findViewById(R.id.textViewWeek2Duration);
+        textViewWeek3Frequency = findViewById(R.id.textViewWeek3Frequency);
+        textViewWeek3Duration = findViewById(R.id.textViewWeek3Duration);
+        textViewWeek4Frequency = findViewById(R.id.textViewWeek4Frequency);
+        textViewWeek4Duration = findViewById(R.id.textViewWeek4Duration);
+        textViewWeek5Frequency = findViewById(R.id.textViewWeek5Frequency);
+        textViewWeek5Duration = findViewById(R.id.textViewWeek5Duration);
+        textViewWeek6Frequency = findViewById(R.id.textViewWeek6Frequency);
+        textViewWeek6Duration = findViewById(R.id.textViewWeek6Duration);
+        textViewWeek7Frequency = findViewById(R.id.textViewWeek7Frequency);
+        textViewWeek7Duration = findViewById(R.id.textViewWeek7Duration);
+        textViewWeek8Frequency = findViewById(R.id.textViewWeek8Frequency);
+        textViewWeek8Duration = findViewById(R.id.textViewWeek8Duration);
         textViewIndividualScorePerWeekCallDurations = findViewById(R.id.textViewIndividualScorePerWeekCallDurations);
         textViewHMTotalCallDurations = findViewById(R.id.textViewHMTotalCallDurations);
         textViewWeekDayBias = findViewById(R.id.textViewWeekdayBias);
@@ -90,25 +96,32 @@ public class SocialScoreStatistics extends AppCompatActivity {
 
 //        ------------------------------------------------------------
 
-//       ------------------------- Assign Individual Values ------------------
-        textViewIndividualCallCountTotal.setText(String.valueOf(callLogInfo.getCallIncomingOutgoingCount()));
-        textViewIndividualCallDurationsTotal.setText(Utils.formatSeconds(callLogInfo.getCallIncomingOutgoingDuration()));
-
-        textViewIndividualCallCountIncoming.setText(String.valueOf(callLogInfo.getCallIncomingCount()));
-        textViewIndividualCallDurationsIncoming.setText(Utils.formatSeconds(callLogInfo.getCallIncomingDuration()));
-
-        textViewIndividualCallCountOutgoing.setText(String.valueOf(callLogInfo.getCallOutgoingCount()));
-        textViewIndividualCallDurationsOutgoing.setText(Utils.formatSeconds(callLogInfo.getCallOutgoingDuration()));
-
-//       ----------------------------- Assign Global Values ---------------------
-        textViewGlobalCallCountTotal.setText(String.valueOf(callLogInfo.getTotalIncomingOutgoingCount()));
-        textViewGlobalCallDurationsTotal.setText(Utils.formatSeconds(callLogInfo.getTotalIncomingOutgoingDuration()));
-
-        textViewGlobalCallCountIncoming.setText(String.valueOf(callLogInfo.getTotalIncomingCount()));
-        textViewGlobalCallDurationsIncoming.setText(Utils.formatSeconds(callLogInfo.getTotalIncomingDuration()));
-
-        textViewGlobalCallCountOutgoing.setText(String.valueOf(callLogInfo.getTotalOutgoingCount()));
-        textViewGlobalCallDurationsOutgoing.setText(Utils.formatSeconds(callLogInfo.getTotalOutgoingDuration()));
+        long numberOfWeeks = callLogUtils.getTotalNumberOfWeeks(callLogInfo.getDate());
+        float[] AllValues = new float[16];
+        float[] WeekValues;
+        int k=0;
+        for (int j=1; j<=numberOfWeeks; j++){
+            WeekValues = callLogUtils.getHMIndividualContactsPerWeek(callLogInfo.getNumber(), j, callLogInfo.getDate());
+            AllValues[k] = WeekValues[0];
+            AllValues[k+1] = WeekValues[1];
+            k+=2;
+        }
+        textViewWeek1Frequency.setText(String.valueOf(AllValues[0]));
+        textViewWeek1Duration.setText(String.valueOf(AllValues[1]));
+        textViewWeek2Frequency.setText(String.valueOf(AllValues[2]));
+        textViewWeek2Duration.setText(String.valueOf(AllValues[3]));
+        textViewWeek3Frequency.setText(String.valueOf(AllValues[4]));
+        textViewWeek3Duration.setText(String.valueOf(AllValues[5]));
+        textViewWeek4Frequency.setText(String.valueOf(AllValues[6]));
+        textViewWeek4Duration.setText(String.valueOf(AllValues[7]));
+        textViewWeek5Frequency.setText(String.valueOf(AllValues[8]));
+        textViewWeek5Duration.setText(String.valueOf(AllValues[9]));
+        textViewWeek6Frequency.setText(String.valueOf(AllValues[10]));
+        textViewWeek6Duration.setText(String.valueOf(AllValues[11]));
+        textViewWeek7Frequency.setText(String.valueOf(AllValues[12]));
+        textViewWeek7Duration.setText(String.valueOf(AllValues[13]));
+        textViewWeek8Frequency.setText(String.valueOf(AllValues[14]));
+        textViewWeek8Duration.setText(String.valueOf(AllValues[15]));
 
 
 //        ------------------------------Socializing Scores---------------------------

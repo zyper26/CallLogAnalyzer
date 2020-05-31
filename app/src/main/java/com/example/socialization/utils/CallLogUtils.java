@@ -281,22 +281,24 @@ public class CallLogUtils {
         return distinctContactsMap.size();
     }
 
-    public float getHMIndividualContactsPerWeek(String number, int WeekNumber, long start_day){
+    public float[] getHMIndividualContactsPerWeek(String number, int WeekNumber, long start_day){
         HashMap<String, ContactDetails> distinctContactsMap;
         long[] temp = getPerWeekDatesRange(WeekNumber,start_day);
         long LastDayToCount=temp[0];
         start_day=temp[1];
         distinctContactsMap = getHashMap(LastDayToCount,start_day);
         float numerator = 0;
+        float[] result = new float[2];
         for (HashMap.Entry mapElement : distinctContactsMap.entrySet()) {
 //            Log.d(TAG, "getHMIndividualContactsPerWeek: " + mapElement.getKey().getClass().getName() + " " + temp[0] + " " + temp[1]);
             if(String.valueOf(mapElement.getKey()).equals(number)) {
                 ContactDetails contactDetails = (ContactDetails) mapElement.getValue();
-                numerator += (float) contactDetails.getDuration() * (float) contactDetails.getTimes();
+                result[0] = contactDetails.getTimes();
+                result[1] = contactDetails.getDuration();
 //                Log.d(TAG, "getHMIndividualContactsPerWeekContacts: " + numerator);
             }
         }
-        return numerator;
+        return result;
     }
 
     public ArrayList<CallLogInfo> updateSocialStatusList(ArrayList<CallLogInfo> List){
@@ -331,6 +333,33 @@ public class CallLogUtils {
 
                 temp.setTotalDistinctContacts(getTotalDistinctContacts(callLogInfo.getDate()));
 
+                long numberOfWeeks = getTotalNumberOfWeeks(callLogInfo.getDate());
+                float[] AllValues = new float[16];
+                float[] WeekValues;
+                int k=0;
+                for (int j=1; j<=numberOfWeeks; j++){
+                    WeekValues = getHMIndividualContactsPerWeek(callLogInfo.getNumber(), j, callLogInfo.getDate());
+                    AllValues[k] = WeekValues[0];
+                    AllValues[k+1] = WeekValues[1];
+                    k+=2;
+                }
+                temp.setWeekFrequency1(AllValues[0]);
+                temp.setWeekDuration1(AllValues[1]);
+                temp.setWeekFrequency2(AllValues[2]);
+                temp.setWeekDuration2(AllValues[3]);
+                temp.setWeekFrequency3(AllValues[4]);
+                temp.setWeekDuration3(AllValues[5]);
+                temp.setWeekFrequency4(AllValues[6]);
+                temp.setWeekDuration4(AllValues[7]);
+                temp.setWeekFrequency5(AllValues[8]);
+                temp.setWeekDuration5(AllValues[9]);
+                temp.setWeekFrequency6(AllValues[10]);
+                temp.setWeekDuration6(AllValues[11]);
+                temp.setWeekFrequency7(AllValues[12]);
+                temp.setWeekDuration7(AllValues[13]);
+                temp.setWeekFrequency8(AllValues[14]);
+                temp.setWeekDuration8(AllValues[15]);
+
                 float HMIndividualUsersPerWeek = socialScore.getHMIndividualPerWeek(callLogInfo.getNumber(),callLogInfo.getDate());
                 temp.setIndividualScore(HMIndividualUsersPerWeek);
                 float HMTotalUsers = getHMGlobalContacts(callLogInfo.getDate())/(float)getTotalDistinctContacts(callLogInfo.getDate());
@@ -359,7 +388,8 @@ public class CallLogUtils {
                 temp.setFinalIndividualScore(finalHMIndividualUsersPerWeek);
                 temp.setFinalGlobalScore(finalHMTotalUsers);
 
-                temp.setSocialStatus(finalHMIndividualUsersPerWeek*10>finalHMTotalUsers);
+//                temp.setSocialStatus(finalHMIndividualUsersPerWeek*10>finalHMTotalUsers);
+                temp.setSocialStatus(socialScore.getSocialScoreWithBiases(callLogInfo.getNumber(),callLogInfo.getDate()));
             }
             List.set(i,temp);
         }
@@ -396,6 +426,23 @@ public class CallLogUtils {
             temp.setIndividualScore(callLogInfo.getIndividualScore());
             temp.setGlobalScore(callLogInfo.getGlobalScore());
 
+            temp.setWeekFrequency1(callLogInfo.getWeekFrequency1());
+            temp.setWeekDuration1(callLogInfo.getWeekDuration1());
+            temp.setWeekFrequency2(callLogInfo.getWeekFrequency2());
+            temp.setWeekDuration2(callLogInfo.getWeekDuration2());
+            temp.setWeekFrequency3(callLogInfo.getWeekFrequency3());
+            temp.setWeekDuration3(callLogInfo.getWeekDuration3());
+            temp.setWeekFrequency4(callLogInfo.getWeekFrequency4());
+            temp.setWeekDuration4(callLogInfo.getWeekDuration4());
+            temp.setWeekFrequency5(callLogInfo.getWeekFrequency5());
+            temp.setWeekDuration5(callLogInfo.getWeekDuration5());
+            temp.setWeekFrequency6(callLogInfo.getWeekFrequency6());
+            temp.setWeekDuration6(callLogInfo.getWeekDuration6());
+            temp.setWeekFrequency7(callLogInfo.getWeekFrequency7());
+            temp.setWeekDuration7(callLogInfo.getWeekDuration7());
+            temp.setWeekFrequency8(callLogInfo.getWeekFrequency8());
+            temp.setWeekDuration8(callLogInfo.getWeekDuration8());
+
             temp.setUnknownBias(callLogInfo.getUnknownBias());
             temp.setKnownBias(callLogInfo.getKnownBias());
 
@@ -405,12 +452,13 @@ public class CallLogUtils {
             temp.setWeekEndDuration(callLogInfo.getWeekEndDuration());
 
             float pastSocializingContactBias = PastSocialContactBias.getInstance(context).getDifference(callLogInfo.getNumber(), callLogInfo.getDate());
+//            Log.d(TAG, "updatePastSocializingContacts: " + pastSocializingContactBias);
             temp.setPastSocializingContactBias(pastSocializingContactBias);
 
             float finalHMIndividualUsersPerWeek = callLogInfo.getFinalIndividualScore() + pastSocializingContactBias;
             float finalHMTotalUsers = callLogInfo.getFinalGlobalScore();
             temp.setFinalIndividualScore(finalHMIndividualUsersPerWeek);
-
+            temp.setFinalGlobalScore(callLogInfo.getFinalGlobalScore());
             temp.setSocialStatus(finalHMIndividualUsersPerWeek*10>finalHMTotalUsers);
             List.set(i,temp);
         }

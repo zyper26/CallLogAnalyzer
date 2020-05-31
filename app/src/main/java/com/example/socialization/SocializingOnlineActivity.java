@@ -101,7 +101,24 @@ public class SocializingOnlineActivity extends AppCompatActivity {
             outputStream.write(("WeekEndDuration" +",").getBytes());
             outputStream.write(("PastSocializingContactBias" +",").getBytes());
             outputStream.write(("FinalIndividualScore" +",").getBytes());
-            outputStream.write(("getFinalGlobalScore" +"\n").getBytes());
+            outputStream.write(("FinalGlobalScore" +",").getBytes());
+            outputStream.write(("WeekTimes1" +",").getBytes());
+            outputStream.write(("WeekDuration1" +",").getBytes());
+            outputStream.write(("WeekTimes2" +",").getBytes());
+            outputStream.write(("WeekDuration2" +",").getBytes());
+            outputStream.write(("WeekTimes3" +",").getBytes());
+            outputStream.write(("WeekDuration3" +",").getBytes());
+            outputStream.write(("WeekTimes4" +",").getBytes());
+            outputStream.write(("WeekDuration4" +",").getBytes());
+            outputStream.write(("WeekTimes5" +",").getBytes());
+            outputStream.write(("WeekDuration5" +",").getBytes());
+            outputStream.write(("WeekTimes6" +",").getBytes());
+            outputStream.write(("WeekDuration6" +",").getBytes());
+            outputStream.write(("WeekTimes7" +",").getBytes());
+            outputStream.write(("WeekDuration7" +",").getBytes());
+            outputStream.write(("WeekTimes8" +",").getBytes());
+            outputStream.write(("WeekDuration8" +"\n").getBytes());
+
             for(CallLogInfo callLogInfo:mainList){
                 outputStream.write((Instant.ofEpochMilli(callLogInfo.getDate()).atZone(ZoneId.systemDefault()).toLocalDateTime() + ",").getBytes());
                 outputStream.write((callLogInfo.getName() + ",").getBytes());
@@ -132,7 +149,23 @@ public class SocializingOnlineActivity extends AppCompatActivity {
                 outputStream.write((callLogInfo.getWeekEndDuration() +",").getBytes());
                 outputStream.write((callLogInfo.getPastSocializingContactBias() +",").getBytes());
                 outputStream.write((callLogInfo.getFinalIndividualScore() +",").getBytes());
-                outputStream.write((callLogInfo.getFinalGlobalScore() +"\n").getBytes());
+                outputStream.write((callLogInfo.getFinalGlobalScore() +",").getBytes());
+                outputStream.write((callLogInfo.getWeekFrequency1()+",").getBytes());
+                outputStream.write((callLogInfo.getWeekDuration1()+",").getBytes());
+                outputStream.write((callLogInfo.getWeekFrequency2()+",").getBytes());
+                outputStream.write((callLogInfo.getWeekDuration2()+",").getBytes());
+                outputStream.write((callLogInfo.getWeekFrequency3()+",").getBytes());
+                outputStream.write((callLogInfo.getWeekDuration3()+",").getBytes());
+                outputStream.write((callLogInfo.getWeekFrequency4()+",").getBytes());
+                outputStream.write((callLogInfo.getWeekDuration4()+",").getBytes());
+                outputStream.write((callLogInfo.getWeekFrequency5()+",").getBytes());
+                outputStream.write((callLogInfo.getWeekDuration5()+",").getBytes());
+                outputStream.write((callLogInfo.getWeekFrequency6()+",").getBytes());
+                outputStream.write((callLogInfo.getWeekDuration6()+",").getBytes());
+                outputStream.write((callLogInfo.getWeekFrequency7()+",").getBytes());
+                outputStream.write((callLogInfo.getWeekDuration7()+",").getBytes());
+                outputStream.write((callLogInfo.getWeekFrequency8()+",").getBytes());
+                outputStream.write((callLogInfo.getWeekDuration8()+"\n").getBytes());
             }
             outputStream.close();
             Toast.makeText(this, "file created", Toast.LENGTH_SHORT).show();

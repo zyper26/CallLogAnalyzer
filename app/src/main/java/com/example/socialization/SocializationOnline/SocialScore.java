@@ -29,17 +29,18 @@ public class SocialScore {
         CallLogUtils callLogUtils = CallLogUtils.getInstance(context);
         long numberOfWeeks = callLogUtils.getTotalNumberOfWeeks(start_day);
         long N = 1;
-        float ND=0, score = 0;
+        float[] ND;
+        float score = 0;
         for (int i=1; i<=numberOfWeeks; i++){
             ND = callLogUtils.getHMIndividualContactsPerWeek(number, i, start_day);
-            Log.d(TAG, "getHMIndividualPerWeek: " + ND);
-            score += (float)(1/N)*(ND);
+            Log.d(TAG, "getHMIndividualPerWeek: " + ND[0]+" "+ND[1]);
+            score += (1/(float)N)*(ND[0]*ND[1]);
             N+=1;
         }
         return score;
     }
 
-    public float[] getSocialScoreWithBiases(String number,long start_day){
+    public Boolean getSocialScoreWithBiases(String number,long start_day){
         float HMTotalUsers = CallLogUtils.getInstance(context).getHMGlobalContacts(start_day);
         long distinctContacts = CallLogUtils.getInstance(context).getTotalDistinctContacts(start_day);
         float HMIndividualUsersPerWeek =  getHMIndividualPerWeek(number,start_day);
@@ -63,7 +64,7 @@ public class SocialScore {
         result[1] = HMTotalUsers;
         Log.d(TAG, "getSocialvaluespercentage: " + HMIndividualUsersPerWeek/HMTotalUsers );
 
-        return result;
+        return result[0]*10>result[1];
     }
 
 }

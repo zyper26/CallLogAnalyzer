@@ -13,11 +13,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.socialization.CallFeatures.CallLogInfo;
-import com.example.socialization.SocializationOnline.SocialScore;
 import com.example.socialization.SocializationOnline.SocialScoreStatistics;
 import com.example.socialization.utils.Utils;
 
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -96,11 +94,11 @@ public class CallLogAdapter extends RecyclerView.Adapter<CallLogAdapter.CallLogV
         holder.textViewCallDate.setText(formatter.format(dateObj));
         holder.textViewPosition.setText(String.valueOf(position));
 
-        float[] result = SocialScore.getInstance(context).getSocialScoreWithBiases(callLogInfoArrayList.get(position).getNumber(),callLogInfoArrayList.get(position).getDate());
-        if(result[1]==0)
-            holder.textViewSocialPercentage.setText("NaN");
-        else
-            holder.textViewSocialPercentage.setText(new DecimalFormat("##.##").format(result[0]/result[1]));
+//        float[] result = SocialScore.getInstance(context).getSocialScoreWithBiases(callLogInfoArrayList.get(position).getNumber(),callLogInfoArrayList.get(position).getDate());
+//        if(result[1]==0)
+//            holder.textViewSocialPercentage.setText("NaN");
+//        else
+//            holder.textViewSocialPercentage.setText(new DecimalFormat("##.##").format(result[0]/result[1]));
     }
 
     public void addCallLog(CallLogInfo callLogInfo){
